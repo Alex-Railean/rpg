@@ -1,0 +1,6 @@
+spellName        , cooldown, effectId, dmgCoefficient, spellURL                        , cost  , type     , school
+Sword Attack     , 0       , 0       , 20            , /resources/img/swordattack.jpg  , 20    , physical , strength
+Bow Attack       , 0       , 0       , 30            , /resources/img/bowshot.jpg      , 35    , physical , agility
+Fire ball        , 0       , 0       , 40            , /resources/img/fireball.jpg     , 65    , magical  , intelligence
+No spell         , 0       , 0       , 0             , /resources/img/empty.jpg        , 0     , none     , none
+Bite             , 0       , 0       , 20            , /resources/img/bite.jpg         , 30    , physical , creep
