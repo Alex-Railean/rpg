@@ -8,14 +8,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import static com.endava.rpg.web.controllers.paths.Paths.START_PAGE;
+import static com.endava.rpg.web.controllers.utils.Views.START_PAGE;
 
 @Controller
 public class PageNavigationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PageNavigationController.class);
 
+    private final CharacterStateService CHAR_STATE_SERVICE;
+
     @Autowired
-    private CharacterStateService characterStateService;
+    public PageNavigationController(CharacterStateService characterStateService) {
+        this.CHAR_STATE_SERVICE = characterStateService;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String toStartPage() {
@@ -23,15 +27,15 @@ public class PageNavigationController {
         return START_PAGE;
     }
 
-    @RequestMapping(value = "/continue", method = RequestMethod.GET)
-    public String continueGame() {
-        return "redirect:/" + characterStateService.getLocation();
-    }
-
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String toLocation(String characterName) {
-        characterStateService.defineCharacter(characterName);
+        CHAR_STATE_SERVICE.defineCharacter(characterName);
         LOGGER.info("Character Successfully Defined");
-        return "redirect:/" + characterStateService.getLocation();
+        return "redirect:/" + CHAR_STATE_SERVICE.getLocation();
+    }
+
+    @RequestMapping(value = "/continue", method = RequestMethod.GET)
+    public String continueGame() {
+        return "redirect:/" + CHAR_STATE_SERVICE.getLocation();
     }
 }

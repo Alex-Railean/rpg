@@ -68,13 +68,14 @@ public class CSVReader {
      * @return Map where key is first column from *.csv and List of rows from *.csv as array
      */
     public Map<String, List<String>> getMapFirstColumnAsKeys() {
-        List<String[]> extraction = getData();
         Map<String, List<String>> result = new HashMap<>();
 
-        for (String[] currentExtraction : extraction) {
-            result.put(currentExtraction[0],
-                    Arrays.asList(currentExtraction).subList(1, currentExtraction.length));
-        }
+        getData()
+                .forEach(extraction -> {
+                    result.put(extraction[0],
+                            Arrays.asList(extraction).subList(1, extraction.length));
+                });
+
         return result;
     }
 

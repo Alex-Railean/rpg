@@ -1,6 +1,6 @@
-package com.endava.rpg.web.controllers.paths;
+package com.endava.rpg.web.controllers.utils;
 
-public class Paths {
+public class Views {
     public static final String START_PAGE = "index";
     public static final String BATTLE = "battle";
     public static final String EXP = "exp";

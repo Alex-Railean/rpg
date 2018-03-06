@@ -1,7 +1,11 @@
 <div class="character col">
     <div class="bars-pints">
         <div class="hp-bar">
-            <p>${currentHp}/${hp}</p>
+            <p>${currentHp}/${hp}
+            <#if shield != 0>
+                (${shield})
+            </#if>
+            </p>
         </div>
         <div class="mana-bar">
             <p>${currentMp}/${mp}</p>

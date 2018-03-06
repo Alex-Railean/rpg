@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "T_CHARACTER")
-public class Character implements Models {
+public class Character implements TableMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +20,15 @@ public class Character implements Models {
 
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "PROGRESS_ID")
-    private Progress progressId;
+    private Progress progress;
 
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "ACTION_BAR_ID")
     private ActionBar actionBar;
 
-    public Character(String characterName, Progress progressId, ActionBar actionBar) {
+    public Character(String characterName, Progress progress, ActionBar actionBar) {
         this.characterName = characterName;
-        this.progressId = progressId;
+        this.progress = progress;
         this.actionBar = actionBar;
     }
 
@@ -48,12 +48,12 @@ public class Character implements Models {
         return this;
     }
 
-    public Progress getProgressId() {
-        return progressId;
+    public Progress getProgress() {
+        return progress;
     }
 
-    public Character setProgressId(Progress progressId) {
-        this.progressId = progressId;
+    public Character setProgress(Progress progressId) {
+        this.progress = progressId;
         return this;
     }
 

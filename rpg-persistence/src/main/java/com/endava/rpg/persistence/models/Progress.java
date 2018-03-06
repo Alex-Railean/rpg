@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "T_PROGRESS")
-public class Progress implements Models {
+public class Progress implements TableMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

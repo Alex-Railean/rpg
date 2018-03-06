@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "T_CREEP")
-public class Creep implements Models {
+public class Creep implements TableMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

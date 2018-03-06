@@ -5,25 +5,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameService {
 
-    private Integer growthFactor = 7;
+    private final Integer GROWTH_FACTOR = 7;
 
-    private Integer gameRate = 1;
+    private final Integer GAME_RATE = 1;
 
     public Integer getGrowthFactor() {
-        return growthFactor;
-    }
-
-    public GameService setGrowthFactor(Integer growthFactor) {
-        this.growthFactor = growthFactor;
-        return this;
+        return GROWTH_FACTOR;
     }
 
     public Integer getGameRate() {
-        return gameRate;
+        return GAME_RATE;
     }
 
-    public GameService setGameRate(Integer gameRate) {
-        this.gameRate = gameRate;
-        return this;
-    }
 }

@@ -12,11 +12,9 @@ import org.springframework.ui.Model;
 public class ExpService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpService.class);
 
-    @Autowired
-    private CharacterStateService characterStateService;
+    private final CharacterStateService CHAR_STATE_SERVICE;
 
-    @Autowired
-    private FormulaService formulaService;
+    private final FormulaService FORMULA;
 
     private Integer strengthEpx = 0;
 
@@ -24,21 +22,33 @@ public class ExpService {
 
     private Integer intelligenceExp = 0;
 
+    @Autowired
+    public ExpService(CharacterStateService characterStateService, FormulaService formulaService) {
+        this.CHAR_STATE_SERVICE = characterStateService;
+        this.FORMULA = formulaService;
+    }
+
     public void addAttributeExp(String attributeName) {
         switch (attributeName) {
             case ("strength"):
-                strengthEpx += formulaService.getDeservedExp();
+                strengthEpx += FORMULA.getDeservedExp();
                 LOGGER.info("Strength Epx -> " + strengthEpx);
                 break;
 
             case ("agility"):
-                agilityExp += formulaService.getDeservedExp();
+                agilityExp += FORMULA.getDeservedExp();
                 LOGGER.info("Agility Exp -> " + agilityExp);
                 break;
 
             case ("intelligence"):
-                intelligenceExp += formulaService.getDeservedExp();
+                intelligenceExp += FORMULA.getDeservedExp();
                 LOGGER.info("Intelligence Exp -> " + intelligenceExp);
+                break;
+
+            case ("creep"):
+                break;
+
+            case ("none"):
                 break;
 
             default:
@@ -46,14 +56,14 @@ public class ExpService {
         }
     }
 
-    public boolean thereIsExp(){
+    public boolean isThereExp() {
         return !(this.strengthEpx.equals(0) && this.agilityExp.equals(0) && this.intelligenceExp.equals(0));
     }
 
     public void updateProgresses() {
-        characterStateService.updateStrengthProgress(strengthEpx);
-        characterStateService.updateAgilityProgress(agilityExp);
-        characterStateService.updateIntelligenceProgress(intelligenceExp);
+        CHAR_STATE_SERVICE.updateStrengthProgress(strengthEpx);
+        CHAR_STATE_SERVICE.updateAgilityProgress(agilityExp);
+        CHAR_STATE_SERVICE.updateIntelligenceProgress(intelligenceExp);
     }
 
     public Model getExpModel(Model model) {
@@ -68,32 +78,5 @@ public class ExpService {
         this.strengthEpx = 0;
         this.agilityExp = 0;
         this.intelligenceExp = 0;
-    }
-
-    public Integer getStrengthEpx() {
-        return strengthEpx;
-    }
-
-    public ExpService setStrengthEpx(Integer strengthEpx) {
-        this.strengthEpx = strengthEpx;
-        return this;
-    }
-
-    public Integer getAgilityExp() {
-        return agilityExp;
-    }
-
-    public ExpService setAgilityExp(Integer agilityExp) {
-        this.agilityExp = agilityExp;
-        return this;
-    }
-
-    public Integer getIntelligenceExp() {
-        return intelligenceExp;
-    }
-
-    public ExpService setIntelligenceExp(Integer intelligenceExp) {
-        this.intelligenceExp = intelligenceExp;
-        return this;
     }
 }

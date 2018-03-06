@@ -10,19 +10,27 @@ import org.springframework.stereotype.Service;
 public class FormulaService {
 
     @Autowired
-    private CharacterStateService characterStateService;
+    private CharacterStateService CHAR_STATE_SERVICE;
 
     @Autowired
-    private GameService gameService;
+    private GameService GAME;
 
     @Autowired
-    private SpellService spellService;
+    private SpellService SPELL_SERVICE;
+
+    // TODO: To investigate the problem
+//    @Autowired
+//    public FormulaService(CharacterStateService characterStateService, GameService gameService, SpellService spellService) {
+//        this.CHARACTER_STATE = characterStateService;
+//        this.GAME = gameService;
+//        this.SPELL_SERVICE = spellService;
+//    }
 
     public Integer getCreepPoints(Integer factor){
         Integer hp = factor * 5;
 
-        for(int i = 1; i <= characterStateService.getCharacterState().getCharacterLevel(); i++){
-            hp += factor + i * gameService.getGrowthFactor();
+        for(int i = 1; i <= CHAR_STATE_SERVICE.getCharacterState().getCharacterLevel(); i++){
+            hp += factor + i * GAME.getGrowthFactor();
         }
 
         return hp;
@@ -30,12 +38,12 @@ public class FormulaService {
 
     public Integer getManaCost(Spell spell){
         return spell.getCost() +
-                characterStateService.getCharacterState().getCharacterLevel() +
-                        gameService.getGrowthFactor() * 2;
+                CHAR_STATE_SERVICE.getCharacterState().getCharacterLevel() +
+                        GAME.getGrowthFactor() * 2;
     }
 
-    public int getSpellDamage(int damageCoefficient) {
-        int characterLevel = characterStateService.getCharacterState().getCharacterLevel();
+    public int getDamage(int damageCoefficient) {
+        int characterLevel = CHAR_STATE_SERVICE.getCharacterState().getCharacterLevel();
         double levelReducer = 0.1;
 
         for (int i = 1; i <= characterLevel; i++) {
@@ -44,6 +52,10 @@ public class FormulaService {
         }
 
         return damageCoefficient;
+    }
+
+    public int getShield(int damageCoefficient){
+        return getDamage(damageCoefficient);
     }
 
     public Integer getNextLevelExp(Integer attributeLevel) {
@@ -59,12 +71,12 @@ public class FormulaService {
     public Integer getCharacterHp() {
         Integer hp = 50;
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getCharacterLevel(); i++) {
-            hp += 20 + i * gameService.getGrowthFactor();
+        for (int i = 1; i <= CHAR_STATE_SERVICE.getCharacterState().getCharacterLevel(); i++) {
+            hp += 20 + i * GAME.getGrowthFactor();
         }
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getStrengthProgressLevel(); i++) {
-            hp += 35 + i * gameService.getGrowthFactor();
+        for (int i = 1; i <= CHAR_STATE_SERVICE.getCharacterState().getStrengthProgressLevel(); i++) {
+            hp += 35 + i * GAME.getGrowthFactor();
         }
 
         return hp;
@@ -73,18 +85,18 @@ public class FormulaService {
     public Integer getCharacterMp() {
         Integer mp = 50;
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getCharacterLevel(); i++) {
-            mp += 10 + i * gameService.getGrowthFactor();
+        for (int i = 1; i <= CHAR_STATE_SERVICE.getCharacterState().getCharacterLevel(); i++) {
+            mp += 10 + i * GAME.getGrowthFactor();
         }
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getIntelligenceProgressLevel(); i++) {
-            mp += 45 + i * gameService.getGrowthFactor();
+        for (int i = 1; i <= CHAR_STATE_SERVICE.getCharacterState().getIntelligenceProgressLevel(); i++) {
+            mp += 45 + i * GAME.getGrowthFactor();
         }
 
         return mp;
     }
 
     public Integer getDeservedExp() {
-        return spellService.getLastTotalDmg() / 5 * gameService.getGameRate();
+        return SPELL_SERVICE.getLastMovePoints() / 5 * GAME.getGameRate();
     }
 }

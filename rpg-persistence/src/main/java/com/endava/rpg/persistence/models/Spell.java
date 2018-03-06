@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "T_SPELL")
-public class Spell implements Models{
+public class Spell implements TableMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +20,8 @@ public class Spell implements Models{
     @Column(name = "EFFECT_ID")
     private Integer effectId;
 
-    @Column(name = "DMG_COEFFICIENT")
-    private Integer dmgCoefficient;
+    @Column(name = "COEFFICIENT")
+    private Integer coefficient;
 
     @Column(name = "SPELL_URL")
     private String spellURL;
@@ -29,11 +29,14 @@ public class Spell implements Models{
     @Column(name = "COST")
     private Integer cost;
 
-    @Column(name = "TYPE")
-    private String spellType;
+    @Column(name = "SCHOOL")
+    private String school;
 
     @Column(name = "ATTRIBUTE")
     private String attribute;
+
+    @Column(name = "TYPE")
+    private String spellType;
 
     public Integer getSpellId() {
         return spellId;
@@ -66,12 +69,12 @@ public class Spell implements Models{
         return this;
     }
 
-    public Integer getDmgCoefficient() {
-        return dmgCoefficient;
+    public Integer getCoefficient() {
+        return coefficient;
     }
 
-    public Spell setDmgCoefficient(Integer dmgCoefficient) {
-        this.dmgCoefficient = dmgCoefficient;
+    public Spell setCoefficient(Integer dmgCoefficient) {
+        this.coefficient = dmgCoefficient;
         return this;
     }
 
@@ -93,12 +96,12 @@ public class Spell implements Models{
         return this;
     }
 
-    public String getSpellType() {
-        return spellType;
+    public String getSchool() {
+        return school;
     }
 
-    public Spell setSpellType(String spellType) {
-        this.spellType = spellType;
+    public Spell setSchool(String school) {
+        this.school = school;
         return this;
     }
 
@@ -108,6 +111,15 @@ public class Spell implements Models{
 
     public Spell setAttribute(String attribute) {
         this.attribute = attribute;
+        return this;
+    }
+
+    public String getSpellType() {
+        return spellType;
+    }
+
+    public Spell setSpellType(String spellType) {
+        this.spellType = spellType;
         return this;
     }
 }

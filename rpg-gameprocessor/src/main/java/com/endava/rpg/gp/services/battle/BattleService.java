@@ -1,60 +1,71 @@
 package com.endava.rpg.gp.services.battle;
 
+import com.endava.rpg.gp.services.responsiveness.SpellChoiceService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.services.state.SpellService;
 import com.endava.rpg.gp.statemodels.CreepState;
-import com.endava.rpg.gp.statemodels.CurrentCharacter;
+import com.endava.rpg.gp.statemodels.CharacterState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BattleService {
 
-    @Autowired
-    private SpellService spellService;
+    private final SpellService spellService;
+
+    private final CreepLocationService creepLocation;
+
+    private final CharacterStateService characterState;
+
+    private final SpellChoiceService spellChoice;
 
     @Autowired
-    private LocationCreepService locationCreepService;
-
-    @Autowired
-    private CharacterStateService characterStateService;
+    public BattleService(SpellService spellService, CreepLocationService creepLocation, CharacterStateService characterState, SpellChoiceService spellChoice) {
+        this.spellService = spellService;
+        this.creepLocation = creepLocation;
+        this.characterState = characterState;
+        this.spellChoice = spellChoice;
+    }
 
     public boolean isEndOfBattle() {
-        return characterStateService.characterIsDead() || locationCreepService.getCreepGroup().size() == 0;
+        return characterState.isCharacterDead() || creepLocation.getCreepGroup().size() == 0;
     }
 
     public void makeATurn(Integer actionBarNumber, CreepState currentEnemy){
-        spellService.useSpellToEnemy(actionBarNumber, currentEnemy);
+        spellService.useSpellTo(actionBarNumber, currentEnemy);
+        spellChoice.creepResponse();
         seekDeath();
         useRegeneration();
     }
 
     public void waitATurn(){
+        spellChoice.creepResponse();
         seekDeath();
         useRegeneration();
     }
 
     private void useRegeneration(){
-        CurrentCharacter character = characterStateService.getCharacterState();
-        for(CreepState creep : locationCreepService.getCreepGroup()){
-            if(creep.getCurrentHp() < creep.getHp()) {
-                creep.setCurrentHp(creep.getCurrentHp() + creep.getHpRegeneration() >= creep.getHp() ?
-                        creep.getHp() :
-                        creep.getCurrentHp() + creep.getHpRegeneration());
-            }
+        CharacterState character = characterState.getCharacterState();
+        creepLocation.getCreepGroup()
+                .forEach(creep -> {
+                    if(creep.getCurrentHp() < creep.getHp()) {
+                        creep.setCurrentHp(creep.getCurrentHp() + creep.getHpRegeneration() >= creep.getHp() ?
+                                creep.getHp() :
+                                creep.getCurrentHp() + creep.getHpRegeneration());
+                    }
 
-            if(creep.getCurrentMp() < creep.getMp()) {
-                creep.setCurrentMp(creep.getCurrentMp() + creep.getMpRegeneration() >= creep.getMp() ?
-                        creep.getMp() :
-                        creep.getCurrentMp() + creep.getMpRegeneration());
-            }
+                    if(creep.getCurrentMp() < creep.getMp()) {
+                        creep.setCurrentMp(creep.getCurrentMp() + creep.getMpRegeneration() >= creep.getMp() ?
+                                creep.getMp() :
+                                creep.getCurrentMp() + creep.getMpRegeneration());
+                    }
 
-            if(creep.getCurrentEnergy() < creep.getEnergy()) {
-                creep.setCurrentEnergy(creep.getCurrentEnergy() + creep.getEnergyRegeneration() >= creep.getEnergy() ?
-                        creep.getEnergy() :
-                        creep.getCurrentEnergy() + creep.getEnergyRegeneration());
-            }
-        }
+                    if(creep.getCurrentEnergy() < creep.getEnergy()) {
+                        creep.setCurrentEnergy(creep.getCurrentEnergy() + creep.getEnergyRegeneration() >= creep.getEnergy() ?
+                                creep.getEnergy() :
+                                creep.getCurrentEnergy() + creep.getEnergyRegeneration());
+                    }
+                });
 
         if(character.getCurrentHp() < character.getHp()){
             character.setCurrentHp(character.getCurrentHp() + character.getHpRegeneration() >= character.getHp() ?
@@ -76,8 +87,8 @@ public class BattleService {
     }
 
     private void seekDeath(){
-        if(locationCreepService.currentEnemyIsDead()){
-            locationCreepService.getCreepGroup().remove(locationCreepService.getCurrentEnemy());
+        if(creepLocation.isCurrentEnemyDead()){
+            creepLocation.getCreepGroup().remove(creepLocation.getCurrentEnemy());
         }
     }
 }
