@@ -1,8 +1,8 @@
 package com.endava.rpg.web.controllers;
 
 import com.endava.rpg.gp.services.battle.BattleService;
-import com.endava.rpg.gp.services.battle.CreepLocationService;
 import com.endava.rpg.gp.services.battle.ExpService;
+import com.endava.rpg.gp.services.battle.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.services.state.SpellService;
 import com.endava.rpg.web.controllers.utils.Views;
@@ -24,7 +24,7 @@ public class ToBattleController {
 
     private final CharacterStateService CHAR_STATE_SERVICE;
 
-    private final CreepLocationService CREEP_LOCATION;
+    private final LocationService LOCATION;
 
     private final BattleService BATTLE;
 
@@ -32,16 +32,14 @@ public class ToBattleController {
 
     private final SpellService SPELL_SERVICE;
 
-    private Long battleId;
-
     @Autowired
     public ToBattleController(CharacterStateService characterStateService,
-                              CreepLocationService creepLocationService,
+                              LocationService locationService,
                               BattleService battleService,
                               ExpService expService,
                               SpellService spellService) {
         this.CHAR_STATE_SERVICE = characterStateService;
-        this.CREEP_LOCATION = creepLocationService;
+        this.LOCATION = locationService;
         this.BATTLE = battleService;
         this.EXP = expService;
         this.SPELL_SERVICE = spellService;
@@ -49,10 +47,12 @@ public class ToBattleController {
 
     @RequestMapping(value = "/toBattle", method = RequestMethod.GET)
     public String toBattle() {
-        this.battleId = new Date().getTime();
-        CHAR_STATE_SERVICE.setNewBattle(this.battleId);
-        LOGGER.info("A New Battle has begun -> " + this.battleId);
-        return "redirect:/" + Views.BATTLE + "/" + this.battleId;
+        EXP.refresh();
+        BATTLE.setBattleId(new Date().getTime());
+        Long battleId = BATTLE.getBattleId();
+        CHAR_STATE_SERVICE.setNewBattle(battleId);
+        LOGGER.info("A New Battle has begun -> " + battleId);
+        return "redirect:/" + Views.BATTLE + "/" + battleId;
     }
 
     @RequestMapping(value = Views.BATTLE + "/{battleId}", method = RequestMethod.GET)
@@ -61,9 +61,11 @@ public class ToBattleController {
             if (!BATTLE.isEndOfBattle()) {
                 LOGGER.info("The battle continues");
                 model = CHAR_STATE_SERVICE.getCharacterModel(model);
-                model = CREEP_LOCATION.getCurrentEnemyAndGroup(model);
+                model = LOCATION.getCurrentEnemyAndGroup(model);
                 return Views.BATTLE;
             }
+
+            CHAR_STATE_SERVICE.setNewBattle(0L);
             return "redirect:/" + Views.EXP;
         }
         LOGGER.warn("Could not find battle with id: " + battleId);
@@ -72,30 +74,30 @@ public class ToBattleController {
 
     @RequestMapping(value = Views.BATTLE + "/use-spell/{actionBarId}", method = RequestMethod.GET)
     public String useSpell(RedirectAttributes redirectAttributes, @PathVariable("actionBarId") Integer actionBarId) {
-        if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
-            BATTLE.makeATurn(actionBarId, CREEP_LOCATION.getCurrentEnemy());
-            return "redirect:/" + Views.BATTLE + "/" + this.battleId;
+        if (CHAR_STATE_SERVICE.getBattle() != null && CHAR_STATE_SERVICE.getBattle() != 0) {
+            if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
+                BATTLE.makeATurn(actionBarId, LOCATION.getCurrentEnemy());
+                return "redirect:/" + Views.BATTLE + "/" + BATTLE.getBattleId();
+            } else {
+                redirectAttributes.addFlashAttribute("warningMessage", "Not Enough Mana or Energy");
+                return "redirect:/" + Views.BATTLE + "/" + BATTLE.getBattleId();
+            }
+        } else {
+            return "redirect:/" + CHAR_STATE_SERVICE.getLocation();
         }
-
-        redirectAttributes.addFlashAttribute("warningMessage", "Not Enough Mana or Energy");
-
-        return "redirect:/" + Views.BATTLE + "/" + this.battleId;
     }
 
     @RequestMapping(value = Views.BATTLE + "/wait", method = RequestMethod.GET)
     public String waitATurn() {
         BATTLE.waitATurn();
-        return "redirect:/" + Views.BATTLE + "/" + this.battleId;
+        return "redirect:/" + Views.BATTLE + "/" + BATTLE.getBattleId();
     }
 
     @RequestMapping(value = Views.EXP, method = RequestMethod.GET)
     public String getExp(Model model) {
-        if (EXP.isThereExp()) {
             EXP.updateProgresses();
             model = CHAR_STATE_SERVICE.getCharacterModel(model);
             model = EXP.getExpModel(model);
             return Views.EXP;
-        }
-        return "redirect:/" + CHAR_STATE_SERVICE.getLocation();
     }
 }

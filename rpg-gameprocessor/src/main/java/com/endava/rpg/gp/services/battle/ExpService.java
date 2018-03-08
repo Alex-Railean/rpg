@@ -2,6 +2,7 @@ package com.endava.rpg.gp.services.battle;
 
 import com.endava.rpg.gp.services.game.FormulaService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.util.Refreshable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 @Service
-public class ExpService {
+
+public class ExpService implements Refreshable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpService.class);
 
     private final CharacterStateService CHAR_STATE_SERVICE;
@@ -23,7 +25,7 @@ public class ExpService {
     private Integer intelligenceExp = 0;
 
     @Autowired
-    public ExpService(CharacterStateService characterStateService, FormulaService formulaService) {
+    private ExpService(CharacterStateService characterStateService, FormulaService formulaService) {
         this.CHAR_STATE_SERVICE = characterStateService;
         this.FORMULA = formulaService;
     }
@@ -56,25 +58,25 @@ public class ExpService {
         }
     }
 
-    public boolean isThereExp() {
-        return !(this.strengthEpx.equals(0) && this.agilityExp.equals(0) && this.intelligenceExp.equals(0));
+    public void updateProgresses() {
+        CHAR_STATE_SERVICE.updateStrengthProgress(getDeservedExp(strengthEpx));
+        CHAR_STATE_SERVICE.updateAgilityProgress(getDeservedExp(agilityExp));
+        CHAR_STATE_SERVICE.updateIntelligenceProgress(getDeservedExp(intelligenceExp));
     }
 
-    public void updateProgresses() {
-        CHAR_STATE_SERVICE.updateStrengthProgress(strengthEpx);
-        CHAR_STATE_SERVICE.updateAgilityProgress(agilityExp);
-        CHAR_STATE_SERVICE.updateIntelligenceProgress(intelligenceExp);
+    private int getDeservedExp(int exp) {
+        return CHAR_STATE_SERVICE.isCharacterDead() ? exp / 4 : exp;
     }
 
     public Model getExpModel(Model model) {
-        model.addAttribute("strengthEpx", strengthEpx);
-        model.addAttribute("agilityExp", agilityExp);
-        model.addAttribute("intelligenceExp", intelligenceExp);
-        flushExp();
+        model.addAttribute("strengthEpx", getDeservedExp(strengthEpx));
+        model.addAttribute("agilityExp", getDeservedExp(agilityExp));
+        model.addAttribute("intelligenceExp", getDeservedExp(intelligenceExp));
+        refresh();
         return model;
     }
 
-    private void flushExp() {
+    public void refresh() {
         this.strengthEpx = 0;
         this.agilityExp = 0;
         this.intelligenceExp = 0;

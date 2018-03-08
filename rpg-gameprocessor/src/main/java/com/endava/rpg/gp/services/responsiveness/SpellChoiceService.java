@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.services.responsiveness;
 
-import com.endava.rpg.gp.services.battle.CreepLocationService;
+import com.endava.rpg.gp.services.battle.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.services.state.SpellService;
 import com.endava.rpg.gp.statemodels.CreepState;
@@ -14,33 +14,33 @@ import java.util.List;
 @Service
 public class SpellChoiceService {
 
-    private final CreepLocationService CREEP_LOCATION;
+    private final LocationService LOCATION;
 
     private final SpellService SPELL_SERVICE;
 
     private final CharacterStateService CHAR_STATE_SERVICE;
 
     @Autowired
-    public SpellChoiceService(CreepLocationService creepLocationService, SpellService spellService, CharacterStateService characterStateService) {
-        this.CREEP_LOCATION = creepLocationService;
+    private SpellChoiceService(LocationService locationService, SpellService spellService, CharacterStateService characterStateService) {
+        this.LOCATION = locationService;
         this.SPELL_SERVICE = spellService;
         this.CHAR_STATE_SERVICE = characterStateService;
     }
 
     public void creepResponse() {
-        CREEP_LOCATION.getCreepGroup()
+        LOCATION.getCreepGroup()
                 .forEach(creep -> {
                     if (isAlmostDead(creep)) {
-                        List<Spell> spells = CREEP_LOCATION.getEnemyProtectionSpells(creep);
-
-                        if (SPELL_SERVICE.isManaEnough(chooseAppropriate(spells), creep)) {
-                            SPELL_SERVICE.useSpellTo(chooseAppropriate(spells), CHAR_STATE_SERVICE.getCharacterState(), creep);
-                        } else if (chooseAnotherOption(CREEP_LOCATION.getEnemySpells(creep)) != null) {
-                            SPELL_SERVICE.useSpellTo(chooseAnotherOption(CREEP_LOCATION.getEnemySpells(creep)), CHAR_STATE_SERVICE.getCharacterState(), creep);
+                        List<Spell> spells = LOCATION.getEnemyProtectionSpells(creep);
+                        Spell toCast;
+                        if (SPELL_SERVICE.isManaEnough(toCast = chooseAppropriate(spells), creep)) {
+                            SPELL_SERVICE.useSpellTo(toCast, CHAR_STATE_SERVICE.getCharacterState(), creep);
+                        } else if (chooseAnotherOption(LOCATION.getEnemySpells(creep)) != null) {
+                            SPELL_SERVICE.useSpellTo(chooseAnotherOption(LOCATION.getEnemySpells(creep)), CHAR_STATE_SERVICE.getCharacterState(), creep);
                         }
 
                     } else {
-                        SPELL_SERVICE.useSpellTo(chooseStrongestSpell(CREEP_LOCATION.getEnemyAttackSpells(creep)),
+                        SPELL_SERVICE.useSpellTo(chooseStrongestSpell(LOCATION.getEnemyAttackSpells(creep)),
                                 CHAR_STATE_SERVICE.getCharacterState(),
                                 creep);
                     }
@@ -55,7 +55,7 @@ public class SpellChoiceService {
 
     private Spell chooseAnotherOption(List<Spell> spells) {
         return spells.stream()
-                .filter(spell -> SPELL_SERVICE.isManaEnough(spell, CREEP_LOCATION.getCurrentEnemy()))
+                .filter(spell -> SPELL_SERVICE.isManaEnough(spell, LOCATION.getCurrentEnemy()))
                 .findFirst()
                 .orElse(null);
     }
@@ -68,17 +68,19 @@ public class SpellChoiceService {
                 .orElse(null);
 
         return isRisky() ?
-                SPELL_SERVICE.isManaEnough(strongest, CREEP_LOCATION.getCurrentEnemy()) ? strongest : weakest
+                SPELL_SERVICE.isManaEnough(strongest, LOCATION.getCurrentEnemy()) ? strongest : weakest
                 : weakest;
     }
 
     private boolean isRisky() {
-        return CREEP_LOCATION.getCreepGroup().size() <= 4;
+        return LOCATION.getCreepGroup().size() <= 4;
     }
 
+    // TODO: Move risk coefficient (1.8)
     private boolean isAlmostDead(CreepState creep) {
-        return creep.getCurrentHp() +
-                CREEP_LOCATION.getCurrentEnemy().getShieldPoints() <
-                SPELL_SERVICE.getBiggestDmg() * 2;
+        return !creep.getHp().equals(creep.getCurrentHp()) &&
+        creep.getCurrentHp() +
+                LOCATION.getCurrentEnemy().getShieldPoints() <
+                SPELL_SERVICE.getBiggestDmg() * 1.8;
     }
 }

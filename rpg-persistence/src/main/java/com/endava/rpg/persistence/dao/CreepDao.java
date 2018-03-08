@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public class CreepDao extends Dao<Creep> {
 
     @Autowired
-    public CreepDao(SessionFactory sessionFactory) {
+    private CreepDao(SessionFactory sessionFactory) {
         super(Creep.class, sessionFactory);
     }
 }

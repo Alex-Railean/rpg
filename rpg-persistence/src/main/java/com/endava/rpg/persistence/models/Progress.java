@@ -17,7 +17,6 @@ public class Progress implements TableMapping {
     @Column(name = "STRENGTH_PROGRESS")
     private Integer strengthProgress = 0;
 
-
     @Column(name = "AGILITY_PROGRESS_LEVEL")
     private Integer agilityProgressLevel = 1;
 
@@ -26,7 +25,6 @@ public class Progress implements TableMapping {
 
     @Column(name = "INTELLIGENCE_PROGRESS_LEVEL")
     private Integer intelligenceProgressLevel = 1;
-
 
     @Column(name = "INTELLIGENCE_PROGRESS")
     private Integer intelligenceProgress = 0;

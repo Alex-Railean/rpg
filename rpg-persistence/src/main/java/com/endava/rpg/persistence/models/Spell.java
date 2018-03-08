@@ -8,7 +8,7 @@ public class Spell implements TableMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SPELLS_ID")
+    @Column(name = "SPELL_ID")
     private Integer spellId;
 
     @Column(name = "SPELL_NAME")

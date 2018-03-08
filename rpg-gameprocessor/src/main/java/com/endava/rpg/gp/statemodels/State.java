@@ -4,33 +4,33 @@ import com.endava.rpg.persistence.models.Spell;
 
 public class State {
 
-    Integer hp;
+    private Integer hpRegeneration;
 
-    Integer currentHp;
+    private Integer mpRegeneration;
 
-    Integer hpRegeneration;
+    private Integer energy;
 
-    Integer mp;
+    private Integer energyRegeneration;
 
-    Integer currentMp;
+    private Integer shieldPoints = 0;
 
-    Integer mpRegeneration;
+    private Double criticalDmgCoefficient = 1.8;
 
-    Integer energy;
+    private Integer hp;
 
-    Integer currentEnergy;
+    private Integer currentHp;
 
-    Integer energyRegeneration;
+    private Integer mp;
 
-    Spell spell_1;
+    private Integer currentMp;
 
-    Spell spell_2;
+    private Integer currentEnergy;
 
-    Spell spell_3;
+    private Spell spell_1;
 
-    Integer shieldPoints = 0;
+    private Spell spell_2;
 
-    Double criticalDmgCoefficient = 1.8;
+    private Spell spell_3;
 
     public Integer getHp() {
         return hp;

@@ -1,6 +1,6 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.services.battle.CreepLocationService;
+import com.endava.rpg.gp.services.battle.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,18 +18,18 @@ public class LocationController {
 
     private final CharacterStateService CHAR_STATE_SERVICE;
 
-    private final CreepLocationService CREEP_LOCATION;
+    private final LocationService LOCATION;
 
     @Autowired
-    public LocationController(CharacterStateService characterStateService, CreepLocationService creepLocationService) {
+    public LocationController(CharacterStateService characterStateService, LocationService locationService) {
         this.CHAR_STATE_SERVICE = characterStateService;
-        this.CREEP_LOCATION = creepLocationService;
+        this.LOCATION = locationService;
     }
 
     @RequestMapping(value = "/hungry-forest", method = RequestMethod.GET)
     public String toHungryForest(Model model) {
         model = CHAR_STATE_SERVICE.getCharacterModel(model);
-        model = CREEP_LOCATION.getRandomCreepGroup(model, HUNGRY_FOREST);
+        model = LOCATION.getRandomCreepGroup(model, HUNGRY_FOREST);
         LOGGER.info("Redirect to Hungry Forest");
         return HUNGRY_FOREST;
     }

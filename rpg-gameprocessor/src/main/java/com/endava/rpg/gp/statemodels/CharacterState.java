@@ -1,25 +1,13 @@
 package com.endava.rpg.gp.statemodels;
 
 import com.endava.rpg.gp.services.game.FormulaService;
-import com.endava.rpg.persistence.models.ActionBar;
-import com.endava.rpg.persistence.models.Character;
-import com.endava.rpg.persistence.models.Progress;
 import com.endava.rpg.persistence.models.Spell;
-import com.endava.rpg.persistence.services.PersistenceService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CharacterState extends State {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CharacterState.class);
 
-    @Autowired
-    private PersistenceService PS;
-
-    @Autowired
-    private FormulaService FORMULA;
+    private final FormulaService FORMULA;
 
     private String characterName;
 
@@ -75,71 +63,8 @@ public class CharacterState extends State {
 
     private Double criticalDmgCoefficient = 1.8;
 
-    //TODO: Investigate the problem
-//    @Autowired
-//    public CharacterState(PersistenceService dbs, FormulaService formulaService) {
-//        this.PS = dbs;
-//        this.FORMULA = formulaService;
-//    }
-
-    public CharacterState defineCharacter(String characterName) {
-        reloadCharacter(PS.getCharacterByName(characterName));
-        LOGGER.info("Defined an Existing Character");
-        return this;
-    }
-
-    public CharacterState defineNewCharacter(String characterName) {
-        reloadCharacter(PS.saveCharacter(new Character(
-                characterName,
-                new Progress(),
-                new ActionBar())));
-        LOGGER.info("Defined a New Character");
-        return this;
-    }
-
-    private void reloadCharacter(Character character) {
-        this.characterName = character.getCharacterName();
-        this.location = character.getLocation();
-        this.strengthProgressLevel = character.getProgress().getStrengthProgressLevel();
-        this.strengthNextLevel = FORMULA.getNextLevelExp(strengthProgressLevel);
-        this.strengthProgress = character.getProgress().getStrengthProgress();
-        this.agilityProgressLevel = character.getProgress().getAgilityProgressLevel();
-        this.agilityNextLevel = FORMULA.getNextLevelExp(agilityProgressLevel);
-        this.agilityProgress = character.getProgress().getAgilityProgress();
-        this.intelligenceProgressLevel = character.getProgress().getIntelligenceProgressLevel();
-        this.intelligenceNextLevel = FORMULA.getNextLevelExp(intelligenceProgressLevel);
-        this.intelligenceProgress = character.getProgress().getIntelligenceProgress();
-        this.characterLevel = calculateCharacterLevel();
-        super.hp = FORMULA.getCharacterHp();
-        super.currentHp = hp;
-        super.mp = FORMULA.getCharacterMp();
-        super.currentMp = mp;
-        super.currentEnergy = energy;
-        super.spell_1 = character.getActionBar().getSpell_1() == null ? getDefaultSpell(1) : character.getActionBar().getSpell_1();
-        super.spell_2 = character.getActionBar().getSpell_2() == null ? getDefaultSpell(2) : character.getActionBar().getSpell_2();
-        super.spell_3 = character.getActionBar().getSpell_3() == null ? getDefaultSpell(3) : character.getActionBar().getSpell_3();
-        this.spell_4 = character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4();
-        this.spell_5 = character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5();
-        this.spell_6 = character.getActionBar().getSpell_6() == null ? getDefaultSpell() : character.getActionBar().getSpell_6();
-        this.spell_7 = character.getActionBar().getSpell_7() == null ? getDefaultSpell() : character.getActionBar().getSpell_7();
-        this.spell_8 = character.getActionBar().getSpell_8() == null ? getDefaultSpell() : character.getActionBar().getSpell_8();
-        this.spell_9 = character.getActionBar().getSpell_9() == null ? getDefaultSpell() : character.getActionBar().getSpell_9();
-        this.spell_10 = character.getActionBar().getSpell_10() == null ? getDefaultSpell() : character.getActionBar().getSpell_10();
-        this.spell_11 = character.getActionBar().getSpell_11() == null ? getDefaultSpell() : character.getActionBar().getSpell_11();
-        this.spell_12 = character.getActionBar().getSpell_12() == null ? getDefaultSpell() : character.getActionBar().getSpell_12();
-        LOGGER.info("Character was reloaded");
-    }
-
-    private Spell getDefaultSpell(Integer spellPlace) {
-        return PS.getSpellById(spellPlace);
-    }
-
-    private Spell getDefaultSpell() {
-        return PS.getSpellById(4);
-    }
-
-    private Integer calculateCharacterLevel() {
-        return getStrengthProgressLevel() + getAgilityProgressLevel() + getIntelligenceProgressLevel() - 2;
+    public CharacterState(FormulaService formula) {
+        this.FORMULA = formula;
     }
 
     public String getCharacterName() {
@@ -166,6 +91,7 @@ public class CharacterState extends State {
 
     public CharacterState setStrengthProgressLevel(Integer strengthProgressLevel) {
         this.strengthProgressLevel = strengthProgressLevel;
+        this.strengthNextLevel = FORMULA.getNextLevelExp(strengthProgressLevel);
         return this;
     }
 
@@ -184,6 +110,7 @@ public class CharacterState extends State {
 
     public CharacterState setAgilityProgressLevel(Integer agilityProgressLevel) {
         this.agilityProgressLevel = agilityProgressLevel;
+        this.agilityNextLevel = FORMULA.getNextLevelExp(agilityProgressLevel);
         return this;
     }
 
@@ -202,6 +129,7 @@ public class CharacterState extends State {
 
     public CharacterState setIntelligenceProgressLevel(Integer intelligenceProgressLevel) {
         this.intelligenceProgressLevel = intelligenceProgressLevel;
+        this.intelligenceNextLevel = FORMULA.getNextLevelExp(intelligenceProgressLevel);
         return this;
     }
 

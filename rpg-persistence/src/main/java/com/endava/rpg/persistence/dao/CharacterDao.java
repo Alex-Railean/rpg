@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public class CharacterDao extends Dao<Character> {
 
     @Autowired
-    public CharacterDao(SessionFactory sessionFactory) {
+    private CharacterDao(SessionFactory sessionFactory) {
         super(Character.class, sessionFactory);
     }
 }

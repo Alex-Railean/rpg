@@ -1,9 +1,10 @@
 package com.endava.rpg.gp.services.battle;
 
-import com.endava.rpg.gp.statemodels.CreepState;
-import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.adapters.CreepAdaptor;
+import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.ProcessorUtil;
+import com.endava.rpg.gp.util.Refreshable;
 import com.endava.rpg.persistence.models.Creep;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
@@ -20,8 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class CreepLocationService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreepLocationService.class);
+
+public class LocationService implements Refreshable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocationService.class);
 
     private final PersistenceService PS;
 
@@ -34,7 +36,7 @@ public class CreepLocationService {
     private CreepState currentEnemy;
 
     @Autowired
-    public CreepLocationService(PersistenceService ps, CharacterStateService characterState, CreepAdaptor creepAdaptor) {
+    private LocationService(PersistenceService ps, CharacterStateService characterState, CreepAdaptor creepAdaptor) {
         this.PS = ps;
         this.CHAR_STATE_SERVICE = characterState;
         this.CREEP_ADAPTOR = creepAdaptor;
@@ -97,5 +99,11 @@ public class CreepLocationService {
         return new ArrayList<>(Stream.of(creep.getSpell_1(), creep.getSpell_2(), creep.getSpell_3())
                 .filter(spell -> !spell.getAttribute().equals("none"))
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public void refresh() {
+        creepGroup = new ArrayList<>();
+        currentEnemy = new CreepState();
     }
 }

@@ -5,6 +5,7 @@ import com.endava.rpg.gp.services.game.FormulaService;
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.gp.util.ProcessorUtil;
+import com.endava.rpg.gp.util.Refreshable;
 import com.endava.rpg.persistence.models.Spell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
-public class SpellService {
+public class SpellService implements Refreshable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpellService.class);
 
     private final ActionBarService ACTION_BAR_SERVICE;
@@ -30,7 +31,7 @@ public class SpellService {
     private Integer biggestDmg = 0;
 
     @Autowired
-    public SpellService(ActionBarService actionBarService,
+    private SpellService(ActionBarService actionBarService,
                         CharacterStateService characterStateService,
                         ExpService expService,
                         FormulaService formulaService) {
@@ -45,14 +46,14 @@ public class SpellService {
         useSpellTo(usedSpell, target, CHAR_STATE_SERVICE.getCharacterState());
     }
 
-    public void useSpellTo(Spell usedSpell, State target, State manaHolder) {
+    public void useSpellTo(Spell usedSpell, State target, State caster) {
         if (usedSpell.getSpellType().equals("Attack")) {
             makeDamage(target, usedSpell.getCoefficient());
-            takeCost(usedSpell, manaHolder);
+            takeCost(usedSpell, caster);
             EXP.addAttributeExp(usedSpell.getAttribute());
         } else {
-            protection(manaHolder, usedSpell.getCoefficient());
-            takeCost(usedSpell, manaHolder);
+            protection(caster, usedSpell.getCoefficient());
+            takeCost(usedSpell, caster);
             EXP.addAttributeExp(usedSpell.getAttribute());
         }
     }
@@ -62,13 +63,13 @@ public class SpellService {
         return isManaEnough(usedSpell, CHAR_STATE_SERVICE.getCharacterState());
     }
 
-    public boolean isManaEnough(Spell usedSpell, State manaHolder) {
+    public boolean isManaEnough(Spell usedSpell, State caster) {
         String spellSchool = usedSpell.getSchool();
 
         if (spellSchool.equals("physical")) {
-            return manaHolder.getCurrentEnergy() - usedSpell.getCost() >= 0;
+            return caster.getCurrentEnergy() - usedSpell.getCost() >= 0;
         } else {
-            return manaHolder.getCurrentMp() - FORMULA.getManaCost(usedSpell) >= 0;
+            return caster.getCurrentMp() - FORMULA.getManaCost(usedSpell) >= 0;
         }
     }
 
@@ -79,25 +80,25 @@ public class SpellService {
 
         this.lastMovePoints = protectionCoefficient;
 
-        LOGGER.info("Calculated DMG is -> " + protectionCoefficient);
+        LOGGER.info("Calculated Protection is -> " + protectionCoefficient);
     }
 
     private Spell getSpellFromActionBar(Integer actionBarNumber) {
         return ACTION_BAR_SERVICE.getActionBarMap().get(actionBarNumber);
     }
 
-    private void takeCost(Spell spell, State manaHolder) {
+    private void takeCost(Spell spell, State caster) {
         String spellType = spell.getSchool();
         int manaCost = FORMULA.getManaCost(spell);
 
         if (spellType.equals("physical")) {
-            manaHolder.setCurrentEnergy(manaHolder.getCurrentEnergy() - spell.getCost());
+            caster.setCurrentEnergy(caster.getCurrentEnergy() - spell.getCost());
         } else {
-            manaHolder.setCurrentMp(manaHolder.getCurrentMp() - manaCost);
+            caster.setCurrentMp(caster.getCurrentMp() - manaCost);
         }
     }
 
-    // Investigate best approach
+    //TODO Investigate best approach
     private void makeDamage(State target, int damageCoefficient) {
         damageCoefficient = FORMULA.getDamage(damageCoefficient);
 
@@ -121,7 +122,7 @@ public class SpellService {
 
         this.lastMovePoints = damageCoefficient;
 
-        biggestDmg = biggestDmg > damageCoefficient ? damageCoefficient : biggestDmg;
+        biggestDmg = biggestDmg > damageCoefficient ? biggestDmg : damageCoefficient;
 
         LOGGER.info("Calculated DMG is -> " + damageCoefficient);
     }
@@ -129,8 +130,8 @@ public class SpellService {
 
     private boolean isCritical(State target) {
         return target instanceof CharacterState ?
-                new Random().nextInt(100) <= CHAR_STATE_SERVICE.getCharacterState().getAgilityProgressLevel() :
-                new Random().nextInt(100) <= 25;
+                new Random().nextInt(100) <= 25 :
+                new Random().nextInt(100) <= CHAR_STATE_SERVICE.getCharacterState().getAgilityProgressLevel();
     }
 
     public Integer getLastMovePoints() {
@@ -139,5 +140,11 @@ public class SpellService {
 
     public Integer getBiggestDmg() {
         return biggestDmg;
+    }
+
+    @Override
+    public void refresh() {
+        this.lastMovePoints = 0;
+        this.biggestDmg = 0;
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public class ProgressDao extends Dao<Progress> {
 
     @Autowired
-    public ProgressDao(SessionFactory sessionFactory) {
+    private ProgressDao(SessionFactory sessionFactory) {
         super(Progress.class, sessionFactory);
     }
 }

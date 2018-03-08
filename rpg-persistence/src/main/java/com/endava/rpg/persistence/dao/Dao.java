@@ -69,6 +69,17 @@ public class Dao<R extends TableMapping> {
         return entity;
     }
 
+    public boolean deleteAll() {
+        try (Session session = sessionFactory.openSession()) {
+            Query query = session.createQuery("DELETE FROM " + RTC.getSimpleName());
+            query.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            LOGGER.error("Error -> {}", ex.getMessage());
+            LOGGER.debug("Full error -> {}", ex);
+            return false;
+        }
+    }
     public R update(R entity) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();

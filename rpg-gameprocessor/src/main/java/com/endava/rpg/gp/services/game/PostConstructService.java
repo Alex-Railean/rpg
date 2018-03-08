@@ -18,16 +18,15 @@ public class PostConstructService {
     private final PersistenceService PS;
 
     @Autowired
-    public PostConstructService(PersistenceService ps) {
+    private PostConstructService(PersistenceService ps) {
         this.PS = ps;
     }
 
     @PostConstruct
-    private void injectAll(){
+    private void injectAll() {
         injectAllSpells();
         injectAllCreeps();
     }
-
 
     private void injectAllSpells() {
         List<String[]> spells = new CSVReader("spells.csv").getAsListOfArrays();

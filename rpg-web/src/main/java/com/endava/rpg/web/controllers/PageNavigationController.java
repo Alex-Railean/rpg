@@ -1,5 +1,6 @@
 package com.endava.rpg.web.controllers;
 
+import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,12 @@ public class PageNavigationController {
 
     private final CharacterStateService CHAR_STATE_SERVICE;
 
+    private final Refresher REFRESHER;
+
     @Autowired
-    public PageNavigationController(CharacterStateService characterStateService) {
+    public PageNavigationController(CharacterStateService characterStateService, Refresher REFRESHER) {
         this.CHAR_STATE_SERVICE = characterStateService;
+        this.REFRESHER = REFRESHER;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -29,8 +33,9 @@ public class PageNavigationController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String toLocation(String characterName) {
+        REFRESHER.refresh();
         CHAR_STATE_SERVICE.defineCharacter(characterName);
-        LOGGER.info("Character Successfully Defined");
+        LOGGER.info("Character was Successfully Defined");
         return "redirect:/" + CHAR_STATE_SERVICE.getLocation();
     }
 

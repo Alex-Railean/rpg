@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public class SpellDao extends Dao<Spell> {
 
     @Autowired
-    public SpellDao(SessionFactory sessionFactory) {
+    private SpellDao(SessionFactory sessionFactory) {
         super(Spell.class, sessionFactory);
     }
 }
