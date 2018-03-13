@@ -18,22 +18,22 @@
         <img src="/resources/img/testCharacter.jpg" alt="character-image">
     </div>
     <div class="spells">
-    <#list actionBar as abNumber, abImage>
-        <a href="/battle/use-spell/${abNumber}"><img src="${abImage.getSpellURL()}" class="spellImg" alt="spell-image"></a>
+    <#list actionBar as abNumber, abSpell>
+        <a href="/battle/use-spell/<#if abSpell.getSpellURL() != "/resources/img/empty.jpg">${abNumber}<#else>0</#if>">
+            <img src="${abSpell.getSpellURL()}" class="spellImg" alt="spell-image">
+        </a>
     </#list>
     </div>
     <div class="bars-exp">
         <div class="strength-exp">
         ${strength}/${strengthNextLevel} (${strengthLevel})
-            <a href="/character/talents/strength" class="talents-link">Strength Talents</a>
         </div>
         <div class="agility-exp">
         ${agility}/${agilityNextLevel} (${agilityLevel})
-            <a href="/character/talents/agility" class="talents-link">Agility Talents</a>
         </div>
         <div class="intelligence-exp">
         ${intelligence}/${intelligenceNextLevel} (${intelligenceLevel})
-            <a href="/character/talents/intelligence" class="talents-link">Intelligence Talents</a>
         </div>
+        <div><a href="/talents" class="talents-link">Talents</a></div>
     </div>
 </div>

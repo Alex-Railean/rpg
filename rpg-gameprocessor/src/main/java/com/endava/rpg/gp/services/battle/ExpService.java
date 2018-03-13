@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 public class ExpService implements Refreshable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpService.class);
 
-    private final CharacterStateService CHAR_STATE_SERVICE;
+    private final CharacterStateService CHAR_STATE;
 
     private final FormulaService FORMULA;
 
@@ -26,7 +26,7 @@ public class ExpService implements Refreshable {
 
     @Autowired
     private ExpService(CharacterStateService characterStateService, FormulaService formulaService) {
-        this.CHAR_STATE_SERVICE = characterStateService;
+        this.CHAR_STATE = characterStateService;
         this.FORMULA = formulaService;
     }
 
@@ -59,13 +59,13 @@ public class ExpService implements Refreshable {
     }
 
     public void updateProgresses() {
-        CHAR_STATE_SERVICE.updateStrengthProgress(getDeservedExp(strengthEpx));
-        CHAR_STATE_SERVICE.updateAgilityProgress(getDeservedExp(agilityExp));
-        CHAR_STATE_SERVICE.updateIntelligenceProgress(getDeservedExp(intelligenceExp));
+        CHAR_STATE.updateStrengthProgress(getDeservedExp(strengthEpx));
+        CHAR_STATE.updateAgilityProgress(getDeservedExp(agilityExp));
+        CHAR_STATE.updateIntelligenceProgress(getDeservedExp(intelligenceExp));
     }
 
     private int getDeservedExp(int exp) {
-        return CHAR_STATE_SERVICE.isCharacterDead() ? exp / 4 : exp;
+        return CHAR_STATE.isCharacterDead() ? exp / 4 : exp;
     }
 
     public Model getExpModel(Model model) {

@@ -6,16 +6,16 @@
     <link rel="stylesheet" href="/resources/css/main.css">
 </head>
 <body>
-<#include "modules/header.ftl">
-<div class="container">
-    <div class="row">
-        <#include "modules/character.ftl">
-        <#include "modules/enemies.ftl">
-    </div>
-    <a href="/battle/wait"><button type="button" class="btn btn-dark">Wait</button></a>
+<#include "../../modules/header.ftl">
+
+<#list branches as branch>
+<p>${branch.getName()}</p>
+<a href="/talents/${branch.getLinkName()}/"><img src="${branch.getURL()}" alt="branch-image"></a>
+</#list>
+
 <#if warningMessage??>
     <div class="alert alert-primary" role="alert">
-        ${warningMessage}
+    ${warningMessage}
     </div>
 </#if>
 </div>

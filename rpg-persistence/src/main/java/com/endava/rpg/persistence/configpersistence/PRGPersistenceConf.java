@@ -44,7 +44,12 @@ public class PRGPersistenceConf {
         props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
 
         factoryBean.setHibernateProperties(props);
-        factoryBean.setAnnotatedClasses(Character.class, Progress.class, ActionBar.class, Spell.class, Creep.class);
+        factoryBean.setAnnotatedClasses(Character.class,
+                Progress.class,
+                ActionBar.class,
+                Spell.class,
+                Technologies.class,
+                Creep.class);
         return factoryBean;
     }
 

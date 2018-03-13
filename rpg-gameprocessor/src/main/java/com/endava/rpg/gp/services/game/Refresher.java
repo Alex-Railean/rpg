@@ -2,8 +2,8 @@ package com.endava.rpg.gp.services.game;
 
 import com.endava.rpg.gp.services.battle.BattleService;
 import com.endava.rpg.gp.services.battle.ExpService;
-import com.endava.rpg.gp.services.battle.LocationService;
-import com.endava.rpg.gp.services.state.SpellService;
+import com.endava.rpg.gp.services.battle.location.LocationService;
+import com.endava.rpg.gp.services.battle.SpellService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -6,14 +6,12 @@
     <link rel="stylesheet" href="/resources/css/main.css">
 </head>
 <body>
-<#include "modules/header.ftl">
+<#include "../modules/header.ftl">
 <div class="container">
     <div class="row">
-    <#include "modules/character.ftl">
+    <#include "../modules/character.ftl">
         <div class="creeps col-6">
-            <form action="/toBattle" method="get">
-                <button type="submit" class="btn btn-danger">To Battle!</button>
-            </form>
+            <a href="/battle"><button type="submit" class="btn btn-danger">To Battle!</button></a>
         <#list creepsGroup as creep>
             <span> ${creep.getCreepName()} [${creep.getCreepLevel()}] (${creep.getCurrentHp()}/${creep.getHp()}); </span>
         </#list>

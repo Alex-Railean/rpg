@@ -1,8 +1,8 @@
 package com.endava.rpg.gp.services.responsiveness;
 
-import com.endava.rpg.gp.services.battle.LocationService;
+import com.endava.rpg.gp.services.battle.location.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
-import com.endava.rpg.gp.services.state.SpellService;
+import com.endava.rpg.gp.services.battle.SpellService;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.persistence.models.Spell;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,36 +12,37 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class SpellChoiceService {
+public class ResponseService {
 
     private final LocationService LOCATION;
 
     private final SpellService SPELL_SERVICE;
 
-    private final CharacterStateService CHAR_STATE_SERVICE;
+    private final CharacterStateService CHAR_STATE;
 
     @Autowired
-    private SpellChoiceService(LocationService locationService, SpellService spellService, CharacterStateService characterStateService) {
+    private ResponseService(LocationService locationService, SpellService spellService, CharacterStateService characterStateService) {
         this.LOCATION = locationService;
         this.SPELL_SERVICE = spellService;
-        this.CHAR_STATE_SERVICE = characterStateService;
+        this.CHAR_STATE = characterStateService;
     }
 
     public void creepResponse() {
         LOCATION.getCreepGroup()
                 .forEach(creep -> {
                     if (isAlmostDead(creep)) {
-                        List<Spell> spells = LOCATION.getEnemyProtectionSpells(creep);
+                        List<Spell> spells = SPELL_SERVICE.getEnemyProtectionSpells(creep);
                         Spell toCast;
                         if (SPELL_SERVICE.isManaEnough(toCast = chooseAppropriate(spells), creep)) {
-                            SPELL_SERVICE.useSpellTo(toCast, CHAR_STATE_SERVICE.getCharacterState(), creep);
-                        } else if (chooseAnotherOption(LOCATION.getEnemySpells(creep)) != null) {
-                            SPELL_SERVICE.useSpellTo(chooseAnotherOption(LOCATION.getEnemySpells(creep)), CHAR_STATE_SERVICE.getCharacterState(), creep);
+                            SPELL_SERVICE.useSpellTo(toCast, CHAR_STATE.getCharacterState(), creep);
+                        } else if (chooseAnotherOption(SPELL_SERVICE.getEnemySpells(creep)) != null) {
+                            SPELL_SERVICE.useSpellTo(chooseAnotherOption(SPELL_SERVICE.getEnemySpells(creep)), CHAR_STATE.getCharacterState(), creep);
                         }
 
                     } else {
-                        SPELL_SERVICE.useSpellTo(chooseStrongestSpell(LOCATION.getEnemyAttackSpells(creep)),
-                                CHAR_STATE_SERVICE.getCharacterState(),
+                        //TODO: OOM option
+                        SPELL_SERVICE.useSpellTo(chooseStrongestSpell(SPELL_SERVICE.getEnemyAttackSpells(creep)),
+                                CHAR_STATE.getCharacterState(),
                                 creep);
                     }
                 });

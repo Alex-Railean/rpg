@@ -1,8 +1,10 @@
-package com.endava.rpg.gp.services.state;
+package com.endava.rpg.gp.services.battle;
 
-import com.endava.rpg.gp.services.battle.ExpService;
 import com.endava.rpg.gp.services.game.FormulaService;
+import com.endava.rpg.gp.services.state.ActionBarService;
+import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
+import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.gp.util.Refreshable;
@@ -12,7 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SpellService implements Refreshable {
@@ -20,30 +26,30 @@ public class SpellService implements Refreshable {
 
     private final ActionBarService ACTION_BAR_SERVICE;
 
-    private final CharacterStateService CHAR_STATE_SERVICE;
+    private final CharacterStateService CHAR_STATE;
 
     private final ExpService EXP;
 
     private final FormulaService FORMULA;
 
-    private Integer lastMovePoints;
+    private Integer lastMovePoints = 0;
 
     private Integer biggestDmg = 0;
 
     @Autowired
     private SpellService(ActionBarService actionBarService,
-                        CharacterStateService characterStateService,
-                        ExpService expService,
-                        FormulaService formulaService) {
+                         CharacterStateService characterStateService,
+                         ExpService expService,
+                         FormulaService formulaService) {
         this.ACTION_BAR_SERVICE = actionBarService;
-        this.CHAR_STATE_SERVICE = characterStateService;
+        this.CHAR_STATE = characterStateService;
         this.EXP = expService;
         this.FORMULA = formulaService;
     }
 
     public void useSpellTo(Integer actionBarNumber, State target) {
         Spell usedSpell = getSpellFromActionBar(actionBarNumber);
-        useSpellTo(usedSpell, target, CHAR_STATE_SERVICE.getCharacterState());
+        useSpellTo(usedSpell, target, CHAR_STATE.getCharacterState());
     }
 
     public void useSpellTo(Spell usedSpell, State target, State caster) {
@@ -60,7 +66,7 @@ public class SpellService implements Refreshable {
 
     public boolean doesHaveEnoughMana(Integer actionBarNumber) {
         Spell usedSpell = getSpellFromActionBar(actionBarNumber);
-        return isManaEnough(usedSpell, CHAR_STATE_SERVICE.getCharacterState());
+        return isManaEnough(usedSpell, CHAR_STATE.getCharacterState());
     }
 
     public boolean isManaEnough(Spell usedSpell, State caster) {
@@ -127,11 +133,10 @@ public class SpellService implements Refreshable {
         LOGGER.info("Calculated DMG is -> " + damageCoefficient);
     }
 
-
     private boolean isCritical(State target) {
         return target instanceof CharacterState ?
                 new Random().nextInt(100) <= 25 :
-                new Random().nextInt(100) <= CHAR_STATE_SERVICE.getCharacterState().getAgilityProgressLevel();
+                new Random().nextInt(100) <= CHAR_STATE.getCharacterState().getAgilityProgressLevel();
     }
 
     public Integer getLastMovePoints() {
@@ -140,6 +145,24 @@ public class SpellService implements Refreshable {
 
     public Integer getBiggestDmg() {
         return biggestDmg;
+    }
+
+    public List<Spell> getEnemyProtectionSpells(CreepState creep) {
+        return getEnemySpells(creep).stream()
+                .filter(spell -> spell.getSpellType().equals("Protection"))
+                .collect(Collectors.toList());
+    }
+
+    public List<Spell> getEnemyAttackSpells(CreepState creep) {
+        return getEnemySpells(creep).stream()
+                .filter(spell -> spell.getSpellType().equals("Attack"))
+                .collect(Collectors.toList());
+    }
+
+    public List<Spell> getEnemySpells(CreepState creep) {
+        return new ArrayList<>(Stream.of(creep.getSpell_1(), creep.getSpell_2(), creep.getSpell_3())
+                .filter(spell -> !spell.getAttribute().equals("none"))
+                .collect(Collectors.toList()));
     }
 
     @Override

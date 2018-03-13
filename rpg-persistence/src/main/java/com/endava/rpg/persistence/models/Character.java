@@ -1,7 +1,10 @@
 package com.endava.rpg.persistence.models;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "T_CHARACTER")
@@ -25,6 +28,22 @@ public class Character implements TableMapping {
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "ACTION_BAR_ID")
     private ActionBar actionBar;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "T_AVAILABLE_SPELLS", joinColumns = {@JoinColumn(name = "CHARACTER_ID")}, inverseJoinColumns = {@JoinColumn(name = "SPELL_ID")})
+    private List<Spell> availableSpells;
+
+    @OneToOne(mappedBy = "character")
+    private Technologies technologies;
+
+    public List<Spell> getAvailableSpells() {
+        return availableSpells;
+    }
+
+    public void setAvailableSpells(List<Spell> spells) {
+        this.availableSpells = spells;
+    }
 
     public Character(String characterName, Progress progress, ActionBar actionBar) {
         this.characterName = characterName;
@@ -72,6 +91,15 @@ public class Character implements TableMapping {
 
     public Character setLocation(String location) {
         this.location = location;
+        return this;
+    }
+
+    public Technologies getTechnologies() {
+        return technologies;
+    }
+
+    public Character setTechnologies(Technologies technologies) {
+        this.technologies = technologies;
         return this;
     }
 }

@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.services.game;
 
 import com.endava.rpg.gp.adapters.CSVAdapter;
+import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.services.PersistenceService;
 import com.endava.rpg.persistence.services.utils.CSVReader;
 import org.slf4j.Logger;
@@ -31,9 +32,7 @@ public class PostConstructService {
     private void injectAllSpells() {
         List<String[]> spells = new CSVReader("spells.csv").getAsListOfArrays();
         if (PS.getAllSpells().size() < spells.size()) {
-
             spells.forEach(spell -> PS.saveSpell(CSVAdapter.arrayToSpell(spell)));
-
             LOGGER.info("All Spells from CSV are saved in DB");
         }
     }

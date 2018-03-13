@@ -35,6 +35,8 @@ public class CharacterState extends State {
 
     private Integer mpRegeneration = 5;
 
+    private Integer defaultEnergy = 100;
+
     private Integer energy = 100;
 
     private Integer energyRegeneration = 10;
@@ -62,6 +64,8 @@ public class CharacterState extends State {
     private String location;
 
     private Double criticalDmgCoefficient = 1.8;
+    
+    private Double stunResistancePercentage = 0D;
 
     public CharacterState(FormulaService formula) {
         this.FORMULA = formula;
@@ -290,6 +294,14 @@ public class CharacterState extends State {
         return this;
     }
 
+    public Integer getDefaultEnergy() {
+        return defaultEnergy;
+    }
+
+    public void setDefaultEnergy(Integer defaultEnergy) {
+        this.defaultEnergy = defaultEnergy;
+    }
+
     @Override
     public Integer getEnergy() {
         return energy;
@@ -321,5 +333,13 @@ public class CharacterState extends State {
     public CharacterState setCriticalDmgCoefficient(Double criticalDmgCoefficient) {
         this.criticalDmgCoefficient = criticalDmgCoefficient;
         return this;
+    }
+
+    public Double getStunResistancePercentage() {
+        return stunResistancePercentage;
+    }
+
+    public void setStunResistancePercentage(Double stunResistancePercentage) {
+        this.stunResistancePercentage = stunResistancePercentage;
     }
 }

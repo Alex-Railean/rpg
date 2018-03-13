@@ -1,8 +1,8 @@
 package com.endava.rpg.gp.services.battle;
 
-import com.endava.rpg.gp.services.responsiveness.SpellChoiceService;
+import com.endava.rpg.gp.services.battle.location.LocationService;
+import com.endava.rpg.gp.services.responsiveness.ResponseService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
-import com.endava.rpg.gp.services.state.SpellService;
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.Refreshable;
@@ -14,42 +14,42 @@ public class BattleService implements Refreshable {
 
     private final SpellService SPELL_SERVICE;
 
-    private final LocationService CREEP_LOCATION;
+    private final LocationService LOCATION;
 
     private final CharacterStateService CHARACTER_STATE_SERVICE;
 
-    private final SpellChoiceService SPELL_CHOICE;
+    private final ResponseService RESPONSE;
 
     private Long battleId;
 
     @Autowired
-    private BattleService(SpellService spellService, LocationService creepLocation, CharacterStateService characterState, SpellChoiceService spellChoice) {
+    private BattleService(SpellService spellService, LocationService creepLocation, CharacterStateService characterState, ResponseService spellChoice) {
         this.SPELL_SERVICE = spellService;
-        this.CREEP_LOCATION = creepLocation;
+        this.LOCATION = creepLocation;
         this.CHARACTER_STATE_SERVICE = characterState;
-        this.SPELL_CHOICE = spellChoice;
+        this.RESPONSE = spellChoice;
     }
 
     public boolean isEndOfBattle() {
-        return CHARACTER_STATE_SERVICE.isCharacterDead() || CREEP_LOCATION.getCreepGroup().size() == 0;
+        return CHARACTER_STATE_SERVICE.isCharacterDead() || LOCATION.getCreepGroup().size() == 0;
     }
 
     public void makeATurn(Integer actionBarNumber, CreepState currentEnemy) {
         SPELL_SERVICE.useSpellTo(actionBarNumber, currentEnemy);
-        SPELL_CHOICE.creepResponse();
+        RESPONSE.creepResponse();
         seekDeath();
         useRegeneration();
     }
 
     public void waitATurn() {
-        SPELL_CHOICE.creepResponse();
+        RESPONSE.creepResponse();
         seekDeath();
         useRegeneration();
     }
 
     private void useRegeneration() {
         CharacterState character = CHARACTER_STATE_SERVICE.getCharacterState();
-        CREEP_LOCATION.getCreepGroup()
+        LOCATION.getCreepGroup()
                 .forEach(creep -> {
                     if (creep.getCurrentHp() < creep.getHp()) {
                         creep.setCurrentHp(creep.getCurrentHp() + creep.getHpRegeneration() >= creep.getHp() ?
@@ -90,8 +90,8 @@ public class BattleService implements Refreshable {
     }
 
     private void seekDeath() {
-        if (CREEP_LOCATION.isCurrentEnemyDead()) {
-            CREEP_LOCATION.getCreepGroup().remove(CREEP_LOCATION.getCurrentEnemy());
+        if (LOCATION.isCurrentEnemyDead()) {
+            LOCATION.getCreepGroup().remove(LOCATION.getCurrentEnemy());
         }
     }
 

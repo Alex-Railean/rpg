@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.services.battle;
+package com.endava.rpg.gp.services.battle.location;
 
 import com.endava.rpg.gp.adapters.CreepAdaptor;
 import com.endava.rpg.gp.services.state.CharacterStateService;
@@ -6,7 +6,6 @@ import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.gp.util.Refreshable;
 import com.endava.rpg.persistence.models.Creep;
-import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +15,6 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 
@@ -27,7 +23,7 @@ public class LocationService implements Refreshable {
 
     private final PersistenceService PS;
 
-    private final CharacterStateService CHAR_STATE_SERVICE;
+    private final CharacterStateService CHAR_STATE;
 
     private final CreepAdaptor CREEP_ADAPTOR;
 
@@ -38,14 +34,14 @@ public class LocationService implements Refreshable {
     @Autowired
     private LocationService(PersistenceService ps, CharacterStateService characterState, CreepAdaptor creepAdaptor) {
         this.PS = ps;
-        this.CHAR_STATE_SERVICE = characterState;
+        this.CHAR_STATE = characterState;
         this.CREEP_ADAPTOR = creepAdaptor;
     }
 
     public Model getRandomCreepGroup(Model model, String location) {
         List<Creep> creeps = PS.getCreepsFromLocation(location);
         List<CreepState> creepGroup = new ArrayList<>();
-        int lvl = CHAR_STATE_SERVICE.getCharacterState().getCharacterLevel();
+        int lvl = CHAR_STATE.getCharacterState().getCharacterLevel();
         int groupSize = ProcessorUtil.getRandomInt(1, lvl);
 
         for (int i = 0; i < groupSize; i++) {
@@ -63,8 +59,7 @@ public class LocationService implements Refreshable {
     }
 
     public Model getCurrentEnemyAndGroup(Model model) {
-        currentEnemy = creepGroup.get(creepGroup.size() == 1 ?
-                0 : ThreadLocalRandom.current().nextInt(0, creepGroup.size()));
+        currentEnemy = creepGroup.get(ProcessorUtil.getRandomInt(0, creepGroup.size() - 1));
         model.addAttribute("currentEnemy", currentEnemy);
         model.addAttribute("creepsGroup", this.creepGroup);
 
@@ -81,24 +76,6 @@ public class LocationService implements Refreshable {
 
     public CreepState getCurrentEnemy() {
         return currentEnemy;
-    }
-
-    public List<Spell> getEnemyProtectionSpells(CreepState creep) {
-        return getEnemySpells(creep).stream()
-                .filter(spell -> spell.getSpellType().equals("Protection"))
-                .collect(Collectors.toList());
-    }
-
-    public List<Spell> getEnemyAttackSpells(CreepState creep) {
-        return getEnemySpells(creep).stream()
-                .filter(spell -> spell.getSpellType().equals("Attack"))
-                .collect(Collectors.toList());
-    }
-
-    public List<Spell> getEnemySpells(CreepState creep) {
-        return new ArrayList<>(Stream.of(creep.getSpell_1(), creep.getSpell_2(), creep.getSpell_3())
-                .filter(spell -> !spell.getAttribute().equals("none"))
-                .collect(Collectors.toList()));
     }
 
     @Override

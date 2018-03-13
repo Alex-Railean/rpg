@@ -1,13 +1,8 @@
 package com.endava.rpg.persistence.services;
 
-import com.endava.rpg.persistence.dao.CharacterDao;
-import com.endava.rpg.persistence.dao.CreepDao;
-import com.endava.rpg.persistence.dao.ProgressDao;
-import com.endava.rpg.persistence.dao.SpellDao;
+import com.endava.rpg.persistence.dao.*;
+import com.endava.rpg.persistence.models.*;
 import com.endava.rpg.persistence.models.Character;
-import com.endava.rpg.persistence.models.Creep;
-import com.endava.rpg.persistence.models.Progress;
-import com.endava.rpg.persistence.models.Spell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +19,15 @@ public class PersistenceService {
 
     private final ProgressDao PROGRESS;
 
+    private final TechnologiesDao TECHNOLOGIES;
+
     @Autowired
-    private PersistenceService(CharacterDao character, SpellDao spells, CreepDao creeps, ProgressDao progress) {
+    private PersistenceService(CharacterDao character, SpellDao spells, CreepDao creeps, ProgressDao progress, TechnologiesDao technologies) {
         this.CHARACTER = character;
         this.SPELLS = spells;
         this.CREEPS = creeps;
         this.PROGRESS = progress;
+        this.TECHNOLOGIES = technologies;
     }
 
     public Character saveCharacter(Character character) {
@@ -78,5 +76,13 @@ public class PersistenceService {
 
     public boolean deleteAllSpells() {
         return SPELLS.deleteAll();
+    }
+
+    public Technologies saveTech(Technologies technologies){
+        return TECHNOLOGIES.save(technologies);
+    }
+
+    public Technologies updateTech(Technologies technologies){
+        return TECHNOLOGIES.update(technologies);
     }
 }

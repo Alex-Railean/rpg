@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @Service
@@ -28,18 +27,7 @@ public class CharacterStateService {
 
     private FormulaService formula;
 
-    @PostConstruct
-    public Character saveTestCharacter() {
-        if ((ps.getCharacterByName("Admin") == null)) {
-            LOGGER.info("Test Admin User is Created");
-            return ps.saveCharacter(new Character(
-                    "Admin",
-                    new Progress(),
-                    new ActionBar()));
-
-        }
-        return ps.getCharacterByName("Admin");
-    }
+    private TalentService talent;
 
     public CharacterState getCharacterState() {
         return characterState;
@@ -64,27 +52,27 @@ public class CharacterStateService {
         return characterState.getLocation();
     }
 
-    public Model getCharacterModel(Model model) {
+    public <M extends Model> M getCharacterModel(M model) {
         Map<Integer, Spell> actionBar = actionBarService.getActionBarMap();
-        model.addAttribute("characterName", characterState.getCharacterName());
-        model.addAttribute("characterLevel", characterState.getCharacterLevel());
-        model.addAttribute("hp", characterState.getHp());
-        model.addAttribute("currentHp", characterState.getCurrentHp());
-        model.addAttribute("mp", characterState.getMp());
-        model.addAttribute("currentMp", characterState.getCurrentMp());
-        model.addAttribute("energy", characterState.getEnergy());
-        model.addAttribute("currentEnergy", characterState.getCurrentEnergy());
-        model.addAttribute("actionBar", actionBar);
-        model.addAttribute("strengthLevel", characterState.getStrengthProgressLevel());
-        model.addAttribute("strength", characterState.getStrengthProgress());
-        model.addAttribute("strengthNextLevel", characterState.getStrengthNextLevel());
-        model.addAttribute("agilityLevel", characterState.getAgilityProgressLevel());
-        model.addAttribute("agility", characterState.getAgilityProgress());
-        model.addAttribute("agilityNextLevel", characterState.getAgilityNextLevel());
-        model.addAttribute("intelligenceLevel", characterState.getIntelligenceProgressLevel());
-        model.addAttribute("intelligence", characterState.getIntelligenceProgress());
-        model.addAttribute("intelligenceNextLevel", characterState.getIntelligenceNextLevel());
-        model.addAttribute("shield", characterState.getShieldPoints());
+        model.addAttribute("characterName", characterState.getCharacterName())
+                .addAttribute("characterLevel", characterState.getCharacterLevel())
+                .addAttribute("hp", characterState.getHp())
+                .addAttribute("currentHp", characterState.getCurrentHp())
+                .addAttribute("mp", characterState.getMp())
+                .addAttribute("currentMp", characterState.getCurrentMp())
+                .addAttribute("energy", characterState.getEnergy())
+                .addAttribute("currentEnergy", characterState.getCurrentEnergy())
+                .addAttribute("actionBar", actionBar)
+                .addAttribute("strengthLevel", characterState.getStrengthProgressLevel())
+                .addAttribute("strength", characterState.getStrengthProgress())
+                .addAttribute("strengthNextLevel", characterState.getStrengthNextLevel())
+                .addAttribute("agilityLevel", characterState.getAgilityProgressLevel())
+                .addAttribute("agility", characterState.getAgilityProgress())
+                .addAttribute("agilityNextLevel", characterState.getAgilityNextLevel())
+                .addAttribute("intelligenceLevel", characterState.getIntelligenceProgressLevel())
+                .addAttribute("intelligence", characterState.getIntelligenceProgress())
+                .addAttribute("intelligenceNextLevel", characterState.getIntelligenceNextLevel())
+                .addAttribute("shield", characterState.getShieldPoints());
 
         return model;
     }
@@ -142,14 +130,28 @@ public class CharacterStateService {
     public CharacterState defineCharacter(String characterName) {
         if (ps.getCharacterByName(characterName) != null) {
             LOGGER.info("Defined an Existing Character");
-            return reloadCharacter(ps.getCharacterByName(characterName));
+            Character character = ps.getCharacterByName(characterName);
+            CharacterState characterState = reloadCharacter(character);
+            talent.defineTalents(character);
+            talent.affect();
+            return characterState;
         }
 
         LOGGER.info("Defined a New Character");
-        return reloadCharacter(ps.saveCharacter(new Character(
+        Character character = ps.saveCharacter(new Character(
                 characterName,
                 new Progress(),
-                new ActionBar())));
+                new ActionBar()));
+        CharacterState characterState = reloadCharacter(character);
+        talent.createAll(character);
+        talent.affect();
+        return characterState;
+    }
+
+    public <M extends Model> M getHeaderData(M model) {
+        model.addAttribute("characterName", getCharacterState().getCharacterName())
+                .addAttribute("characterLevel", getCharacterState().getCharacterLevel());
+        return model;
     }
 
     private CharacterState reloadCharacter(Character character) {
@@ -215,5 +217,10 @@ public class CharacterStateService {
     @Autowired
     private void setFormula(FormulaService formula) {
         this.formula = formula;
+    }
+
+    @Autowired
+    public void setTalent(TalentService talent) {
+        this.talent = talent;
     }
 }

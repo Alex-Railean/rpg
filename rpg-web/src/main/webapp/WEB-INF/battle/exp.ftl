@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/resources/css/main.css">
 </head>
 <body>
-<#include "modules/header.ftl">
+<#include "../modules/header.ftl">
 <div class="container">
     <div class="row">
         <div class="col-sm"></div>

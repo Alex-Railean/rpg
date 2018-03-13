@@ -24,6 +24,22 @@
     margin-bottom: 25px;
 }
 
+.spellbook-form{
+    margin-top: 3px;
+}
+
+.bottom-button{
+    margin-top: 15px;
+}
+
+.spells{
+    margin-top: 10px;
+}
+
+.talent-counter, .points-button{
+    width: 50px;
+}
+
 @media (min-width: 992px){
     .container {
         max-width: 100%;
