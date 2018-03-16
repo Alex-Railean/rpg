@@ -20,21 +20,25 @@ public class CreepAdaptor {
         this.FORMULA = formula;
     }
 
-    public CreepState toCreepState(Creep creep){
+    public CreepState toCreepState(Creep creep) {
         Integer lvl = CHAR_STATE.getCharacterState().getCharacterLevel();
-        return (CreepState) new CreepState()
-                .setCreepType(creep.getCreepType())
+        CreepState cs = new CreepState();
+
+        cs.getHp().setValue(FORMULA.getCreepPoints(creep.getHpFactor()))
+                .setCurrentValue(FORMULA.getCreepPoints(creep.getHpFactor()))
+                .setRegeneration(creep.getHpRegeneration() * lvl);
+
+        cs.getMp().setValue(FORMULA.getCreepPoints(creep.getMpFactor()))
+                .setCurrentValue(FORMULA.getCreepPoints(creep.getMpFactor()))
+                .setRegeneration(creep.getMpRegeneration() * lvl);
+
+        cs.getEnergy().setValue(creep.getEnergy())
+                .setCurrentValue(creep.getEnergy())
+                .setRegeneration(creep.getEnergyRegeneration());
+
+        return (CreepState) cs.setCreepType(creep.getCreepType())
                 .setCreepName(creep.getCreepName())
                 .setCreepLevel(lvl)
-                .setHp(FORMULA.getCreepPoints(creep.getHpFactor()))
-                .setCurrentHp(FORMULA.getCreepPoints(creep.getHpFactor()))
-                .setHpRegeneration(creep.getHpRegeneration() * lvl)
-                .setMp(FORMULA.getCreepPoints(creep.getMpFactor()))
-                .setCurrentMp(FORMULA.getCreepPoints(creep.getMpFactor()))
-                .setMpRegeneration(creep.getMpRegeneration() * lvl)
-                .setEnergy(creep.getEnergy())
-                .setCurrentEnergy(creep.getEnergy())
-                .setEnergyRegeneration(creep.getEnergyRegeneration())
                 .setSpell_1(creep.getSpell_1())
                 .setSpell_2(creep.getSpell_2())
                 .setSpell_3(creep.getSpell_3());

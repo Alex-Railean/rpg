@@ -1,8 +1,8 @@
 package com.endava.rpg.persistence.services;
 
 import com.endava.rpg.persistence.dao.*;
-import com.endava.rpg.persistence.models.*;
 import com.endava.rpg.persistence.models.Character;
+import com.endava.rpg.persistence.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,11 +78,18 @@ public class PersistenceService {
         return SPELLS.deleteAll();
     }
 
-    public Technologies saveTech(Technologies technologies){
+    public Technologies saveTech(Technologies technologies) {
+        //TODO: Move .calculateTotalPoints() to interface
+        technologies.calculateTotalPoints();
         return TECHNOLOGIES.save(technologies);
     }
 
-    public Technologies updateTech(Technologies technologies){
+    public Technologies updateTech(Technologies technologies) {
+        technologies.calculateTotalPoints();
         return TECHNOLOGIES.update(technologies);
+    }
+
+    public Character refreshChar(Character character) {
+        return CHARACTER.refresh(character);
     }
 }

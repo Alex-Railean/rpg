@@ -1,7 +1,7 @@
 package com.endava.rpg.gp.services.game;
 
-import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.services.battle.SpellService;
+import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.persistence.models.Spell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +16,13 @@ public class FormulaService {
     private SpellService spellService;
 
     public Integer getCreepPoints(Integer factor) {
-        Integer hp = factor * 5;
+        Integer points = factor * 5;
 
         for (int i = 1; i <= characterStateService.getCharacterState().getCharacterLevel(); i++) {
-            hp += factor + i * game.getGrowthFactor();
+            points += factor + i * game.getGrowthFactor();
         }
 
-        return hp;
+        return points;
     }
 
     public Integer getManaCost(Spell spell) {
@@ -64,7 +64,7 @@ public class FormulaService {
             hp += 20 + i * game.getGrowthFactor();
         }
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getStrengthProgressLevel(); i++) {
+        for (int i = 1; i <= characterStateService.getCharacterState().getStrength().getProgressLevel(); i++) {
             hp += 35 + i * game.getGrowthFactor();
         }
 
@@ -78,7 +78,7 @@ public class FormulaService {
             mp += 10 + i * game.getGrowthFactor();
         }
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getIntelligenceProgressLevel(); i++) {
+        for (int i = 1; i <= characterStateService.getCharacterState().getIntelligence().getProgressLevel(); i++) {
             mp += 45 + i * game.getGrowthFactor();
         }
 

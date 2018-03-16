@@ -29,6 +29,36 @@ public class Progress implements TableMapping {
     @Column(name = "INTELLIGENCE_PROGRESS")
     private Integer intelligenceProgress = 0;
 
+    public Progress addStrengthProgress(Integer strengthProgress) {
+        this.strengthProgress += strengthProgress;
+        return this;
+    }
+
+    public Progress addStrengthProgressLevel(Integer strengthProgressLevel) {
+        this.strengthProgressLevel += strengthProgressLevel;
+        return this;
+    }
+
+    public Progress addAgilityProgress(Integer agilityProgress) {
+        this.agilityProgress += agilityProgress;
+        return this;
+    }
+
+    public Progress addAgilityProgressLevel(Integer agilityProgressLevel) {
+        this.agilityProgressLevel += agilityProgressLevel;
+        return this;
+    }
+
+    public Progress addIntelligenceProgressLevel(Integer intelligenceProgressLevel) {
+        this.intelligenceProgressLevel += intelligenceProgressLevel;
+        return this;
+    }
+
+    public Progress addIntelligenceProgress(Integer intelligenceProgress) {
+        this.intelligenceProgress += intelligenceProgress;
+        return this;
+    }
+
     public Integer getProgressId() {
         return progressId;
     }

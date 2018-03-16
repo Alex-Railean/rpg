@@ -2,17 +2,17 @@
     <div class="creep col">
         <div class="bars-pints">
             <div class="hp-bar">
-                <p>${currentEnemy.getCurrentHp()}/${currentEnemy.getHp()}
+                <p>${currentEnemy.getHp().getCurrentValue()}/${currentEnemy.getHp().getValue()}
                 <#if currentEnemy.getShieldPoints() != 0>
                     (${currentEnemy.getShieldPoints()})
                 </#if>
                 </p>
             </div>
             <div class="mana-bar">
-                <p>${currentEnemy.getCurrentMp()}/${currentEnemy.getMp()}</p>
+                <p>${currentEnemy.getMp().getCurrentValue()}/${currentEnemy.getMp().getValue()}</p>
             </div>
             <div class="energy-bar">
-                <p>${currentEnemy.getCurrentEnergy()}/${currentEnemy.getEnergy()}</p>
+                <p>${currentEnemy.getEnergy().getCurrentValue()}/${currentEnemy.getEnergy().getValue()}</p>
             </div>
         </div>
         <div class="character-image">
@@ -21,6 +21,6 @@
     </div>
 <#list creepsGroup as creep>
     <span> ${creep.getCreepName()}
-        [${creep.getCreepLevel()}] (${creep.getCurrentHp()}/${creep.getHp()})(${creep.getShieldPoints()}); </span>
+        [${creep.getCreepLevel()}] (${creep.getHp().getCurrentValue()}/${creep.getHp().getValue()})(${creep.getShieldPoints()}); </span>
 </#list>
 </div>

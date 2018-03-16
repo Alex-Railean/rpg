@@ -1,8 +1,8 @@
 package com.endava.rpg.gp.services.responsiveness;
 
+import com.endava.rpg.gp.services.battle.SpellService;
 import com.endava.rpg.gp.services.battle.location.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
-import com.endava.rpg.gp.services.battle.SpellService;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.persistence.models.Spell;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ResponseService {
                     if (isAlmostDead(creep)) {
                         List<Spell> spells = SPELL_SERVICE.getEnemyProtectionSpells(creep);
                         Spell toCast;
-                        if (SPELL_SERVICE.isManaEnough(toCast = chooseAppropriate(spells), creep)) {
+                        if (SPELL_SERVICE.isEnoughMana(toCast = chooseAppropriate(spells), creep)) {
                             SPELL_SERVICE.useSpellTo(toCast, CHAR_STATE.getCharacterState(), creep);
                         } else if (chooseAnotherOption(SPELL_SERVICE.getEnemySpells(creep)) != null) {
                             SPELL_SERVICE.useSpellTo(chooseAnotherOption(SPELL_SERVICE.getEnemySpells(creep)), CHAR_STATE.getCharacterState(), creep);
@@ -56,7 +56,7 @@ public class ResponseService {
 
     private Spell chooseAnotherOption(List<Spell> spells) {
         return spells.stream()
-                .filter(spell -> SPELL_SERVICE.isManaEnough(spell, LOCATION.getCurrentEnemy()))
+                .filter(spell -> SPELL_SERVICE.isEnoughMana(spell, LOCATION.getCurrentEnemy()))
                 .findFirst()
                 .orElse(null);
     }
@@ -69,7 +69,7 @@ public class ResponseService {
                 .orElse(null);
 
         return isRisky() ?
-                SPELL_SERVICE.isManaEnough(strongest, LOCATION.getCurrentEnemy()) ? strongest : weakest
+                SPELL_SERVICE.isEnoughMana(strongest, LOCATION.getCurrentEnemy()) ? strongest : weakest
                 : weakest;
     }
 
@@ -79,9 +79,9 @@ public class ResponseService {
 
     // TODO: Move risk coefficient (1.8)
     private boolean isAlmostDead(CreepState creep) {
-        return !creep.getHp().equals(creep.getCurrentHp()) &&
-        creep.getCurrentHp() +
-                LOCATION.getCurrentEnemy().getShieldPoints() <
-                SPELL_SERVICE.getBiggestDmg() * 1.8;
+        return !creep.getHp().getValue().equals(creep.getHp().getCurrentValue()) &&
+                creep.getHp().getCurrentValue() +
+                        LOCATION.getCurrentEnemy().getShieldPoints() <
+                        SPELL_SERVICE.getBiggestDmg() * 1.8;
     }
 }

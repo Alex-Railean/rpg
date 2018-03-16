@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Branch {
-    protected List<Talent> allTalents = new ArrayList<>();
+    protected List<Talent> talentsOfBranch = new ArrayList<>();
 
     private String name;
 
@@ -19,8 +19,12 @@ public abstract class Branch {
 
     public abstract void create(Character character);
 
+    public void addTalent(Talent t) {
+        talentsOfBranch.add(t);
+    }
+
     public void affect() {
-        allTalents.forEach(Talent::affect);
+        talentsOfBranch.forEach(Talent::affect);
     }
 
     public String getName() {
@@ -48,6 +52,6 @@ public abstract class Branch {
     }
 
     public List<Talent> getTalents() {
-        return allTalents;
+        return talentsOfBranch;
     }
 }

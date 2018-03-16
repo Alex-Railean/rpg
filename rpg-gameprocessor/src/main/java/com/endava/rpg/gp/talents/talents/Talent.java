@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.talents.talents;
 
 import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.persistence.models.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.List;
 public abstract class Talent {
 
     protected CharacterStateService characterState;
+
+    protected List<Talent> dependency = new ArrayList<>();
 
     private String name;
 
@@ -22,9 +25,13 @@ public abstract class Talent {
 
     private String URL;
 
-    protected List<Talent> dependency = new ArrayList<>();
-
     public abstract void affect();
+
+    public abstract void define(Character character);
+
+    public void addDependency(Talent t) {
+        dependency.add(t);
+    }
 
     public boolean isAvailable() {
         return dependency.size() == 0 || dependency.stream().allMatch(d -> d.getPoints() == d.getLimit());

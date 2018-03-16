@@ -31,19 +31,16 @@ public class Character implements TableMapping {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "T_AVAILABLE_SPELLS", joinColumns = {@JoinColumn(name = "CHARACTER_ID")}, inverseJoinColumns = {@JoinColumn(name = "SPELL_ID")})
+    @JoinTable(name = "T_AVAILABLE_SPELLS",
+            joinColumns = {@JoinColumn(name = "CHARACTER_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "SPELL_ID")})
     private List<Spell> availableSpells;
+
+    @Column(name = "FREE_POINTS")
+    private Integer freePoints = 0;
 
     @OneToOne(mappedBy = "character")
     private Technologies technologies;
-
-    public List<Spell> getAvailableSpells() {
-        return availableSpells;
-    }
-
-    public void setAvailableSpells(List<Spell> spells) {
-        this.availableSpells = spells;
-    }
 
     public Character(String characterName, Progress progress, ActionBar actionBar) {
         this.characterName = characterName;
@@ -52,6 +49,25 @@ public class Character implements TableMapping {
     }
 
     public Character() {
+    }
+
+
+    public Character addFreePoints(Integer freePoints) {
+        this.freePoints += freePoints;
+        return this;
+    }
+
+    public Character removeFreePoints(Integer freePoints) {
+        this.freePoints -= freePoints;
+        return this;
+    }
+
+    public List<Spell> getAvailableSpells() {
+        return availableSpells;
+    }
+
+    public void setAvailableSpells(List<Spell> spells) {
+        this.availableSpells = spells;
     }
 
     public Integer getCharacterId() {
@@ -91,6 +107,15 @@ public class Character implements TableMapping {
 
     public Character setLocation(String location) {
         this.location = location;
+        return this;
+    }
+
+    public Integer getFreePoints() {
+        return freePoints;
+    }
+
+    public Character setFreePoints(Integer freePoints) {
+        this.freePoints = freePoints;
         return this;
     }
 

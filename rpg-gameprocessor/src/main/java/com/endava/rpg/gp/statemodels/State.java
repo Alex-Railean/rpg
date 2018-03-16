@@ -1,30 +1,24 @@
 package com.endava.rpg.gp.statemodels;
 
+import com.endava.rpg.gp.statemodels.points.Point;
 import com.endava.rpg.persistence.models.Spell;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class State {
 
-    private Integer hpRegeneration;
+    private List<Point> points = new ArrayList<>();
 
-    private Integer mpRegeneration;
+    private Point hp = new Point(this);
 
-    private Integer energy;
+    private Point mp = new Point(this);
 
-    private Integer energyRegeneration;
+    private Point energy = new Point(this);
 
     private Integer shieldPoints = 0;
 
     private Double criticalDmgCoefficient = 1.8;
-
-    private Integer hp;
-
-    private Integer currentHp;
-
-    private Integer mp;
-
-    private Integer currentMp;
-
-    private Integer currentEnergy;
 
     private Spell spell_1;
 
@@ -32,85 +26,36 @@ public class State {
 
     private Spell spell_3;
 
-    public Integer getHp() {
+    public void addPoint(Point point){
+        this.points.add(point);
+    }
+
+    public List<Point> getPoints() {
+        return points;
+    }
+
+    public Point getHp() {
         return hp;
     }
 
-    public State setHp(Integer hp) {
+    public void setHp(Point hp) {
         this.hp = hp;
-        return this;
     }
 
-    public Integer getCurrentHp() {
-        return currentHp;
-    }
-
-    public State setCurrentHp(Integer currentHp) {
-        this.currentHp = currentHp;
-        return this;
-    }
-
-    public Integer getHpRegeneration() {
-        return hpRegeneration;
-    }
-
-    public State setHpRegeneration(Integer hpRegeneration) {
-        this.hpRegeneration = hpRegeneration;
-        return this;
-    }
-
-    public Integer getMp() {
+    public Point getMp() {
         return mp;
     }
 
-    public State setMp(Integer mp) {
+    public void setMp(Point mp) {
         this.mp = mp;
-        return this;
     }
 
-    public Integer getCurrentMp() {
-        return currentMp;
-    }
-
-    public State setCurrentMp(Integer currentMp) {
-        this.currentMp = currentMp;
-        return this;
-    }
-
-    public Integer getMpRegeneration() {
-        return mpRegeneration;
-    }
-
-    public State setMpRegeneration(Integer mpRegeneration) {
-        this.mpRegeneration = mpRegeneration;
-        return this;
-    }
-
-    public Integer getEnergy() {
+    public Point getEnergy() {
         return energy;
     }
 
-    public State setEnergy(Integer energy) {
+    public void setEnergy(Point energy) {
         this.energy = energy;
-        return this;
-    }
-
-    public Integer getCurrentEnergy() {
-        return currentEnergy;
-    }
-
-    public State setCurrentEnergy(Integer currentEnergy) {
-        this.currentEnergy = currentEnergy;
-        return this;
-    }
-
-    public Integer getEnergyRegeneration() {
-        return energyRegeneration;
-    }
-
-    public State setEnergyRegeneration(Integer energyRegeneration) {
-        this.energyRegeneration = energyRegeneration;
-        return this;
     }
 
     public Spell getSpell_1() {

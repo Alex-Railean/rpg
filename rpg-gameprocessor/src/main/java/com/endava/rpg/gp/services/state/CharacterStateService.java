@@ -2,6 +2,8 @@ package com.endava.rpg.gp.services.state;
 
 import com.endava.rpg.gp.services.game.FormulaService;
 import com.endava.rpg.gp.statemodels.CharacterState;
+import com.endava.rpg.gp.statemodels.points.Attribute;
+import com.endava.rpg.gp.util.AttributeType;
 import com.endava.rpg.persistence.models.ActionBar;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Progress;
@@ -33,9 +35,18 @@ public class CharacterStateService {
         return characterState;
     }
 
+    @Autowired
+    private void setCharacterState(CharacterState characterState) {
+        this.characterState = characterState;
+    }
+
     public CharacterState setNewBattle(Long battleId) {
         LOGGER.info("New Battle was Defined");
         return characterState.setCurrentBattle(battleId);
+    }
+
+    public CharacterState resetBattle() {
+        return characterState.setCurrentBattle(0L);
     }
 
     public Long getBattle() {
@@ -56,95 +67,109 @@ public class CharacterStateService {
         Map<Integer, Spell> actionBar = actionBarService.getActionBarMap();
         model.addAttribute("characterName", characterState.getCharacterName())
                 .addAttribute("characterLevel", characterState.getCharacterLevel())
-                .addAttribute("hp", characterState.getHp())
-                .addAttribute("currentHp", characterState.getCurrentHp())
-                .addAttribute("mp", characterState.getMp())
-                .addAttribute("currentMp", characterState.getCurrentMp())
-                .addAttribute("energy", characterState.getEnergy())
-                .addAttribute("currentEnergy", characterState.getCurrentEnergy())
+                .addAttribute("hp", characterState.getHp().getValue())
+                .addAttribute("currentHp", characterState.getHp().getCurrentValue())
+                .addAttribute("mp", characterState.getMp().getValue())
+                .addAttribute("currentMp", characterState.getMp().getCurrentValue())
+                .addAttribute("energy", characterState.getEnergy().getValue())
+                .addAttribute("currentEnergy", characterState.getEnergy().getCurrentValue())
                 .addAttribute("actionBar", actionBar)
-                .addAttribute("strengthLevel", characterState.getStrengthProgressLevel())
-                .addAttribute("strength", characterState.getStrengthProgress())
-                .addAttribute("strengthNextLevel", characterState.getStrengthNextLevel())
-                .addAttribute("agilityLevel", characterState.getAgilityProgressLevel())
-                .addAttribute("agility", characterState.getAgilityProgress())
-                .addAttribute("agilityNextLevel", characterState.getAgilityNextLevel())
-                .addAttribute("intelligenceLevel", characterState.getIntelligenceProgressLevel())
-                .addAttribute("intelligence", characterState.getIntelligenceProgress())
-                .addAttribute("intelligenceNextLevel", characterState.getIntelligenceNextLevel())
+                .addAttribute("strengthLevel", characterState.getStrength().getProgressLevel())
+                .addAttribute("strength", characterState.getStrength().getProgress())
+                .addAttribute("strengthNextLevel", characterState.getStrength().getToNextLevel())
+                .addAttribute("agilityLevel", characterState.getAgility().getProgressLevel())
+                .addAttribute("agility", characterState.getAgility().getProgress())
+                .addAttribute("agilityNextLevel", characterState.getAgility().getToNextLevel())
+                .addAttribute("intelligenceLevel", characterState.getIntelligence().getProgressLevel())
+                .addAttribute("intelligence", characterState.getIntelligence().getProgress())
+                .addAttribute("intelligenceNextLevel", characterState.getIntelligence().getToNextLevel())
+                .addAttribute("freePoints", characterState.getFreePoints())
                 .addAttribute("shield", characterState.getShieldPoints());
 
         return model;
     }
 
     public boolean isCharacterDead() {
-        return characterState.getCurrentHp() <= 0;
+        return characterState.getHp().getCurrentValue() <= 0;
     }
 
-    public void updateStrengthProgress(Integer strengthEpx) {
-        Progress progress = ps.getCharacterByName(characterState.getCharacterName()).getProgress();
-        if (characterState.getStrengthProgress() + strengthEpx < characterState.getStrengthNextLevel()) {
-            progress.setStrengthProgress(progress.getStrengthProgress() + strengthEpx);
-            ps.updateProgress(progress);
-            characterState.setStrengthProgress(progress.getStrengthProgress());
-        } else {
-            ps.updateProgress(progress
-                    .setStrengthProgressLevel(progress.getStrengthProgressLevel() + 1)
-                    .setStrengthProgress(progress.getStrengthProgress() + strengthEpx - characterState.getStrengthNextLevel()));
-            defineCharacter(characterState.getCharacterName());
-            LOGGER.info("Level Up!");
+    public boolean updateProgress(Integer additionalExp, Attribute stateAttribute, AttributeType type) {
+        if (additionalExp == 0) {
+            return true;
         }
+
+        Character character = ps.getCharacterByName(characterState.getCharacterName());
+        Progress progress = character.getProgress();
+
+        if (stateAttribute.isItNextLevel(additionalExp)) {
+
+            switch (type) {
+                case STRENGTH:
+                    progress.addStrengthProgressLevel(1)
+                            .addStrengthProgress(additionalExp - stateAttribute.getToNextLevel());
+                    break;
+                case AGILITY:
+                    progress.addAgilityProgressLevel(1)
+                            .addAgilityProgress(additionalExp - stateAttribute.getToNextLevel());
+                    break;
+
+                case INTELLIGENCE:
+                    progress.addIntelligenceProgressLevel(1)
+                            .addIntelligenceProgress(additionalExp - stateAttribute.getToNextLevel());
+                    break;
+            }
+
+            character.addFreePoints(1);
+            LOGGER.info("Level Up!");
+
+        } else {
+            switch (type) {
+                case STRENGTH:
+                    progress.addStrengthProgress(additionalExp);
+                    break;
+                case AGILITY:
+                    progress.addAgilityProgress(additionalExp);
+                    break;
+
+                case INTELLIGENCE:
+                    progress.addIntelligenceProgress(additionalExp);
+                    break;
+            }
+
+            stateAttribute.addProgress(additionalExp);
+        }
+
+        ps.updateCharacter(character);
+        refreshCharacter();
+
+        return stateAttribute.isLevelStable();
     }
 
-    public void updateAgilityProgress(Integer agilityExp) {
-        Progress progress = ps.getCharacterByName(characterState.getCharacterName()).getProgress();
-        if (characterState.getAgilityProgress() + agilityExp < characterState.getAgilityNextLevel()) {
-            progress.setAgilityProgress(progress.getAgilityProgress() + agilityExp);
-            ps.updateProgress(progress);
-            characterState.setAgilityProgress(progress.getAgilityProgress());
-        } else {
-            ps.updateProgress(progress
-                    .setAgilityProgressLevel(progress.getAgilityProgressLevel() + 1)
-                    .setAgilityProgress(progress.getAgilityProgress() + agilityExp - characterState.getAgilityNextLevel()));
-            defineCharacter(characterState.getCharacterName());
-            LOGGER.info("Level Up!");
-        }
-    }
-
-    public void updateIntelligenceProgress(Integer intelligenceExp) {
-        Progress progress = ps.getCharacterByName(characterState.getCharacterName()).getProgress();
-        if (characterState.getIntelligenceProgress() + intelligenceExp < characterState.getIntelligenceNextLevel()) {
-            progress.setIntelligenceProgress(progress.getIntelligenceProgress() + intelligenceExp);
-            ps.updateProgress(progress);
-            characterState.setIntelligenceProgress(progress.getIntelligenceProgress());
-        } else {
-            ps.updateProgress(progress
-                    .setIntelligenceProgressLevel(progress.getIntelligenceProgressLevel() + 1)
-                    .setIntelligenceProgress(progress.getIntelligenceProgress() + intelligenceExp - characterState.getIntelligenceNextLevel()));
-            defineCharacter(characterState.getCharacterName());
-            LOGGER.info("Level Up!");
-        }
-
+    public CharacterState refreshCharacter(){
+        return defineCharacter(characterState.getCharacterName());
     }
 
     public CharacterState defineCharacter(String characterName) {
-        if (ps.getCharacterByName(characterName) != null) {
-            LOGGER.info("Defined an Existing Character");
-            Character character = ps.getCharacterByName(characterName);
-            CharacterState characterState = reloadCharacter(character);
+        Character character;
+
+        if ((character = ps.getCharacterByName(characterName)) != null) {
             talent.defineTalents(character);
+            CharacterState characterState = reloadCharacter(character);
             talent.affect();
+            LOGGER.info("An existing Character was defined");
             return characterState;
         }
 
-        LOGGER.info("Defined a New Character");
-        Character character = ps.saveCharacter(new Character(
+        character = ps.saveCharacter(new Character(
                 characterName,
                 new Progress(),
                 new ActionBar()));
-        CharacterState characterState = reloadCharacter(character);
         talent.createAll(character);
+        ps.refreshChar(character);
+        talent.defineTalents(character);
+        CharacterState characterState = reloadCharacter(character);
         talent.affect();
+        LOGGER.info("A New Character was Created");
         return characterState;
     }
 
@@ -155,15 +180,17 @@ public class CharacterStateService {
     }
 
     private CharacterState reloadCharacter(Character character) {
-        LOGGER.info("Character was reloaded");
+        characterState.getStrength().setProgressLevel(character.getProgress().getStrengthProgressLevel())
+                .setProgress(character.getProgress().getStrengthProgress());
+
+        characterState.getAgility().setProgressLevel(character.getProgress().getAgilityProgressLevel())
+                .setProgress(character.getProgress().getAgilityProgress());
+
+        characterState.getIntelligence().setProgressLevel(character.getProgress().getIntelligenceProgressLevel())
+                .setProgress(character.getProgress().getIntelligenceProgress());
+
         characterState.setCharacterName(character.getCharacterName())
                 .setLocation(character.getLocation())
-                .setStrengthProgressLevel(character.getProgress().getStrengthProgressLevel())
-                .setStrengthProgress(character.getProgress().getStrengthProgress())
-                .setAgilityProgressLevel(character.getProgress().getAgilityProgressLevel())
-                .setAgilityProgress(character.getProgress().getAgilityProgress())
-                .setIntelligenceProgressLevel(character.getProgress().getIntelligenceProgressLevel())
-                .setIntelligenceProgress(character.getProgress().getIntelligenceProgress())
                 .setCharacterLevel(calculateCharacterLevel())
                 .setSpell_4(character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4())
                 .setSpell_5(character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5())
@@ -174,17 +201,24 @@ public class CharacterStateService {
                 .setSpell_10(character.getActionBar().getSpell_10() == null ? getDefaultSpell() : character.getActionBar().getSpell_10())
                 .setSpell_11(character.getActionBar().getSpell_11() == null ? getDefaultSpell() : character.getActionBar().getSpell_11())
                 .setSpell_12(character.getActionBar().getSpell_12() == null ? getDefaultSpell() : character.getActionBar().getSpell_12())
-                .setHp(formula.getCharacterHp())
-                .setCurrentHp(characterState.getHp())
-                .setMp(formula.getCharacterMp())
-                .setCurrentMp(characterState.getMp())
-                .setCurrentEnergy(characterState.getEnergy())
+                .setFreePoints(character.getFreePoints())
                 .setSpell_1(character.getActionBar().getSpell_1() == null ? getDefaultSpell(1) : character.getActionBar().getSpell_1())
                 .setSpell_2(character.getActionBar().getSpell_2() == null ? getDefaultSpell(2) : character.getActionBar().getSpell_2())
                 .setSpell_3(character.getActionBar().getSpell_3() == null ? getDefaultSpell(3) : character.getActionBar().getSpell_3());
+
+        characterState.getHp().setValue(formula.getCharacterHp())
+                .setCurrentValue(characterState.getHp().getValue());
+
+        characterState.getMp().setValue(formula.getCharacterMp())
+                .setCurrentValue(characterState.getMp().getValue());
+
+        characterState.getEnergy().setCurrentValue(characterState.getEnergy().getValue());
+
+        LOGGER.info("Character has been reloaded");
         return characterState;
     }
 
+    //TODO: Remove hardcode
     private Spell getDefaultSpell(Integer spellPlace) {
         return ps.getSpellById(spellPlace);
     }
@@ -194,19 +228,12 @@ public class CharacterStateService {
     }
 
     private Integer calculateCharacterLevel() {
-        return characterState.getStrengthProgressLevel() +
-                characterState.getAgilityProgressLevel() +
-                characterState.getIntelligenceProgressLevel() - 2;
+        return characterState.getAttributes().stream().mapToInt(Attribute::getProgressLevel).sum() - 2;
     }
 
     @Autowired
     private void setPs(PersistenceService ps) {
         this.ps = ps;
-    }
-
-    @Autowired
-    private void setCharacterState(CharacterState characterState) {
-        this.characterState = characterState;
     }
 
     @Autowired

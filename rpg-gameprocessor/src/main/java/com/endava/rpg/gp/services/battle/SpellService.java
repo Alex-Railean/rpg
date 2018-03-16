@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.services.battle;
 
 import com.endava.rpg.gp.services.game.FormulaService;
+import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.ActionBarService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
@@ -40,7 +41,10 @@ public class SpellService implements Refreshable {
     private SpellService(ActionBarService actionBarService,
                          CharacterStateService characterStateService,
                          ExpService expService,
-                         FormulaService formulaService) {
+                         FormulaService formulaService,
+                         Refresher refresher) {
+
+        refresher.addRefreshable(this);
         this.ACTION_BAR_SERVICE = actionBarService;
         this.CHAR_STATE = characterStateService;
         this.EXP = expService;
@@ -66,16 +70,16 @@ public class SpellService implements Refreshable {
 
     public boolean doesHaveEnoughMana(Integer actionBarNumber) {
         Spell usedSpell = getSpellFromActionBar(actionBarNumber);
-        return isManaEnough(usedSpell, CHAR_STATE.getCharacterState());
+        return isEnoughMana(usedSpell, CHAR_STATE.getCharacterState());
     }
 
-    public boolean isManaEnough(Spell usedSpell, State caster) {
+    public boolean isEnoughMana(Spell usedSpell, State caster) {
         String spellSchool = usedSpell.getSchool();
 
         if (spellSchool.equals("physical")) {
-            return caster.getCurrentEnergy() - usedSpell.getCost() >= 0;
+            return caster.getEnergy().getCurrentValue() - usedSpell.getCost() >= 0;
         } else {
-            return caster.getCurrentMp() - FORMULA.getManaCost(usedSpell) >= 0;
+            return caster.getMp().getCurrentValue() - FORMULA.getManaCost(usedSpell) >= 0;
         }
     }
 
@@ -98,9 +102,9 @@ public class SpellService implements Refreshable {
         int manaCost = FORMULA.getManaCost(spell);
 
         if (spellType.equals("physical")) {
-            caster.setCurrentEnergy(caster.getCurrentEnergy() - spell.getCost());
+            caster.getEnergy().setCurrentValue(caster.getEnergy().getCurrentValue() - spell.getCost());
         } else {
-            caster.setCurrentMp(caster.getCurrentMp() - manaCost);
+            caster.getMp().setCurrentValue(caster.getMp().getCurrentValue() - manaCost);
         }
     }
 
@@ -124,7 +128,7 @@ public class SpellService implements Refreshable {
         target.setShieldPoints(target.getShieldPoints() - damageCoefficient <= 0 ?
                 0 : target.getShieldPoints() - damageCoefficient);
 
-        target.setCurrentHp(target.getCurrentHp() - damageAfterShield);
+        target.getHp().setCurrentValue(target.getHp().getCurrentValue() - damageAfterShield);
 
         this.lastMovePoints = damageCoefficient;
 
@@ -136,7 +140,7 @@ public class SpellService implements Refreshable {
     private boolean isCritical(State target) {
         return target instanceof CharacterState ?
                 new Random().nextInt(100) <= 25 :
-                new Random().nextInt(100) <= CHAR_STATE.getCharacterState().getAgilityProgressLevel();
+                new Random().nextInt(100) <= CHAR_STATE.getCharacterState().getAgility().getProgressLevel();
     }
 
     public Integer getLastMovePoints() {

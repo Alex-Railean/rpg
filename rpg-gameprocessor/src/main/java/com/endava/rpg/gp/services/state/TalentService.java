@@ -1,9 +1,9 @@
 package com.endava.rpg.gp.services.state;
 
 import com.endava.rpg.gp.talents.branches.Branch;
-import com.endava.rpg.gp.talents.branches.strength.TechnologiesState;
-import com.endava.rpg.gp.talents.linknames.BranchLinks;
-import com.endava.rpg.gp.talents.linknames.TalentLinks;
+import com.endava.rpg.gp.talents.branches.strength.TechnologiesBranch;
+import com.endava.rpg.gp.talents.constants.linknames.BranchLinks;
+import com.endava.rpg.gp.talents.constants.linknames.TalentLinks;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Technologies;
 import com.endava.rpg.persistence.services.PersistenceService;
@@ -20,7 +20,7 @@ public class TalentService {
     private final PersistenceService PS;
 
     @Autowired
-    public TalentService(TechnologiesState tech, PersistenceService ps) {
+    public TalentService(TechnologiesBranch tech, PersistenceService ps) {
         this.PS = ps;
         this.BRANCHES.add(tech);
     }

@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.services.battle.location;
 
 import com.endava.rpg.gp.adapters.CreepAdaptor;
+import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.ProcessorUtil;
@@ -32,7 +33,8 @@ public class LocationService implements Refreshable {
     private CreepState currentEnemy;
 
     @Autowired
-    private LocationService(PersistenceService ps, CharacterStateService characterState, CreepAdaptor creepAdaptor) {
+    private LocationService(PersistenceService ps, CharacterStateService characterState, CreepAdaptor creepAdaptor, Refresher refresher) {
+        refresher.addRefreshable(this);
         this.PS = ps;
         this.CHAR_STATE = characterState;
         this.CREEP_ADAPTOR = creepAdaptor;
@@ -58,16 +60,16 @@ public class LocationService implements Refreshable {
         return model;
     }
 
-    public Model getCurrentEnemyAndGroup(Model model) {
+    public Model getCurrentEnemyAndGroup(Model m) {
         currentEnemy = creepGroup.get(ProcessorUtil.getRandomInt(0, creepGroup.size() - 1));
-        model.addAttribute("currentEnemy", currentEnemy);
-        model.addAttribute("creepsGroup", this.creepGroup);
+        m.addAttribute("currentEnemy", currentEnemy);
+        m.addAttribute("creepsGroup", this.creepGroup);
 
-        return model;
+        return m;
     }
 
     public boolean isCurrentEnemyDead() {
-        return currentEnemy.getCurrentHp() <= 0;
+        return currentEnemy.getHp().getCurrentValue() <= 0;
     }
 
     public List<CreepState> getCreepGroup() {

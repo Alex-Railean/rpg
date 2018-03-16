@@ -1,45 +1,28 @@
 package com.endava.rpg.gp.statemodels;
 
-import com.endava.rpg.gp.services.game.FormulaService;
+import com.endava.rpg.gp.statemodels.points.Attribute;
 import com.endava.rpg.persistence.models.Spell;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class CharacterState extends State {
 
-    private final FormulaService FORMULA;
+    private List<Attribute> attributes = new ArrayList<>();
 
     private String characterName;
 
     private Integer characterLevel;
 
-    private Integer strengthProgressLevel;
+    private Attribute strength = new Attribute(this);
 
-    private Integer strengthNextLevel;
+    private Attribute agility = new Attribute(this);
 
-    private Integer strengthProgress;
-
-    private Integer agilityProgressLevel;
-
-    private Integer agilityNextLevel;
-
-    private Integer agilityProgress;
-
-    private Integer intelligenceNextLevel;
-
-    private Integer intelligenceProgressLevel;
-
-    private Integer intelligenceProgress;
-
-    private Integer hpRegeneration = 3;
-
-    private Integer mpRegeneration = 5;
+    private Attribute intelligence = new Attribute(this);
 
     private Integer defaultEnergy = 100;
-
-    private Integer energy = 100;
-
-    private Integer energyRegeneration = 10;
 
     private Spell spell_4;
 
@@ -63,16 +46,32 @@ public class CharacterState extends State {
 
     private String location;
 
-    private Double criticalDmgCoefficient = 1.8;
-    
     private Double stunResistancePercentage = 0D;
 
-    public CharacterState(FormulaService formula) {
-        this.FORMULA = formula;
+    private Integer freePoints;
+
+    public CharacterState() {
+        getHp().setRegeneration(3);
+        getMp().setRegeneration(5);
+        getEnergy().setRegeneration(10);
+        getEnergy().setCurrentValue(100);
+    }
+
+    public void addAttribute(Attribute a){
+        attributes.add(a);
+    }
+
+    public List<Attribute> getAttributes() {
+        return attributes;
     }
 
     public String getCharacterName() {
         return characterName;
+    }
+
+    public CharacterState setCharacterName(String characterName) {
+        this.characterName = characterName;
+        return this;
     }
 
     public Integer getCharacterLevel() {
@@ -84,66 +83,28 @@ public class CharacterState extends State {
         return this;
     }
 
-    public CharacterState setCharacterName(String characterName) {
-        this.characterName = characterName;
-        return this;
+    public Attribute getStrength() {
+        return strength;
     }
 
-    public Integer getStrengthProgressLevel() {
-        return strengthProgressLevel;
+    public void setStrength(Attribute strength) {
+        this.strength = strength;
     }
 
-    public CharacterState setStrengthProgressLevel(Integer strengthProgressLevel) {
-        this.strengthProgressLevel = strengthProgressLevel;
-        this.strengthNextLevel = FORMULA.getNextLevelExp(strengthProgressLevel);
-        return this;
+    public Attribute getAgility() {
+        return agility;
     }
 
-    public Integer getStrengthProgress() {
-        return strengthProgress;
+    public void setAgility(Attribute agility) {
+        this.agility = agility;
     }
 
-    public CharacterState setStrengthProgress(Integer strengthProgress) {
-        this.strengthProgress = strengthProgress;
-        return this;
+    public Attribute getIntelligence() {
+        return intelligence;
     }
 
-    public Integer getAgilityProgressLevel() {
-        return agilityProgressLevel;
-    }
-
-    public CharacterState setAgilityProgressLevel(Integer agilityProgressLevel) {
-        this.agilityProgressLevel = agilityProgressLevel;
-        this.agilityNextLevel = FORMULA.getNextLevelExp(agilityProgressLevel);
-        return this;
-    }
-
-    public Integer getAgilityProgress() {
-        return agilityProgress;
-    }
-
-    public CharacterState setAgilityProgress(Integer agilityProgress) {
-        this.agilityProgress = agilityProgress;
-        return this;
-    }
-
-    public Integer getIntelligenceProgressLevel() {
-        return intelligenceProgressLevel;
-    }
-
-    public CharacterState setIntelligenceProgressLevel(Integer intelligenceProgressLevel) {
-        this.intelligenceProgressLevel = intelligenceProgressLevel;
-        this.intelligenceNextLevel = FORMULA.getNextLevelExp(intelligenceProgressLevel);
-        return this;
-    }
-
-    public Integer getIntelligenceProgress() {
-        return intelligenceProgress;
-    }
-
-    public CharacterState setIntelligenceProgress(Integer intelligenceProgress) {
-        this.intelligenceProgress = intelligenceProgress;
-        return this;
+    public void setIntelligence(Attribute intelligence) {
+        this.intelligence = intelligence;
     }
 
     public Spell getSpell_4() {
@@ -227,33 +188,6 @@ public class CharacterState extends State {
         return this;
     }
 
-    public Integer getStrengthNextLevel() {
-        return strengthNextLevel;
-    }
-
-    public CharacterState setStrengthNextLevel(Integer strengthNextLevel) {
-        this.strengthNextLevel = strengthNextLevel;
-        return this;
-    }
-
-    public Integer getAgilityNextLevel() {
-        return agilityNextLevel;
-    }
-
-    public CharacterState setAgilityNextLevel(Integer agilityNextLevel) {
-        this.agilityNextLevel = agilityNextLevel;
-        return this;
-    }
-
-    public Integer getIntelligenceNextLevel() {
-        return intelligenceNextLevel;
-    }
-
-    public CharacterState setIntelligenceNextLevel(Integer intelligenceNextLevel) {
-        this.intelligenceNextLevel = intelligenceNextLevel;
-        return this;
-    }
-
     public Long getCurrentBattle() {
         return currentBattle;
     }
@@ -272,28 +206,6 @@ public class CharacterState extends State {
         return this;
     }
 
-    @Override
-    public Integer getHpRegeneration() {
-        return hpRegeneration;
-    }
-
-    @Override
-    public CharacterState setHpRegeneration(Integer hpRegeneration) {
-        this.hpRegeneration = hpRegeneration;
-        return this;
-    }
-
-    @Override
-    public Integer getMpRegeneration() {
-        return mpRegeneration;
-    }
-
-    @Override
-    public CharacterState setMpRegeneration(Integer mpRegeneration) {
-        this.mpRegeneration = mpRegeneration;
-        return this;
-    }
-
     public Integer getDefaultEnergy() {
         return defaultEnergy;
     }
@@ -302,44 +214,20 @@ public class CharacterState extends State {
         this.defaultEnergy = defaultEnergy;
     }
 
-    @Override
-    public Integer getEnergy() {
-        return energy;
-    }
-
-    @Override
-    public CharacterState setEnergy(Integer energy) {
-        this.energy = energy;
-        return this;
-    }
-
-    @Override
-    public Integer getEnergyRegeneration() {
-        return energyRegeneration;
-    }
-
-    @Override
-    public CharacterState setEnergyRegeneration(Integer energyRegeneration) {
-        this.energyRegeneration = energyRegeneration;
-        return this;
-    }
-
-    @Override
-    public Double getCriticalDmgCoefficient() {
-        return criticalDmgCoefficient;
-    }
-
-    @Override
-    public CharacterState setCriticalDmgCoefficient(Double criticalDmgCoefficient) {
-        this.criticalDmgCoefficient = criticalDmgCoefficient;
-        return this;
-    }
-
     public Double getStunResistancePercentage() {
         return stunResistancePercentage;
     }
 
     public void setStunResistancePercentage(Double stunResistancePercentage) {
         this.stunResistancePercentage = stunResistancePercentage;
+    }
+
+    public Integer getFreePoints() {
+        return freePoints;
+    }
+
+    public CharacterState setFreePoints(Integer freePoints) {
+        this.freePoints = freePoints;
+        return this;
     }
 }

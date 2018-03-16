@@ -11,9 +11,12 @@
     <div class="row">
     <#include "../modules/character.ftl">
         <div class="creeps col-6">
-            <a href="/battle"><button type="submit" class="btn btn-danger">To Battle!</button></a>
+            <a href="/battle">
+                <button type="submit" class="btn btn-danger">To Battle!</button>
+            </a>
         <#list creepsGroup as creep>
-            <span> ${creep.getCreepName()} [${creep.getCreepLevel()}] (${creep.getCurrentHp()}/${creep.getHp()}); </span>
+            <span> ${creep.getCreepName()}
+                [${creep.getCreepLevel()}] (${creep.getHp().getCurrentValue()}/${creep.getHp().getValue()}); </span>
         </#list>
         </div>
     </div>

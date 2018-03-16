@@ -1,46 +1,46 @@
-.navbar{
+.navbar {
     width: 100%;
 }
 
-.character{
+.character {
     margin-top: 30px;
 }
 
-.creeps{
+.creeps {
     margin-top: 30px;
 }
 
-.spells .spellImg{
+.spells .spellImg {
     width: 38px;
     height: 38px;
 }
 
-.character-image img{
+.character-image img {
     height: 228px;
     width: 160px;
 }
 
-.character-image{
+.character-image {
     margin-bottom: 25px;
 }
 
-.spellbook-form{
+.spellbook-form {
     margin-top: 3px;
 }
 
-.bottom-button{
+.bottom-button {
     margin-top: 15px;
 }
 
-.spells{
+.spells {
     margin-top: 10px;
 }
 
-.talent-counter, .points-button{
+.talent-counter, .points-button {
     width: 50px;
 }
 
-@media (min-width: 992px){
+@media (min-width: 992px) {
     .container {
         max-width: 100%;
     }

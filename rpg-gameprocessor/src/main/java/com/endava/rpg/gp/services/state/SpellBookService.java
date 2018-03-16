@@ -5,7 +5,6 @@ import com.endava.rpg.persistence.services.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Service
@@ -13,9 +12,9 @@ public class SpellBookService {
 
     private final PersistenceService PS;
 
-    private List<Spell> defaultSpells;
-
     private final Map<String, List<Spell>> AVAILABLE_SPELLS = new HashMap<>();
+
+    private List<Spell> defaultSpells;
 
     @Autowired
     public SpellBookService(PersistenceService PS) {
@@ -40,8 +39,7 @@ public class SpellBookService {
         }
     }
 
-    @PostConstruct
-    private List<Spell> getDefault() {
+    public List<Spell> getDefault() {
         return defaultSpells = new ArrayList<>(
                 Arrays.asList(PS.getSpellByName("SwordAttack"),
                         PS.getSpellByName("BowAttack"),

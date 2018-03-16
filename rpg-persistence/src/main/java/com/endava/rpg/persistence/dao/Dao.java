@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dao<R extends TableMapping> {
+    private final SessionFactory sessionFactory;
+
     private Logger LOGGER = LoggerFactory.getLogger(Dao.class);
 
     private Class<R> RTC;
-
-    private final SessionFactory sessionFactory;
 
     Dao(Class<R> representedTableClass, SessionFactory sessionFactory) {
         this.RTC = representedTableClass;
@@ -80,6 +80,7 @@ public class Dao<R extends TableMapping> {
             return false;
         }
     }
+
     public R update(R entity) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
@@ -92,6 +93,17 @@ public class Dao<R extends TableMapping> {
             return null;
         }
 
+        return entity;
+    }
+
+    public R refresh(R entity) {
+        try (Session session = sessionFactory.openSession()) {
+            session.refresh(entity);
+        } catch (Exception ex) {
+            LOGGER.error("Error -> {}", ex.getMessage());
+            LOGGER.debug("Full error -> {}", ex);
+            return null;
+        }
         return entity;
     }
 }

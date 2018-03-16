@@ -34,6 +34,6 @@
         <div class="intelligence-exp">
         ${intelligence}/${intelligenceNextLevel} (${intelligenceLevel})
         </div>
-        <div><a href="/talents" class="talents-link">Talents</a></div>
+        <div><a href="/talents" class="talents-link">Talents (${freePoints})</a></div>
     </div>
 </div>

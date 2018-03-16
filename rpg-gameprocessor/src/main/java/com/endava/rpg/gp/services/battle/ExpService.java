@@ -1,7 +1,9 @@
 package com.endava.rpg.gp.services.battle;
 
 import com.endava.rpg.gp.services.game.FormulaService;
+import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.util.AttributeType;
 import com.endava.rpg.gp.util.Refreshable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 @Service
-
 public class ExpService implements Refreshable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpService.class);
 
@@ -25,7 +26,8 @@ public class ExpService implements Refreshable {
     private Integer intelligenceExp = 0;
 
     @Autowired
-    private ExpService(CharacterStateService characterStateService, FormulaService formulaService) {
+    private ExpService(CharacterStateService characterStateService, FormulaService formulaService, Refresher refresher) {
+        refresher.addRefreshable(this);
         this.CHAR_STATE = characterStateService;
         this.FORMULA = formulaService;
     }
@@ -59,9 +61,24 @@ public class ExpService implements Refreshable {
     }
 
     public void updateProgresses() {
-        CHAR_STATE.updateStrengthProgress(getDeservedExp(strengthEpx));
-        CHAR_STATE.updateAgilityProgress(getDeservedExp(agilityExp));
-        CHAR_STATE.updateIntelligenceProgress(getDeservedExp(intelligenceExp));
+        boolean isStrengthStable;
+        boolean isAgilityStable;
+        boolean isIntelligenceStable;
+
+        do {
+            isStrengthStable = CHAR_STATE.updateProgress(strengthEpx,
+                    CHAR_STATE.getCharacterState().getStrength(),
+                    AttributeType.STRENGTH);
+
+            isAgilityStable = CHAR_STATE.updateProgress(agilityExp,
+                    CHAR_STATE.getCharacterState().getAgility(),
+                    AttributeType.AGILITY);
+
+            isIntelligenceStable = CHAR_STATE.updateProgress(intelligenceExp,
+                    CHAR_STATE.getCharacterState().getIntelligence(),
+                    AttributeType.INTELLIGENCE);
+
+        } while (!(isStrengthStable && isAgilityStable && isIntelligenceStable));
     }
 
     private int getDeservedExp(int exp) {

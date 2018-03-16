@@ -1,7 +1,7 @@
 package com.endava.rpg.gp.services.game;
 
 import com.endava.rpg.gp.adapters.CSVAdapter;
-import com.endava.rpg.persistence.models.Character;
+import com.endava.rpg.gp.services.state.SpellBookService;
 import com.endava.rpg.persistence.services.PersistenceService;
 import com.endava.rpg.persistence.services.utils.CSVReader;
 import org.slf4j.Logger;
@@ -18,15 +18,19 @@ public class PostConstructService {
 
     private final PersistenceService PS;
 
+    private final SpellBookService SPELLBOOK;
+
     @Autowired
-    private PostConstructService(PersistenceService ps) {
+    private PostConstructService(PersistenceService ps, SpellBookService sbs) {
         this.PS = ps;
+        this.SPELLBOOK = sbs;
     }
 
     @PostConstruct
     private void injectAll() {
         injectAllSpells();
         injectAllCreeps();
+        SPELLBOOK.getDefault();
     }
 
     private void injectAllSpells() {

@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class ProcessorUtil {
 
-    private ProcessorUtil(){
+    private ProcessorUtil() {
     }
 
     public static int getRandomInt(int lowerBorder, int upperBorder) {

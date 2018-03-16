@@ -20,8 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Date;
 
 @Controller
-public class ToBattleController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ToBattleController.class);
+public class BattleController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BattleController.class);
 
     private final CharacterStateService CHAR_STATE;
 
@@ -34,11 +34,11 @@ public class ToBattleController {
     private final SpellService SPELL_SERVICE;
 
     @Autowired
-    public ToBattleController(CharacterStateService characterStateService,
-                              LocationService locationService,
-                              BattleService battleService,
-                              ExpService expService,
-                              SpellService spellService) {
+    public BattleController(CharacterStateService characterStateService,
+                            LocationService locationService,
+                            BattleService battleService,
+                            ExpService expService,
+                            SpellService spellService) {
         this.CHAR_STATE = characterStateService;
         this.LOCATION = locationService;
         this.BATTLE = battleService;
@@ -68,7 +68,7 @@ public class ToBattleController {
 
             LOGGER.info("End of Battle");
 
-            CHAR_STATE.setNewBattle(0L);
+            CHAR_STATE.resetBattle();
             return "redirect:" + Paths.EXP;
         }
         LOGGER.warn("Could not find battle with id: " + battleId);

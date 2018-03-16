@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.services.battle;
 
 import com.endava.rpg.gp.services.battle.location.LocationService;
+import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.responsiveness.ResponseService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
@@ -23,7 +24,12 @@ public class BattleService implements Refreshable {
     private Long battleId;
 
     @Autowired
-    private BattleService(SpellService spellService, LocationService creepLocation, CharacterStateService characterState, ResponseService spellChoice) {
+    private BattleService(SpellService spellService,
+                          LocationService creepLocation,
+                          CharacterStateService characterState,
+                          ResponseService spellChoice,
+                          Refresher refresher) {
+        refresher.addRefreshable(this);
         this.SPELL_SERVICE = spellService;
         this.LOCATION = creepLocation;
         this.CHARACTER_STATE_SERVICE = characterState;
@@ -48,45 +54,22 @@ public class BattleService implements Refreshable {
     }
 
     private void useRegeneration() {
-        CharacterState character = CHARACTER_STATE_SERVICE.getCharacterState();
         LOCATION.getCreepGroup()
-                .forEach(creep -> {
-                    if (creep.getCurrentHp() < creep.getHp()) {
-                        creep.setCurrentHp(creep.getCurrentHp() + creep.getHpRegeneration() >= creep.getHp() ?
-                                creep.getHp() :
-                                creep.getCurrentHp() + creep.getHpRegeneration());
-                    }
+                .forEach(creep -> creep.getPoints().forEach(p -> {
+                if (p.getCurrentValue() < p.getValue()) {
+                    p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
+                            p.getValue() :
+                            p.getCurrentValue() + p.getRegeneration());
 
-                    if (creep.getCurrentMp() < creep.getMp()) {
-                        creep.setCurrentMp(creep.getCurrentMp() + creep.getMpRegeneration() >= creep.getMp() ?
-                                creep.getMp() :
-                                creep.getCurrentMp() + creep.getMpRegeneration());
-                    }
+                }}));
 
-                    if (creep.getCurrentEnergy() < creep.getEnergy()) {
-                        creep.setCurrentEnergy(creep.getCurrentEnergy() + creep.getEnergyRegeneration() >= creep.getEnergy() ?
-                                creep.getEnergy() :
-                                creep.getCurrentEnergy() + creep.getEnergyRegeneration());
-                    }
-                });
+        CHARACTER_STATE_SERVICE.getCharacterState().getPoints().forEach(p ->{
+            if (p.getCurrentValue() < p.getValue()) {
+                p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
+                        p.getValue() :
+                        p.getCurrentValue() + p.getRegeneration());
 
-        if (character.getCurrentHp() < character.getHp()) {
-            character.setCurrentHp(character.getCurrentHp() + character.getHpRegeneration() >= character.getHp() ?
-                    character.getHp() :
-                    character.getCurrentHp() + character.getHpRegeneration());
-        }
-
-        if (character.getCurrentMp() < character.getMp()) {
-            character.setCurrentMp(character.getCurrentMp() + character.getMpRegeneration() >= character.getMp() ?
-                    character.getMp() :
-                    character.getCurrentMp() + character.getMpRegeneration());
-        }
-
-        if (character.getCurrentEnergy() < character.getEnergy()) {
-            character.setCurrentEnergy(character.getCurrentEnergy() + character.getEnergyRegeneration() >= character.getEnergy() ?
-                    character.getEnergy() :
-                    character.getCurrentEnergy() + character.getEnergyRegeneration());
-        }
+            }});
     }
 
     private void seekDeath() {

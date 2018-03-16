@@ -24,6 +24,19 @@ public class Technologies implements TableMapping, Serializable {
     @Column(name = "EXOSPINE_LIMIT")
     private Integer exoSpineLimit = 5;
 
+    @Column(name = "TOTAL_POINTS")
+    private Integer totalPoints = 0;
+
+    public Integer calculateTotalPoints() {
+        return totalPoints =
+                muscleStimulants +
+                        exoSpine;
+    }
+
+    public Integer getTotalPoints() {
+        return totalPoints;
+    }
+
     public Character getCharacter() {
         return character;
     }

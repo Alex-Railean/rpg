@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-
 @Configuration
 @EnableWebMvc
 @ComponentScan({"com.endava.rpg.web", "com.endava.rpg.persistence", "com.endava.rpg.gp"})

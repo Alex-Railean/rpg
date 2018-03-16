@@ -45,6 +45,7 @@ public class SpellBookController {
     public String toSpellBook(Model model) {
         model = CHARACTER_STATE.getHeaderData(model)
                 .addAttribute("actionBar", ACTION_BAR.getActionBarMap())
+                //TODO: BUG - first load returns 3 null elements
                 .addAttribute("spellBookContent", SPELL_BOOK.getAvailableSpells(CHARACTER_STATE.getCharacterState().getCharacterName()));
         LOGGER.info("Spell Book");
         return Views.SPELL_BOOK;

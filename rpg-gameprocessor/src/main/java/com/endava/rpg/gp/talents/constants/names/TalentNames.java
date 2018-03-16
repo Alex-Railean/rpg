@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.talents.names;
+package com.endava.rpg.gp.talents.constants.names;
 
 public class TalentNames {
     public static final String EXO_SPINE = "Exo-spine";

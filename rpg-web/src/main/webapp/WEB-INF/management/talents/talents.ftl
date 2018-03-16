@@ -14,9 +14,9 @@
 </#list>
 
 <#if warningMessage??>
-    <div class="alert alert-primary" role="alert">
-    ${warningMessage}
-    </div>
+<div class="alert alert-primary" role="alert">
+${warningMessage}
+</div>
 </#if>
 </div>
 <script src="/resources/js/main.js"></script>

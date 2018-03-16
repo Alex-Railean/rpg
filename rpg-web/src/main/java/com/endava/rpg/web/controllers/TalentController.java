@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.nio.file.Path;
-
 @Controller
 public class TalentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TalentController.class);
@@ -45,6 +43,7 @@ public class TalentController {
     @RequestMapping(value = Paths.TALENTS_BRANCH, method = RequestMethod.GET)
     public String toTalent(Model model, @PathVariable("branch") String branch) {
         model = CHARACTER_STATE.getHeaderData(model)
+                .addAttribute("freePoints", CHARACTER_STATE.getCharacterState().getFreePoints())
                 .addAttribute("branch", TALENT.getBranch(branch));
         LOGGER.info("Branch page");
         return Views.BRANCH;
@@ -53,8 +52,13 @@ public class TalentController {
     @RequestMapping(value = Paths.TALENTS_UPDATE, method = RequestMethod.POST)
     public String addTalents(@PathVariable("branch") String branch, @PathVariable("talent") String talent, int points) {
         Character character = PS.getCharacterByName(CHARACTER_STATE.getCharacterState().getCharacterName());
-        if (points != 0 && TALENT.updateCharacterTalent(character, branch, talent, points)) {
-            CHARACTER_STATE.defineCharacter(CHARACTER_STATE.getCharacterState().getCharacterName());
+
+        if (CHARACTER_STATE.getCharacterState().getFreePoints() - points < 0) {
+            return "redirect:" + Paths.TALENTS_BRANCH;
+        } else if (points != 0 && TALENT.updateCharacterTalent(character, branch, talent, points)) {
+            character.removeFreePoints(points);
+            PS.updateCharacter(character);
+            CHARACTER_STATE.refreshCharacter();
             LOGGER.info("Talents have been updated");
         }
         return "redirect:" + Paths.TALENTS_BRANCH;

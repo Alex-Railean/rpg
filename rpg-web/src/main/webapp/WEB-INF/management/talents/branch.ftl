@@ -20,6 +20,7 @@
     </form>
 </div>
 </#list>
+<h4>Free Points: ${freePoints}</h4>
 <#if warningMessage??>
 <div class="alert alert-primary" role="alert">
 ${warningMessage}
