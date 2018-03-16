@@ -1,6 +1,8 @@
 package com.endava.rpg.gp.services.battle.location;
 
 import com.endava.rpg.gp.adapters.CreepAdaptor;
+import com.endava.rpg.gp.services.battle.location.creepfactories.CreepFactory;
+import com.endava.rpg.gp.services.battle.location.enums.Location;
 import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
@@ -22,39 +24,23 @@ import java.util.List;
 public class LocationService implements Refreshable {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationService.class);
 
-    private final PersistenceService PS;
-
     private final CharacterStateService CHAR_STATE;
-
-    private final CreepAdaptor CREEP_ADAPTOR;
 
     private List<CreepState> creepGroup;
 
     private CreepState currentEnemy;
 
     @Autowired
-    private LocationService(PersistenceService ps, CharacterStateService characterState, CreepAdaptor creepAdaptor, Refresher refresher) {
+    private LocationService(CharacterStateService characterState, Refresher refresher) {
         refresher.addRefreshable(this);
-        this.PS = ps;
         this.CHAR_STATE = characterState;
-        this.CREEP_ADAPTOR = creepAdaptor;
     }
 
-    public Model getRandomCreepGroup(Model model, String location) {
-        List<Creep> creeps = PS.getCreepsFromLocation(location);
-        List<CreepState> creepGroup = new ArrayList<>();
-        int lvl = CHAR_STATE.getCharacterState().getCharacterLevel();
-        int groupSize = ProcessorUtil.getRandomInt(1, lvl);
-
-        for (int i = 0; i < groupSize; i++) {
-            int randomCreepIndex = ProcessorUtil.getRandomInt(0, creeps.size() - 1);
-            creepGroup.add(i, CREEP_ADAPTOR.toCreepState(creeps.get(randomCreepIndex)));
-        }
-
-        this.creepGroup = creepGroup;
+    // TODO: Refactoring
+    public Model getRandomCreepGroup(Model model, Location location, int lvl, CreepFactory creepFactory) {
+        this.creepGroup = creepFactory.createCreepGroup(location, lvl);
 
         model.addAttribute("creepsGroup", this.creepGroup);
-
         LOGGER.info("Creep Group was Generated for location -> " + location);
 
         return model;

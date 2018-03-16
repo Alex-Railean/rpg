@@ -18,7 +18,7 @@ public class FormulaService {
     public Integer getCreepPoints(Integer factor) {
         Integer points = factor * 5;
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getCharacterLevel(); i++) {
+        for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
             points += factor + i * game.getGrowthFactor();
         }
 
@@ -27,12 +27,12 @@ public class FormulaService {
 
     public Integer getManaCost(Spell spell) {
         return spell.getCost() +
-                characterStateService.getCharacterState().getCharacterLevel() +
+                characterStateService.getCharacterLevel() +
                 game.getGrowthFactor() * 2;
     }
 
     public int getDamage(int damageCoefficient) {
-        int characterLevel = characterStateService.getCharacterState().getCharacterLevel();
+        int characterLevel = characterStateService.getCharacterLevel();
         double levelReducer = 0.1;
 
         for (int i = 1; i <= characterLevel; i++) {
@@ -60,7 +60,7 @@ public class FormulaService {
     public Integer getCharacterHp() {
         Integer hp = 50;
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getCharacterLevel(); i++) {
+        for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
             hp += 20 + i * game.getGrowthFactor();
         }
 
@@ -74,7 +74,7 @@ public class FormulaService {
     public Integer getCharacterMp() {
         Integer mp = 50;
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getCharacterLevel(); i++) {
+        for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
             mp += 10 + i * game.getGrowthFactor();
         }
 

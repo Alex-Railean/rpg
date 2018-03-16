@@ -218,6 +218,14 @@ public class CharacterStateService {
         return characterState;
     }
 
+    public int getCharacterLevel(){
+        return characterState.getCharacterLevel();
+    }
+
+    public String getCharacterName(){
+        return characterState.getCharacterName();
+    }
+
     //TODO: Remove hardcode
     private Spell getDefaultSpell(Integer spellPlace) {
         return ps.getSpellById(spellPlace);

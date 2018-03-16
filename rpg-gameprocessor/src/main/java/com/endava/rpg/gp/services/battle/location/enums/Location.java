@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.services.battle.location;
+package com.endava.rpg.gp.services.battle.location.enums;
 
 public enum Location {
     HUNGRY_FOREST("hungry-forest", "locations/hungry-forest");

@@ -4,7 +4,6 @@ import com.endava.rpg.gp.services.battle.location.LocationService;
 import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.responsiveness.ResponseService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
-import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.Refreshable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,20 +55,22 @@ public class BattleService implements Refreshable {
     private void useRegeneration() {
         LOCATION.getCreepGroup()
                 .forEach(creep -> creep.getPoints().forEach(p -> {
-                if (p.getCurrentValue() < p.getValue()) {
-                    p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
-                            p.getValue() :
-                            p.getCurrentValue() + p.getRegeneration());
+                    if (p.getCurrentValue() < p.getValue()) {
+                        p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
+                                p.getValue() :
+                                p.getCurrentValue() + p.getRegeneration());
 
-                }}));
+                    }
+                }));
 
-        CHARACTER_STATE_SERVICE.getCharacterState().getPoints().forEach(p ->{
+        CHARACTER_STATE_SERVICE.getCharacterState().getPoints().forEach(p -> {
             if (p.getCurrentValue() < p.getValue()) {
                 p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
                         p.getValue() :
                         p.getCurrentValue() + p.getRegeneration());
 
-            }});
+            }
+        });
     }
 
     private void seekDeath() {
