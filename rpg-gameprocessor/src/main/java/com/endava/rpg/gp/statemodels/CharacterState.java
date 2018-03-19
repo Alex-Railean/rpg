@@ -12,10 +12,6 @@ public class CharacterState extends State {
 
     private List<Attribute> attributes = new ArrayList<>();
 
-    private String characterName;
-
-    private Integer characterLevel;
-
     private Attribute strength = new Attribute(this);
 
     private Attribute agility = new Attribute(this);
@@ -63,24 +59,6 @@ public class CharacterState extends State {
 
     public List<Attribute> getAttributes() {
         return attributes;
-    }
-
-    public String getCharacterName() {
-        return characterName;
-    }
-
-    public CharacterState setCharacterName(String characterName) {
-        this.characterName = characterName;
-        return this;
-    }
-
-    public Integer getCharacterLevel() {
-        return characterLevel;
-    }
-
-    public CharacterState setCharacterLevel(Integer characterLevel) {
-        this.characterLevel = characterLevel;
-        return this;
     }
 
     public Attribute getStrength() {

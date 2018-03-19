@@ -5,6 +5,7 @@ import com.endava.rpg.gp.services.battle.ExpService;
 import com.endava.rpg.gp.services.battle.SpellService;
 import com.endava.rpg.gp.services.battle.location.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.util.CombatTextService;
 import com.endava.rpg.web.controllers.utils.Paths;
 import com.endava.rpg.web.controllers.utils.Views;
 import org.slf4j.Logger;
@@ -63,6 +64,7 @@ public class BattleController {
                 LOGGER.info("The Battle continues");
                 model = CHAR_STATE.getCharacterModel(model);
                 model = LOCATION.getCurrentEnemyAndGroup(model);
+                model.addAttribute("combatText", CombatTextService.getCombatText());
                 return Views.BATTLE;
             }
 
@@ -107,6 +109,7 @@ public class BattleController {
         EXP.updateProgresses();
         model = CHAR_STATE.getCharacterModel(model);
         model = EXP.getExpModel(model);
+        CombatTextService.clearCombatText();
         return Views.EXP;
     }
 }

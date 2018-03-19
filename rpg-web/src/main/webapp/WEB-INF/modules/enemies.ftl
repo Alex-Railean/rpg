@@ -20,7 +20,7 @@
         </div>
     </div>
 <#list creepsGroup as creep>
-    <span> ${creep.getCreepName()}
-        [${creep.getCreepLevel()}] (${creep.getHp().getCurrentValue()}/${creep.getHp().getValue()})(${creep.getShieldPoints()}); </span>
+    <span> ${creep.getName()}
+        [${creep.getLevel()}] (${creep.getHp().getCurrentValue()}/${creep.getHp().getValue()})(${creep.getShieldPoints()}); </span>
 </#list>
 </div>

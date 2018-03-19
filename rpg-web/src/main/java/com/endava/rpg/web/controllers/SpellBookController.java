@@ -45,14 +45,14 @@ public class SpellBookController {
     public String toSpellBook(Model model) {
         model = CHARACTER_STATE.getHeaderData(model)
                 .addAttribute("actionBar", ACTION_BAR.getActionBarMap())
-                .addAttribute("spellBookContent", SPELL_BOOK.getAvailableSpells(CHARACTER_STATE.getCharacterState().getCharacterName()));
+                .addAttribute("spellBookContent", SPELL_BOOK.getAvailableSpells(CHARACTER_STATE.getCharacterState().getName()));
         LOGGER.info("Spell Book");
         return Views.SPELL_BOOK;
     }
 
     @RequestMapping(value = Paths.SPELLBOOK_SPELL, method = RequestMethod.POST)
     public String updateActionBar(@PathVariable("spell") String spell, Integer slot) {
-        String charName = CHARACTER_STATE.getCharacterState().getCharacterName();
+        String charName = CHARACTER_STATE.getCharacterState().getName();
         Spell defaultSpell = PS.getSpellByName("Nospell");
         Character character = PS.getCharacterByName(charName);
         Map<Integer, Spell> ab = ACTION_BAR.getActionBarMap();
@@ -73,14 +73,14 @@ public class SpellBookController {
         PS.updateCharacter(character);
         ACTION_BAR.reloadActionBar();
 
-        LOGGER.info("Action bar has been changed");
+        LOGGER.info("ObjAction bar has been changed");
 
         return "redirect:" + Paths.SPELLBOOK;
     }
 
     @RequestMapping(value = Paths.SPELLBOOK_REMOVE, method = RequestMethod.GET)
     public String removeSpell(@PathVariable("slot") Integer slot) {
-        String charName = CHARACTER_STATE.getCharacterState().getCharacterName();
+        String charName = CHARACTER_STATE.getCharacterState().getName();
         Spell defaultSpell = PS.getSpellByName("Nospell");
         Character character = PS.getCharacterByName(charName);
         Map<Integer, Spell> ab = ACTION_BAR.getActionBarMap();
@@ -90,7 +90,7 @@ public class SpellBookController {
         PS.updateCharacter(character);
         ACTION_BAR.reloadActionBar();
 
-        LOGGER.info("Action bar has been changed");
+        LOGGER.info("ObjAction bar has been changed");
 
         return "redirect:" + Paths.SPELLBOOK;
     }

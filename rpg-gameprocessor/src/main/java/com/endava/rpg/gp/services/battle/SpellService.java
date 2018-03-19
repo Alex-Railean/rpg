@@ -7,6 +7,7 @@ import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.statemodels.State;
+import com.endava.rpg.gp.util.CombatTextService;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.gp.util.Refreshable;
 import com.endava.rpg.persistence.models.Spell;
@@ -58,13 +59,15 @@ public class SpellService implements Refreshable {
 
     public void useSpellTo(Spell usedSpell, State target, State caster) {
         if (usedSpell.getSpellType().equals("Attack")) {
-            makeDamage(target, usedSpell.getCoefficient());
-            takeCost(usedSpell, caster);
+            int dmg = makeDamage(target, usedSpell.getCoefficient());
+            int cost = takeCost(usedSpell, caster);
             EXP.addAttributeExp(usedSpell.getAttribute());
+            CombatTextService.createSpellRecord(usedSpell, caster, target, dmg, cost);
         } else {
-            protection(caster, usedSpell.getCoefficient());
-            takeCost(usedSpell, caster);
+            int protection = protection(caster, usedSpell.getCoefficient());
+            int cost = takeCost(usedSpell, caster);
             EXP.addAttributeExp(usedSpell.getAttribute());
+            CombatTextService.createSpellRecord(usedSpell, caster, protection, cost);
         }
     }
 
@@ -83,7 +86,7 @@ public class SpellService implements Refreshable {
         }
     }
 
-    private void protection(State target, int protectionCoefficient) {
+    private Integer protection(State target, int protectionCoefficient) {
         protectionCoefficient = FORMULA.getShield(protectionCoefficient);
 
         target.setShieldPoints(protectionCoefficient);
@@ -91,25 +94,29 @@ public class SpellService implements Refreshable {
         this.lastMovePoints = protectionCoefficient;
 
         LOGGER.info("Calculated Protection is -> " + protectionCoefficient);
+
+        return protectionCoefficient;
     }
 
     private Spell getSpellFromActionBar(Integer actionBarNumber) {
         return ACTION_BAR_SERVICE.getActionBarMap().get(actionBarNumber);
     }
 
-    private void takeCost(Spell spell, State caster) {
+    private int takeCost(Spell spell, State caster) {
         String spellType = spell.getSchool();
         int manaCost = FORMULA.getManaCost(spell);
 
         if (spellType.equals("physical")) {
             caster.getEnergy().setCurrentValue(caster.getEnergy().getCurrentValue() - spell.getCost());
+            return spell.getCost();
         } else {
             caster.getMp().setCurrentValue(caster.getMp().getCurrentValue() - manaCost);
+            return manaCost;
         }
     }
 
     //TODO Investigate best approach
-    private void makeDamage(State target, int damageCoefficient) {
+    private Integer makeDamage(State target, int damageCoefficient) {
         damageCoefficient = FORMULA.getDamage(damageCoefficient);
 
         Double minimumDamage = damageCoefficient - damageCoefficient * 0.15;
@@ -135,6 +142,8 @@ public class SpellService implements Refreshable {
         biggestDmg = biggestDmg > damageCoefficient ? biggestDmg : damageCoefficient;
 
         LOGGER.info("Calculated DMG is -> " + damageCoefficient);
+
+        return damageCoefficient;
     }
 
     private boolean isCritical(State target) {

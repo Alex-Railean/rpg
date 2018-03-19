@@ -21,7 +21,7 @@ public class CreepAdaptor {
     }
 
     public CreepState toCreepState(Creep creep) {
-        Integer lvl = CHAR_STATE.getCharacterState().getCharacterLevel();
+        Integer lvl = CHAR_STATE.getCharacterState().getLevel();
         CreepState cs = new CreepState();
 
         cs.getHp().setValue(FORMULA.getCreepPoints(creep.getHpFactor()))
@@ -37,8 +37,8 @@ public class CreepAdaptor {
                 .setRegeneration(creep.getEnergyRegeneration());
 
         return (CreepState) cs.setCreepType(creep.getCreepType())
-                .setCreepName(creep.getCreepName())
-                .setCreepLevel(lvl)
+                .setName(creep.getCreepName())
+                .setLevel(lvl)
                 .setSpell_1(creep.getSpell_1())
                 .setSpell_2(creep.getSpell_2())
                 .setSpell_3(creep.getSpell_3());

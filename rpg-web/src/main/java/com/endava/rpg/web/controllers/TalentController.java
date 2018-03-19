@@ -51,7 +51,7 @@ public class TalentController {
 
     @RequestMapping(value = Paths.TALENTS_UPDATE, method = RequestMethod.POST)
     public String addTalents(@PathVariable("branch") String branch, @PathVariable("talent") String talent, int points) {
-        Character character = PS.getCharacterByName(CHARACTER_STATE.getCharacterState().getCharacterName());
+        Character character = PS.getCharacterByName(CHARACTER_STATE.getCharacterState().getName());
 
         if (CHARACTER_STATE.getCharacterState().getFreePoints() - points < 0) {
             return "redirect:" + Paths.TALENTS_BRANCH;

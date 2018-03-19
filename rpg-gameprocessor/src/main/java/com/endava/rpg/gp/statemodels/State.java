@@ -10,6 +10,10 @@ public class State {
 
     private List<Point> points = new ArrayList<>();
 
+    private String name;
+
+    private Integer level;
+
     private Point hp = new Point(this);
 
     private Point mp = new Point(this);
@@ -32,6 +36,24 @@ public class State {
 
     public List<Point> getPoints() {
         return points;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public State setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public State setLevel(Integer level) {
+        this.level = level;
+        return this;
     }
 
     public Point getHp() {

@@ -15,8 +15,8 @@
                 <button type="submit" class="btn btn-danger">To Battle!</button>
             </a>
         <#list creepsGroup as creep>
-            <span> ${creep.getCreepName()}
-                [${creep.getCreepLevel()}] (${creep.getHp().getCurrentValue()}/${creep.getHp().getValue()}); </span>
+            <span> ${creep.getName()}
+                [${creep.getLevel()}] (${creep.getHp().getCurrentValue()}/${creep.getHp().getValue()}); </span>
         </#list>
         </div>
     </div>

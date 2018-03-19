@@ -10,11 +10,9 @@
 <div class="container">
     <div class="row">
     <#include "../modules/character.ftl">
-        <#include "../modules/enemies.ftl">
+    <#include "../modules/combat-text.ftl">
+    <#include "../modules/enemies.ftl">
     </div>
-    <a href="/battle/wait">
-        <button type="button" class="btn btn-dark bottom-button">Wait</button>
-    </a>
 <#if warningMessage??>
     <div class="alert alert-primary" role="alert">
     ${warningMessage}

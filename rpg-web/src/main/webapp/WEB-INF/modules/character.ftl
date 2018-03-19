@@ -36,4 +36,9 @@
         </div>
         <div><a href="/talents" class="talents-link">Talents (${freePoints})</a></div>
     </div>
+<#if combatText??>
+    <a href="/battle/wait">
+        <button type="button" class="btn btn-dark bottom-button">Wait</button>
+    </a>
+</#if>
 </div>

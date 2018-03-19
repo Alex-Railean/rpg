@@ -55,7 +55,7 @@ public class CharacterStateService {
 
     public CharacterState setNewLocation(String location) {
         LOGGER.info("New Location -> " + location);
-        ps.updateCharacter(ps.getCharacterByName(characterState.getCharacterName()).setLocation(location));
+        ps.updateCharacter(ps.getCharacterByName(characterState.getName()).setLocation(location));
         return characterState.setLocation(location);
     }
 
@@ -65,8 +65,8 @@ public class CharacterStateService {
 
     public <M extends Model> M getCharacterModel(M model) {
         Map<Integer, Spell> actionBar = actionBarService.getActionBarMap();
-        model.addAttribute("characterName", characterState.getCharacterName())
-                .addAttribute("characterLevel", characterState.getCharacterLevel())
+        model.addAttribute("characterName", characterState.getName())
+                .addAttribute("characterLevel", characterState.getLevel())
                 .addAttribute("hp", characterState.getHp().getValue())
                 .addAttribute("currentHp", characterState.getHp().getCurrentValue())
                 .addAttribute("mp", characterState.getMp().getValue())
@@ -98,7 +98,7 @@ public class CharacterStateService {
             return true;
         }
 
-        Character character = ps.getCharacterByName(characterState.getCharacterName());
+        Character character = ps.getCharacterByName(characterState.getName());
         Progress progress = character.getProgress();
 
         if (stateAttribute.isItNextLevel(additionalExp)) {
@@ -146,7 +146,7 @@ public class CharacterStateService {
     }
 
     public CharacterState refreshCharacter(){
-        return defineCharacter(characterState.getCharacterName());
+        return defineCharacter(characterState.getName());
     }
 
     public CharacterState defineCharacter(String characterName) {
@@ -174,8 +174,8 @@ public class CharacterStateService {
     }
 
     public <M extends Model> M getHeaderData(M model) {
-        model.addAttribute("characterName", getCharacterState().getCharacterName())
-                .addAttribute("characterLevel", getCharacterState().getCharacterLevel());
+        model.addAttribute("characterName", getCharacterState().getName())
+                .addAttribute("characterLevel", getCharacterState().getLevel());
         return model;
     }
 
@@ -189,9 +189,7 @@ public class CharacterStateService {
         characterState.getIntelligence().setProgressLevel(character.getProgress().getIntelligenceProgressLevel())
                 .setProgress(character.getProgress().getIntelligenceProgress());
 
-        characterState.setCharacterName(character.getCharacterName())
-                .setLocation(character.getLocation())
-                .setCharacterLevel(calculateCharacterLevel())
+        characterState.setLocation(character.getLocation())
                 .setSpell_4(character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4())
                 .setSpell_5(character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5())
                 .setSpell_6(character.getActionBar().getSpell_6() == null ? getDefaultSpell() : character.getActionBar().getSpell_6())
@@ -202,6 +200,8 @@ public class CharacterStateService {
                 .setSpell_11(character.getActionBar().getSpell_11() == null ? getDefaultSpell() : character.getActionBar().getSpell_11())
                 .setSpell_12(character.getActionBar().getSpell_12() == null ? getDefaultSpell() : character.getActionBar().getSpell_12())
                 .setFreePoints(character.getFreePoints())
+                .setName(character.getCharacterName())
+                .setLevel(calculateCharacterLevel())
                 .setSpell_1(character.getActionBar().getSpell_1() == null ? getDefaultSpell(1) : character.getActionBar().getSpell_1())
                 .setSpell_2(character.getActionBar().getSpell_2() == null ? getDefaultSpell(2) : character.getActionBar().getSpell_2())
                 .setSpell_3(character.getActionBar().getSpell_3() == null ? getDefaultSpell(3) : character.getActionBar().getSpell_3());
@@ -219,11 +219,11 @@ public class CharacterStateService {
     }
 
     public int getCharacterLevel(){
-        return characterState.getCharacterLevel();
+        return characterState.getLevel();
     }
 
     public String getCharacterName(){
-        return characterState.getCharacterName();
+        return characterState.getName();
     }
 
     //TODO: Remove hardcode
