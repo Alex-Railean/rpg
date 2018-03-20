@@ -18,6 +18,14 @@ public class Attribute {
         cs.addAttribute(this);
     }
 
+    public boolean isItNextLevel(Integer additionalExp) {
+        return progress + additionalExp >= toNextLevel;
+    }
+
+    public boolean isLevelStable(){
+        return progress < toNextLevel;
+    }
+
     public Attribute addProgressLevel(Integer progressLevel) {
         this.progressLevel += progressLevel;
         this.toNextLevel = formulaService.getNextLevelExp(progressLevel);
@@ -50,13 +58,5 @@ public class Attribute {
     public Attribute setProgress(Integer progress) {
         this.progress = progress;
         return this;
-    }
-
-    public boolean isItNextLevel(Integer additionalExp) {
-        return progress + additionalExp >= toNextLevel;
-    }
-
-    public boolean isLevelStable(){
-        return progress < toNextLevel;
     }
 }

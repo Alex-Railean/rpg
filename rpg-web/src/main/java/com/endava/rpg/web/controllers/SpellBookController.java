@@ -73,7 +73,7 @@ public class SpellBookController {
         PS.updateCharacter(character);
         ACTION_BAR.reloadActionBar();
 
-        LOGGER.info("ObjAction bar has been changed");
+        LOGGER.info("Action bar has been changed");
 
         return "redirect:" + Paths.SPELLBOOK;
     }
@@ -90,7 +90,7 @@ public class SpellBookController {
         PS.updateCharacter(character);
         ACTION_BAR.reloadActionBar();
 
-        LOGGER.info("ObjAction bar has been changed");
+        LOGGER.info("Action bar has been changed");
 
         return "redirect:" + Paths.SPELLBOOK;
     }

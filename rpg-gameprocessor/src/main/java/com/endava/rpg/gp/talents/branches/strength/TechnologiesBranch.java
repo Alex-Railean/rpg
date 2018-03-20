@@ -1,13 +1,13 @@
 package com.endava.rpg.gp.talents.branches.strength;
 
 import com.endava.rpg.gp.talents.branches.Branch;
-import com.endava.rpg.gp.talents.constants.linknames.BranchLinks;
-import com.endava.rpg.gp.talents.constants.names.BranchNames;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Technologies;
 import com.endava.rpg.persistence.services.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.endava.rpg.gp.talents.constants.BranchAttribute.TECHNOLOGIES;
 
 @Component
 public class TechnologiesBranch extends Branch {
@@ -16,8 +16,8 @@ public class TechnologiesBranch extends Branch {
 
     @Autowired
     public TechnologiesBranch(PersistenceService ps) {
-        super.setName(BranchNames.TECHNOLOGIES);
-        super.setLinkName(BranchLinks.TECHNOLOGIES);
+        super.setName(TECHNOLOGIES.NAME);
+        super.setLinkName(TECHNOLOGIES.LINK);
         super.setURL("");
         this.PS = ps;
     }

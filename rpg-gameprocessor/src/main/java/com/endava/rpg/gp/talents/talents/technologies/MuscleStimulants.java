@@ -2,12 +2,12 @@ package com.endava.rpg.gp.talents.talents.technologies;
 
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.talents.branches.strength.TechnologiesBranch;
-import com.endava.rpg.gp.talents.constants.linknames.TalentLinks;
-import com.endava.rpg.gp.talents.constants.names.TalentNames;
 import com.endava.rpg.gp.talents.talents.Talent;
 import com.endava.rpg.persistence.models.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.endava.rpg.gp.talents.constants.TalentAttribute.MUSCLE_STIMULANTS;
 
 @Component
 public class MuscleStimulants extends Talent {
@@ -16,8 +16,8 @@ public class MuscleStimulants extends Talent {
     @Autowired
     private MuscleStimulants(TechnologiesBranch technologies) {
         technologies.addTalent(this);
-        setName(TalentNames.MUSCLE_STIMULANTS);
-        setLinkName(TalentLinks.MUSCLE_STIMULANTS);
+        setName(MUSCLE_STIMULANTS.NAME);
+        setLinkName(MUSCLE_STIMULANTS.LINK);
         setURL("");
     }
 

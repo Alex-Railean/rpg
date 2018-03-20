@@ -2,12 +2,12 @@ package com.endava.rpg.gp.talents.talents.technologies;
 
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.talents.branches.strength.TechnologiesBranch;
-import com.endava.rpg.gp.talents.constants.linknames.TalentLinks;
-import com.endava.rpg.gp.talents.constants.names.TalentNames;
 import com.endava.rpg.gp.talents.talents.Talent;
 import com.endava.rpg.persistence.models.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.endava.rpg.gp.talents.constants.TalentAttribute.EXO_SPINE;
 
 @Component
 public class ExoSpine extends Talent {
@@ -18,8 +18,8 @@ public class ExoSpine extends Talent {
     @Autowired
     private ExoSpine(TechnologiesBranch technologies) {
         technologies.addTalent(this);
-        setName(TalentNames.EXO_SPINE);
-        setLinkName(TalentLinks.EXO_SPINE);
+        setName(EXO_SPINE.NAME);
+        setLinkName(EXO_SPINE.LINK);
         setURL("");
     }
 
