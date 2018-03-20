@@ -36,7 +36,7 @@ public class PostConstructService {
     private void injectAllSpells() {
         List<String[]> spells = new CSVReader("spells.csv").getAsListOfArrays();
         if (PS.getAllSpells().size() < spells.size()) {
-            spells.forEach(spell -> PS.saveSpell(CSVAdapter.arrayToSpell(spell)));
+            spells.forEach(spell -> PS.saveSpell(CSVAdapter.toSpell(spell)));
             LOGGER.info("All Spells from CSV are saved in DB");
         }
     }
@@ -45,7 +45,7 @@ public class PostConstructService {
         List<String[]> creeps = new CSVReader("creeps.csv").getAsListOfArrays();
         if (PS.getAllCreeps().size() < creeps.size()) {
 
-            creeps.forEach(creep -> PS.saveCreep(CSVAdapter.arrayToCreep(creep)));
+            creeps.forEach(creep -> PS.saveCreep(CSVAdapter.toCreep(creep)));
 
             LOGGER.info("All Creeps from CSV are saved in DB");
         }

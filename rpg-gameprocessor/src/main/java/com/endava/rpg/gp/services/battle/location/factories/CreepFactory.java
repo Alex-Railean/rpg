@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.services.battle.location.creepfactories;
+package com.endava.rpg.gp.services.battle.location.factories;
 
 import com.endava.rpg.gp.adapters.CreepAdaptor;
 import com.endava.rpg.gp.services.battle.location.enums.Location;

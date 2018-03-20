@@ -145,7 +145,7 @@ public class CharacterStateService {
         return stateAttribute.isLevelStable();
     }
 
-    public CharacterState refreshCharacter(){
+    public CharacterState refreshCharacter() {
         return defineCharacter(characterState.getName());
     }
 
@@ -190,21 +190,21 @@ public class CharacterStateService {
                 .setProgress(character.getProgress().getIntelligenceProgress());
 
         characterState.setLocation(character.getLocation())
-                .setSpell_4(character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4())
-                .setSpell_5(character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5())
-                .setSpell_6(character.getActionBar().getSpell_6() == null ? getDefaultSpell() : character.getActionBar().getSpell_6())
-                .setSpell_7(character.getActionBar().getSpell_7() == null ? getDefaultSpell() : character.getActionBar().getSpell_7())
-                .setSpell_8(character.getActionBar().getSpell_8() == null ? getDefaultSpell() : character.getActionBar().getSpell_8())
-                .setSpell_9(character.getActionBar().getSpell_9() == null ? getDefaultSpell() : character.getActionBar().getSpell_9())
-                .setSpell_10(character.getActionBar().getSpell_10() == null ? getDefaultSpell() : character.getActionBar().getSpell_10())
-                .setSpell_11(character.getActionBar().getSpell_11() == null ? getDefaultSpell() : character.getActionBar().getSpell_11())
-                .setSpell_12(character.getActionBar().getSpell_12() == null ? getDefaultSpell() : character.getActionBar().getSpell_12())
                 .setFreePoints(character.getFreePoints())
                 .setName(character.getCharacterName())
                 .setLevel(calculateCharacterLevel())
-                .setSpell_1(character.getActionBar().getSpell_1() == null ? getDefaultSpell(1) : character.getActionBar().getSpell_1())
-                .setSpell_2(character.getActionBar().getSpell_2() == null ? getDefaultSpell(2) : character.getActionBar().getSpell_2())
-                .setSpell_3(character.getActionBar().getSpell_3() == null ? getDefaultSpell(3) : character.getActionBar().getSpell_3());
+                .setSpell(0, character.getActionBar().getSpell_1() == null ? getDefaultSpell(1) : character.getActionBar().getSpell_1())
+                .setSpell(1, character.getActionBar().getSpell_2() == null ? getDefaultSpell(2) : character.getActionBar().getSpell_2())
+                .setSpell(2, character.getActionBar().getSpell_3() == null ? getDefaultSpell(3) : character.getActionBar().getSpell_3())
+                .setSpell(3, character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4())
+                .setSpell(4, character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5())
+                .setSpell(5, character.getActionBar().getSpell_6() == null ? getDefaultSpell() : character.getActionBar().getSpell_6())
+                .setSpell(6, character.getActionBar().getSpell_7() == null ? getDefaultSpell() : character.getActionBar().getSpell_7())
+                .setSpell(7, character.getActionBar().getSpell_8() == null ? getDefaultSpell() : character.getActionBar().getSpell_8())
+                .setSpell(8, character.getActionBar().getSpell_9() == null ? getDefaultSpell() : character.getActionBar().getSpell_9())
+                .setSpell(9, character.getActionBar().getSpell_10() == null ? getDefaultSpell() : character.getActionBar().getSpell_10())
+                .setSpell(10, character.getActionBar().getSpell_11() == null ? getDefaultSpell() : character.getActionBar().getSpell_11())
+                .setSpell(11, character.getActionBar().getSpell_12() == null ? getDefaultSpell() : character.getActionBar().getSpell_12());
 
         characterState.getHp().setValue(formula.getCharacterHp())
                 .setCurrentValue(characterState.getHp().getValue());
@@ -218,11 +218,11 @@ public class CharacterStateService {
         return characterState;
     }
 
-    public int getCharacterLevel(){
+    public int getCharacterLevel() {
         return characterState.getLevel();
     }
 
-    public String getCharacterName(){
+    public String getCharacterName() {
         return characterState.getName();
     }
 

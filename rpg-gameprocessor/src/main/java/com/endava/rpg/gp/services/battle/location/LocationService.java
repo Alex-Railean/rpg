@@ -1,15 +1,12 @@
 package com.endava.rpg.gp.services.battle.location;
 
-import com.endava.rpg.gp.adapters.CreepAdaptor;
-import com.endava.rpg.gp.services.battle.location.creepfactories.CreepFactory;
+import com.endava.rpg.gp.services.battle.location.factories.CreepFactory;
 import com.endava.rpg.gp.services.battle.location.enums.Location;
 import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.gp.util.Refreshable;
-import com.endava.rpg.persistence.models.Creep;
-import com.endava.rpg.persistence.services.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,6 +10,8 @@ public class State {
 
     private List<Point> points = new ArrayList<>();
 
+    private List<Spell> spells = new ArrayList<>();
+
     private String name;
 
     private Integer level;
@@ -24,13 +26,24 @@ public class State {
 
     private Double criticalDmgCoefficient = 1.8;
 
-    private Spell spell_1;
+    public List<Spell> getSpells() {
+        return spells;
+    }
 
-    private Spell spell_2;
+    public Spell getSpell(int i) {
+        return spells.get(i);
+    }
 
-    private Spell spell_3;
+    public State setSpell(int i, Spell s) {
+        if (spells.size() <= i) {
+            spells.add(i, s);
+        } else {
+            spells.set(i, s);
+        }
+        return this;
+    }
 
-    public void addPoint(Point point){
+    public void addPoint(Point point) {
         this.points.add(point);
     }
 
@@ -78,33 +91,6 @@ public class State {
 
     public void setEnergy(Point energy) {
         this.energy = energy;
-    }
-
-    public Spell getSpell_1() {
-        return spell_1;
-    }
-
-    public State setSpell_1(Spell spell_1) {
-        this.spell_1 = spell_1;
-        return this;
-    }
-
-    public Spell getSpell_2() {
-        return spell_2;
-    }
-
-    public State setSpell_2(Spell spell_2) {
-        this.spell_2 = spell_2;
-        return this;
-    }
-
-    public Spell getSpell_3() {
-        return spell_3;
-    }
-
-    public State setSpell_3(Spell spell_3) {
-        this.spell_3 = spell_3;
-        return this;
     }
 
     public Integer getShieldPoints() {

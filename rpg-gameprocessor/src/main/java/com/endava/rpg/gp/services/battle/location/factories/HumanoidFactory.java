@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.services.battle.location.creepfactories;
+package com.endava.rpg.gp.services.battle.location.factories;
 
 import com.endava.rpg.gp.adapters.CreepAdaptor;
 import com.endava.rpg.gp.services.battle.location.enums.CreepType;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class HumanoidFactory extends CreepFactory {
 
     @Autowired
-    protected HumanoidFactory(PersistenceService ps, CreepAdaptor creep_adaptor) {
-        super(ps, creep_adaptor);
+    protected HumanoidFactory(PersistenceService ps, CreepAdaptor creepAdaptor) {
+        super(ps, creepAdaptor);
     }
 
     @Override

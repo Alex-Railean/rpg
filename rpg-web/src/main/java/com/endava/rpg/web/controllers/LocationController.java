@@ -1,7 +1,7 @@
 package com.endava.rpg.web.controllers;
 
 import com.endava.rpg.gp.services.battle.location.LocationService;
-import com.endava.rpg.gp.services.battle.location.creepfactories.BeastFactory;
+import com.endava.rpg.gp.services.battle.location.factories.BeastFactory;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.web.controllers.utils.Paths;
 import org.slf4j.Logger;

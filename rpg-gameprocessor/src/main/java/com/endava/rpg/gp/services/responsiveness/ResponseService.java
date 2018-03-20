@@ -28,24 +28,25 @@ public class ResponseService {
     }
 
     public void creepResponse() {
-        LOCATION.getCreepGroup()
-                .forEach(creep -> {
-                    if (isAlmostDead(creep)) {
-                        List<Spell> spells = SPELL_SERVICE.getEnemyProtectionSpells(creep);
-                        Spell toCast;
-                        if (SPELL_SERVICE.isEnoughMana(toCast = chooseAppropriate(spells), creep)) {
-                            SPELL_SERVICE.useSpellTo(toCast, CHAR_STATE.getCharacterState(), creep);
-                        } else if (chooseAnotherOption(SPELL_SERVICE.getEnemySpells(creep)) != null) {
-                            SPELL_SERVICE.useSpellTo(chooseAnotherOption(SPELL_SERVICE.getEnemySpells(creep)), CHAR_STATE.getCharacterState(), creep);
-                        }
+        for (CreepState c :LOCATION.getCreepGroup()
+             ) {
+            if (isAlmostDead(c)) {
+                List<Spell> spells = SPELL_SERVICE.getEnemyProtectionSpells(c);
+                Spell toCast;
+                if (SPELL_SERVICE.isEnoughMana(toCast = chooseAppropriate(spells), c)) {
+                    SPELL_SERVICE.useSpellTo(toCast, CHAR_STATE.getCharacterState(), c);
+                } else if (chooseAnotherOption(c.getSpells()) != null) {
+                    SPELL_SERVICE.useSpellTo(chooseAnotherOption(c.getSpells()),
+                            CHAR_STATE.getCharacterState(), c);
+                }
 
-                    } else {
-                        //TODO: OOM option
-                        SPELL_SERVICE.useSpellTo(chooseStrongestSpell(SPELL_SERVICE.getEnemyAttackSpells(creep)),
-                                CHAR_STATE.getCharacterState(),
-                                creep);
-                    }
-                });
+            } else {
+                //TODO: OOM option
+                SPELL_SERVICE.useSpellTo(chooseStrongestSpell(SPELL_SERVICE.getEnemyAttackSpells(c)),
+                        CHAR_STATE.getCharacterState(),c);
+            }
+        }
+
     }
 
     private Spell chooseStrongestSpell(List<Spell> spells) {

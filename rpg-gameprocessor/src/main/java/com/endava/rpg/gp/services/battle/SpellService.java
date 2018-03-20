@@ -16,11 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class SpellService implements Refreshable {
@@ -161,21 +159,15 @@ public class SpellService implements Refreshable {
     }
 
     public List<Spell> getEnemyProtectionSpells(CreepState creep) {
-        return getEnemySpells(creep).stream()
+        return creep.getSpells().stream()
                 .filter(spell -> spell.getSpellType().equals("Protection"))
                 .collect(Collectors.toList());
     }
 
     public List<Spell> getEnemyAttackSpells(CreepState creep) {
-        return getEnemySpells(creep).stream()
+        return creep.getSpells().stream()
                 .filter(spell -> spell.getSpellType().equals("Attack"))
                 .collect(Collectors.toList());
-    }
-
-    public List<Spell> getEnemySpells(CreepState creep) {
-        return new ArrayList<>(Stream.of(creep.getSpell_1(), creep.getSpell_2(), creep.getSpell_3())
-                .filter(spell -> !spell.getAttribute().equals("none"))
-                .collect(Collectors.toList()));
     }
 
     @Override

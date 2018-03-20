@@ -1,7 +1,6 @@
 package com.endava.rpg.gp.statemodels;
 
 import com.endava.rpg.gp.statemodels.points.Attribute;
-import com.endava.rpg.persistence.models.Spell;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,24 +19,6 @@ public class CharacterState extends State {
 
     private Integer defaultEnergy = 100;
 
-    private Spell spell_4;
-
-    private Spell spell_5;
-
-    private Spell spell_6;
-
-    private Spell spell_7;
-
-    private Spell spell_8;
-
-    private Spell spell_9;
-
-    private Spell spell_10;
-
-    private Spell spell_11;
-
-    private Spell spell_12;
-
     private Long currentBattle;
 
     private String location;
@@ -53,7 +34,7 @@ public class CharacterState extends State {
         getEnergy().setCurrentValue(100);
     }
 
-    public void addAttribute(Attribute a){
+    public void addAttribute(Attribute a) {
         attributes.add(a);
     }
 
@@ -83,87 +64,6 @@ public class CharacterState extends State {
 
     public void setIntelligence(Attribute intelligence) {
         this.intelligence = intelligence;
-    }
-
-    public Spell getSpell_4() {
-        return spell_4;
-    }
-
-    public CharacterState setSpell_4(Spell spell_4) {
-        this.spell_4 = spell_4;
-        return this;
-    }
-
-    public Spell getSpell_5() {
-        return spell_5;
-    }
-
-    public CharacterState setSpell_5(Spell spell_5) {
-        this.spell_5 = spell_5;
-        return this;
-    }
-
-    public Spell getSpell_6() {
-        return spell_6;
-    }
-
-    public CharacterState setSpell_6(Spell spell_6) {
-        this.spell_6 = spell_6;
-        return this;
-    }
-
-    public Spell getSpell_7() {
-        return spell_7;
-    }
-
-    public CharacterState setSpell_7(Spell spell_7) {
-        this.spell_7 = spell_7;
-        return this;
-    }
-
-    public Spell getSpell_8() {
-        return spell_8;
-    }
-
-    public CharacterState setSpell_8(Spell spell_8) {
-        this.spell_8 = spell_8;
-        return this;
-    }
-
-    public Spell getSpell_9() {
-        return spell_9;
-    }
-
-    public CharacterState setSpell_9(Spell spell_9) {
-        this.spell_9 = spell_9;
-        return this;
-    }
-
-    public Spell getSpell_10() {
-        return spell_10;
-    }
-
-    public CharacterState setSpell_10(Spell spell_10) {
-        this.spell_10 = spell_10;
-        return this;
-    }
-
-    public Spell getSpell_11() {
-        return spell_11;
-    }
-
-    public CharacterState setSpell_11(Spell spell_11) {
-        this.spell_11 = spell_11;
-        return this;
-    }
-
-    public Spell getSpell_12() {
-        return spell_12;
-    }
-
-    public CharacterState setSpell_12(Spell spell_12) {
-        this.spell_12 = spell_12;
-        return this;
     }
 
     public Long getCurrentBattle() {

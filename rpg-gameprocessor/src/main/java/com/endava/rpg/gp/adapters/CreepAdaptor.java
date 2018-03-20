@@ -39,8 +39,8 @@ public class CreepAdaptor {
         return (CreepState) cs.setCreepType(creep.getCreepType())
                 .setName(creep.getCreepName())
                 .setLevel(lvl)
-                .setSpell_1(creep.getSpell_1())
-                .setSpell_2(creep.getSpell_2())
-                .setSpell_3(creep.getSpell_3());
+                .setSpell(0, creep.getSpell_1())
+                .setSpell(1, creep.getSpell_2())
+                .setSpell(2, creep.getSpell_3());
     }
 }

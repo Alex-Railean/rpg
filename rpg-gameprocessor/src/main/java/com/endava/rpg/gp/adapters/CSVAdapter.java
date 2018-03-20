@@ -19,7 +19,7 @@ public class CSVAdapter {
         CSVAdapter.ps = ps;
     }
 
-    public static Spell arrayToSpell(String[] csvSpell) {
+    public static Spell toSpell(String[] csvSpell) {
         LOGGER.info("CSV row was Converted to Spell Object");
         return new Spell().setSpellName(csvSpell[0])
                 .setCooldown(Integer.parseInt(csvSpell[1]))
@@ -32,7 +32,7 @@ public class CSVAdapter {
                 .setSpellType(csvSpell[8]);
     }
 
-    public static Creep arrayToCreep(String[] csvCreep) {
+    public static Creep toCreep(String[] csvCreep) {
         LOGGER.info("CSV row was Converted to Creep Object");
         return new Creep().setCreepName(csvCreep[0])
                 .setHpFactor(Integer.parseInt(csvCreep[1]))

@@ -2,8 +2,6 @@ package com.endava.rpg.gp.services.state;
 
 import com.endava.rpg.gp.talents.branches.Branch;
 import com.endava.rpg.gp.talents.branches.strength.TechnologiesBranch;
-import com.endava.rpg.gp.talents.constants.linknames.BranchLinks;
-import com.endava.rpg.gp.talents.constants.linknames.TalentLinks;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Technologies;
 import com.endava.rpg.persistence.services.PersistenceService;
@@ -12,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.endava.rpg.gp.talents.constants.BranchAttribute.TECHNOLOGIES;
+import static com.endava.rpg.gp.talents.constants.TalentAttribute.EXO_SPINE;
+import static com.endava.rpg.gp.talents.constants.TalentAttribute.MUSCLE_STIMULANTS;
 
 @Service
 public class TalentService {
@@ -46,33 +48,33 @@ public class TalentService {
     }
 
     public boolean updateCharacterTalent(Character character, String branch, String talent, int points) {
-        switch (branch) {
-            case BranchLinks.TECHNOLOGIES:
-                Technologies technologies = character.getTechnologies();
-                return updateBranch(talent, points, technologies);
-            default:
-                throw new IllegalArgumentException("There is no such talent branch");
-        }
+        if (branch.equals(TECHNOLOGIES.LINK)) {
+            Technologies technologies = character.getTechnologies();
+            return updateBranch(talent, points, technologies);
+        } else
+
+            throw new IllegalArgumentException("There is no such talent branch");
+
     }
 
     private boolean updateBranch(String talent, int points, Technologies technologies) {
-        switch (talent) {
-            case TalentLinks.EXO_SPINE:
-                if (technologies.getExoSpine() + points <= technologies.getExoSpineLimit()) {
-                    PS.updateTech(technologies.setExoSpine(technologies.getExoSpine() + points));
-                    return true;
-                } else {
-                    return false;
-                }
-            case TalentLinks.MUSCLE_STIMULANTS:
-                if (technologies.getMuscleStimulants() + points <= technologies.getMuscleStimulantsLimit()) {
-                    PS.updateTech(technologies.setMuscleStimulants(technologies.getMuscleStimulants() + points));
-                    return true;
-                } else {
-                    return false;
-                }
-            default:
-                throw new IllegalArgumentException("There is no such talent");
+        if (EXO_SPINE.LINK.equals(talent)) {
+            if (technologies.getExoSpine() + points <= technologies.getExoSpineLimit()) {
+                PS.updateTech(technologies.setExoSpine(technologies.getExoSpine() + points));
+                return true;
+            } else {
+                return false;
+            }
+        } else if (MUSCLE_STIMULANTS.LINK.equals(talent)) {
+            if (technologies.getMuscleStimulants() + points <= technologies.getMuscleStimulantsLimit()) {
+                PS.updateTech(technologies.setMuscleStimulants(technologies.getMuscleStimulants() + points));
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+
+            throw new IllegalArgumentException("There is no such talent");
         }
     }
 }
