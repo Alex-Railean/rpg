@@ -1,88 +1,62 @@
 package com.endava.rpg.persistence.services.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
-// TODO: Investigate
 public class CSVReader {
+    private Logger LOGGER = LoggerFactory.getLogger(CSVReader.class);
 
-    private String fileNameFromResources;
+    private String fileName;
 
-    private String dataSplitter = ",";
+    private String dataSplitter = ";";
 
-    private String resourcePath = "C:\\Users\\arailean\\IdeaProjects\\rpg\\rpg-persistence\\src\\main\\resources\\csv\\";
+    private String path = "csv/";
 
-    /**
-     * @param fileName name of file from resources
-     */
     public CSVReader(String fileName) {
-        this.fileNameFromResources = fileName;
+        this.fileName = fileName;
     }
 
-    /**
-     * @param fileName     name of file from resources
-     * @param dataSplitter - if you need different data splitter (not ",")
-     */
-    public CSVReader(String fileName, String dataSplitter) {
-        this.fileNameFromResources = fileName;
-        this.dataSplitter = dataSplitter;
-    }
-
-    /**
-     * private method for extracting data from *.csv
-     *
-     * @return List of rows from *.csv as array
-     */
-    private List<String[]> getData() {
+    public List<String[]> getData() {
         String line;
-        int headerSkipper = 0;
+        boolean first = true;
         List<String[]> result = new ArrayList<>();
 
         try {
             BufferedReader br =
-                    new BufferedReader(new FileReader(resourcePath +
-                            fileNameFromResources));
+                    new BufferedReader(new InputStreamReader(
+                            CSVReader.class.getClassLoader().getResourceAsStream(path + fileName)));
 
             while ((line = br.readLine()) != null) {
-                if (headerSkipper == 0) {
-                    headerSkipper++;
+                if (first) {
+                    first = false;
                     continue;
                 }
-                // "_" this symbol is separator of text in *.csv files
-                result.add(line.replaceAll("\\s", "").replaceAll("_", " ").split(dataSplitter));
+
+                String[] rawData = line.trim().split(dataSplitter);
+
+                String[] finalArray = Arrays.stream(rawData).map(String::trim).toArray(unused -> rawData);
+
+                result.add(finalArray);
             }
-        } catch (IOException iO) {
-            iO.printStackTrace();
+        } catch (IOException io) {
+            LOGGER.error("Error -> {}", io);
         }
         return result;
     }
 
-    /**
-     * @return List of rows from *.csv as array
-     */
-    public List<String[]> getAsListOfArrays() {
-        return getData();
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    /**
-     * @return Map where key is first column from *.csv and List of rows from *.csv as array
-     */
-    public Map<String, List<String>> getMapFirstColumnAsKeys() {
-        Map<String, List<String>> result = new HashMap<>();
-
-        getData()
-                .forEach(extraction -> {
-                    result.put(extraction[0],
-                            Arrays.asList(extraction).subList(1, extraction.length));
-                });
-
-        return result;
+    public void setDataSplitter(String dataSplitter) {
+        this.dataSplitter = dataSplitter;
     }
-
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
-    }
-
 }

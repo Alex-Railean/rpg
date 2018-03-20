@@ -41,9 +41,9 @@ public class CSVAdapter {
                 .setMpRegeneration(Integer.parseInt(csvCreep[4]))
                 .setEnergy(Integer.parseInt(csvCreep[5]))
                 .setEnergyRegeneration(Integer.parseInt(csvCreep[6]))
-                .setSpell_1(csvCreep[7].equals("null") ? ps.getSpellByName("Nospell") : ps.getSpellByName(csvCreep[7]))
-                .setSpell_2(csvCreep[8].equals("null") ? ps.getSpellByName("Nospell") : ps.getSpellByName(csvCreep[8]))
-                .setSpell_3(csvCreep[9].equals("null") ? ps.getSpellByName("Nospell") : ps.getSpellByName(csvCreep[9]))
+                .setSpell_1(csvCreep[7].equals("null") ? ps.getSpellByName("No spell") : ps.getSpellByName(csvCreep[7]))
+                .setSpell_2(csvCreep[8].equals("null") ? ps.getSpellByName("No spell") : ps.getSpellByName(csvCreep[8]))
+                .setSpell_3(csvCreep[9].equals("null") ? ps.getSpellByName("No spell") : ps.getSpellByName(csvCreep[9]))
                 .setCreepType(csvCreep[10])
                 .setCreepLocation(csvCreep[11]);
     }

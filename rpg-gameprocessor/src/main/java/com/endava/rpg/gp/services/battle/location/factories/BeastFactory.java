@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class BeastFactory extends CreepFactory {
 
     @Autowired
-    protected BeastFactory(PersistenceService ps, CreepAdaptor creep_adaptor) {
-        super(ps, creep_adaptor);
+    protected BeastFactory(PersistenceService ps, CreepAdaptor creepAdaptor) {
+        super(ps, creepAdaptor);
     }
 
     @Override

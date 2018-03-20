@@ -1,7 +1,7 @@
-spellName        , cooldown, effectId, dmgCoefficient, spellURL                          , cost  , school   , attribute   , spellType
-Sword Attack     , 0       , 0       , 20            , /resources/img/swordattack.jpg    , 15    , physical , strength    , Attack
-Bow Attack       , 0       , 0       , 30            , /resources/img/bowshot.jpg        , 25    , physical , agility     , Attack
-Fire Ball        , 0       , 0       , 40            , /resources/img/fireball.jpg       , 65    , magical  , intelligence, Attack
-No spell         , 0       , 0       , 0             , /resources/img/empty.jpg          , 0     , none     , none        , None
-Bite             , 0       , 0       , 20            , /resources/img/bite.jpg           , 30    , physical , creep       , Attack
-Defence Stance   , 0       , 0       , 35            , /resources/img/defencestance.jpg  , 100   , physical , creep       , Protection
+spellName        ; cooldown; effectId; dmgCoefficient; spellURL                          ; cost  ; school   ; attribute   ; spellType
+Sword Attack     ; 0       ; 0       ; 20            ; /resources/img/swordattack.jpg    ; 15    ; physical ; strength    ; Attack
+Bow Attack       ; 0       ; 0       ; 30            ; /resources/img/bowshot.jpg        ; 25    ; physical ; agility     ; Attack
+Fire Ball        ; 0       ; 0       ; 40            ; /resources/img/fireball.jpg       ; 65    ; magical  ; intelligence; Attack
+No spell         ; 0       ; 0       ; 0             ; /resources/img/empty.jpg          ; 0     ; none     ; none        ; None
+Bite             ; 0       ; 0       ; 20            ; /resources/img/bite.jpg           ; 30    ; physical ; creep       ; Attack
+Defence Stance   ; 0       ; 0       ; 35            ; /resources/img/defencestance.jpg  ; 100   ; physical ; creep       ; Protection

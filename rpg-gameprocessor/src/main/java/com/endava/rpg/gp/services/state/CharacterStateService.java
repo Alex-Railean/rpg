@@ -232,7 +232,7 @@ public class CharacterStateService {
     }
 
     private Spell getDefaultSpell() {
-        return ps.getSpellByName("Nospell");
+        return ps.getSpellByName("No spell");
     }
 
     private Integer calculateCharacterLevel() {

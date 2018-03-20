@@ -53,7 +53,7 @@ public class SpellBookController {
     @RequestMapping(value = Paths.SPELLBOOK_SPELL, method = RequestMethod.POST)
     public String updateActionBar(@PathVariable("spell") String spell, Integer slot) {
         String charName = CHARACTER_STATE.getCharacterState().getName();
-        Spell defaultSpell = PS.getSpellByName("Nospell");
+        Spell defaultSpell = PS.getSpellByName("No spell");
         Character character = PS.getCharacterByName(charName);
         Map<Integer, Spell> ab = ACTION_BAR.getActionBarMap();
         Spell toMove = ab.get(slot);
@@ -81,7 +81,7 @@ public class SpellBookController {
     @RequestMapping(value = Paths.SPELLBOOK_REMOVE, method = RequestMethod.GET)
     public String removeSpell(@PathVariable("slot") Integer slot) {
         String charName = CHARACTER_STATE.getCharacterState().getName();
-        Spell defaultSpell = PS.getSpellByName("Nospell");
+        Spell defaultSpell = PS.getSpellByName("No spell");
         Character character = PS.getCharacterByName(charName);
         Map<Integer, Spell> ab = ACTION_BAR.getActionBarMap();
         ab.put(slot, defaultSpell);

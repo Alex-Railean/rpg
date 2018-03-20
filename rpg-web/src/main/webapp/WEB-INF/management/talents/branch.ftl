@@ -21,6 +21,11 @@
 </div>
 </#list>
 <h4>Free Points: ${freePoints}</h4>
+<div>
+    <a href="/outside">
+        <button type="button" class="btn btn-dark bottom-button">To Outside</button>
+    </a>
+</div>
 <#if warningMessage??>
 <div class="alert alert-primary" role="alert">
 ${warningMessage}

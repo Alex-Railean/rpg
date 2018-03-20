@@ -41,8 +41,8 @@ public class SpellBookService {
 
     public List<Spell> getDefault() {
         return defaultSpells = new ArrayList<>(
-                Arrays.asList(PS.getSpellByName("SwordAttack"),
-                        PS.getSpellByName("BowAttack"),
-                        PS.getSpellByName("FireBall")));
+                Arrays.asList(PS.getSpellByName("Sword Attack"),
+                        PS.getSpellByName("Bow Attack"),
+                        PS.getSpellByName("Fire Ball")));
     }
 }
