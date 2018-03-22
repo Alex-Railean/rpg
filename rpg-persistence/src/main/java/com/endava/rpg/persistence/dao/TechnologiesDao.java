@@ -1,7 +1,5 @@
 package com.endava.rpg.persistence.dao;
 
-import com.endava.rpg.persistence.models.BranchEntity;
-import com.endava.rpg.persistence.models.TableMapping;
 import com.endava.rpg.persistence.models.Technologies;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

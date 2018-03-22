@@ -53,10 +53,13 @@ public class SpellBookController {
     @RequestMapping(value = Paths.SPELLBOOK_SPELL, method = RequestMethod.POST)
     public String updateActionBar(@PathVariable("spell") String spell, Integer slot) {
         String charName = CHARACTER_STATE.getCharacterState().getName();
-        Spell defaultSpell = PS.getSpellByName("No spell");
         Character character = PS.getCharacterByName(charName);
+
+        Spell defaultSpell = PS.getSpellByName("No spell");
+
         Map<Integer, Spell> ab = ACTION_BAR.getActionBarMap();
         Spell toMove = ab.get(slot);
+
         Spell newSpell = SPELL_BOOK.getAvailableSpells(charName)
                 .stream()
                 .filter(s -> s.getSpellName().equals(spell)).findFirst().orElse(defaultSpell);

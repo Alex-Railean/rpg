@@ -1,8 +1,8 @@
 package com.endava.rpg.persistence.services;
 
 import com.endava.rpg.persistence.dao.*;
-import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.*;
+import com.endava.rpg.persistence.models.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

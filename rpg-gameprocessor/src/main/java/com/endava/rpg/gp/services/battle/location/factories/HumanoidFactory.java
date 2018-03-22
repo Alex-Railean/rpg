@@ -21,7 +21,7 @@ public class HumanoidFactory extends CreepFactory {
     @Override
     protected List<Creep> filterCreep(List<Creep> creeps) {
         return creeps.stream()
-                .filter(c -> c.getCreepType().equalsIgnoreCase(CreepType.HUMANOID.toString()))
+                .filter(c -> c.getCreepType().equalsIgnoreCase(CreepType.HUMANOID))
                 .collect(Collectors.toList());
     }
 }

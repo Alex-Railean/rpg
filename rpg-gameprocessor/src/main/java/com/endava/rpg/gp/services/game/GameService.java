@@ -4,17 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
+    public static final Integer GROWTH_FACTOR = 7;
 
-    private final Integer GROWTH_FACTOR = 7;
-
-    private final Integer GAME_RATE = 1;
-
-    public Integer getGrowthFactor() {
-        return GROWTH_FACTOR;
-    }
-
-    public Integer getGameRate() {
-        return GAME_RATE;
-    }
-
+    public static final Integer GAME_RATE = 1;
 }

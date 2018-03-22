@@ -51,16 +51,18 @@ public class TalentController {
 
     @RequestMapping(value = Paths.TALENTS_UPDATE, method = RequestMethod.POST)
     public String addTalents(@PathVariable("branch") String branch, @PathVariable("talent") String talent, int points) {
-        Character character = PS.getCharacterByName(CHARACTER_STATE.getCharacterState().getName());
 
-        if (CHARACTER_STATE.getCharacterState().getFreePoints() - points < 0) {
+        if (points == 0 || CHARACTER_STATE.getCharacterState().getFreePoints() - points < 0) {
             return "redirect:" + Paths.TALENTS_BRANCH;
-        } else if (points != 0 && TALENT.updateCharacterTalent(character, branch, talent, points)) {
-            character.removeFreePoints(points);
-            PS.updateCharacter(character);
-            CHARACTER_STATE.refreshCharacter();
-            LOGGER.info("Talents have been updated");
         }
+
+        Character character = PS.getCharacterByName(CHARACTER_STATE.getCharacterName());
+        TALENT.updateCharacterTalent(character, branch, talent, points);
+        character.removeFreePoints(points);
+        PS.updateCharacter(character);
+        CHARACTER_STATE.refreshCharacter();
+        LOGGER.info("Talents have been updated");
+
         return "redirect:" + Paths.TALENTS_BRANCH;
     }
 }

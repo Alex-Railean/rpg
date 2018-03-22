@@ -1,12 +1,13 @@
 package com.endava.rpg.gp.services.battle.spells;
 
 import com.endava.rpg.gp.services.battle.ExpService;
+import com.endava.rpg.gp.services.battle.spells.constants.School;
+import com.endava.rpg.gp.services.battle.spells.constants.SpellType;
 import com.endava.rpg.gp.services.game.FormulaService;
 import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.ActionBarService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
-import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.gp.util.CombatTextService;
 import com.endava.rpg.gp.util.ProcessorUtil;
@@ -17,9 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class SpellService implements Refreshable {
@@ -57,7 +56,7 @@ public class SpellService implements Refreshable {
     }
 
     public void useSpellTo(Spell usedSpell, State target, State caster) {
-        if (usedSpell.getSpellType().equals("Attack")) {
+        if (usedSpell.getSpellType().equals(SpellType.ATTACK)) {
             int dmg = makeDamage(caster, target, usedSpell.getCoefficient());
             int cost = takeCost(usedSpell, caster);
             EXP.addAttributeExp(usedSpell.getAttribute());
@@ -78,7 +77,7 @@ public class SpellService implements Refreshable {
     public boolean isEnoughMana(Spell usedSpell, State caster) {
         String spellSchool = usedSpell.getSchool();
 
-        if (spellSchool.equals("physical")) {
+        if (spellSchool.equals(School.PHYSICAL)) {
             return caster.getEnergy().getCurrentValue() - usedSpell.getCost() >= 0;
         } else {
             return caster.getMp().getCurrentValue() - FORMULA.getManaCost(usedSpell) >= 0;
@@ -86,7 +85,7 @@ public class SpellService implements Refreshable {
     }
 
     private Integer protection(State target, int protectionCoefficient) {
-        protectionCoefficient = FORMULA.getShield(target ,protectionCoefficient);
+        protectionCoefficient = FORMULA.getShield(target, protectionCoefficient);
         target.setShieldPoints(protectionCoefficient);
         this.lastMovePoints = protectionCoefficient;
 
@@ -103,7 +102,7 @@ public class SpellService implements Refreshable {
         String spellType = spell.getSchool();
         int manaCost = FORMULA.getManaCost(spell);
 
-        if (spellType.equals("physical")) {
+        if (spellType.equals(School.PHYSICAL)) {
             caster.getEnergy().setCurrentValue(caster.getEnergy().getCurrentValue() - spell.getCost());
             return spell.getCost();
         } else {
@@ -154,18 +153,6 @@ public class SpellService implements Refreshable {
 
     public Integer getBiggestDmg() {
         return biggestDmg;
-    }
-
-    public List<Spell> getEnemyProtectionSpells(CreepState creep) {
-        return creep.getSpells().stream()
-                .filter(spell -> spell.getSpellType().equals("Protection"))
-                .collect(Collectors.toList());
-    }
-
-    public List<Spell> getEnemyAttackSpells(CreepState creep) {
-        return creep.getSpells().stream()
-                .filter(spell -> spell.getSpellType().equals("Attack"))
-                .collect(Collectors.toList());
     }
 
     @Override

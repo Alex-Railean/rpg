@@ -1,17 +1,11 @@
 package com.endava.rpg.gp.services.battle.location.enums;
 
-public enum CreepType {
+public final class CreepType {
 
-    HUMANOID("humanoid"), BEAST("beast");
+    public static final String
+            HUMANOID = "humanoid",
+            BEAST = "beast";
 
-    private String creepType;
-
-    CreepType(String creepType){
-        this.creepType = creepType;
-    }
-
-    @Override
-    public String toString() {
-        return creepType;
+    private CreepType() {
     }
 }

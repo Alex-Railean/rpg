@@ -1,9 +1,10 @@
 package com.endava.rpg.gp.services.state;
 
+import com.endava.rpg.gp.services.battle.spells.constants.AttributeType;
+import com.endava.rpg.gp.services.battle.spells.constants.DefaultSpells;
 import com.endava.rpg.gp.services.game.FormulaService;
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.statemodels.points.Attribute;
-import com.endava.rpg.gp.util.AttributeType;
 import com.endava.rpg.persistence.models.ActionBar;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Progress;
@@ -16,10 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.Map;
-
-import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.BOW_ATTACK;
-import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.FIRE_BALL;
-import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.SWORD_ATTACK;
 
 @Service
 public class CharacterStateService {
@@ -97,7 +94,7 @@ public class CharacterStateService {
         return characterState.getHp().getCurrentValue() <= 0;
     }
 
-    public boolean updateProgress(Integer additionalExp, Attribute stateAttribute, AttributeType type) {
+    public boolean updateProgress(Integer additionalExp, Attribute stateAttribute, String type) {
         if (additionalExp == 0) {
             return true;
         }
@@ -108,16 +105,16 @@ public class CharacterStateService {
         if (stateAttribute.isItNextLevel(additionalExp)) {
 
             switch (type) {
-                case STRENGTH:
+                case AttributeType.STRENGTH:
                     progress.addStrengthProgressLevel(1)
                             .addStrengthProgress(additionalExp - stateAttribute.getToNextLevel());
                     break;
-                case AGILITY:
+                case AttributeType.AGILITY:
                     progress.addAgilityProgressLevel(1)
                             .addAgilityProgress(additionalExp - stateAttribute.getToNextLevel());
                     break;
 
-                case INTELLIGENCE:
+                case AttributeType.INTELLIGENCE:
                     progress.addIntelligenceProgressLevel(1)
                             .addIntelligenceProgress(additionalExp - stateAttribute.getToNextLevel());
                     break;
@@ -128,14 +125,14 @@ public class CharacterStateService {
 
         } else {
             switch (type) {
-                case STRENGTH:
+                case AttributeType.STRENGTH:
                     progress.addStrengthProgress(additionalExp);
                     break;
-                case AGILITY:
+                case AttributeType.AGILITY:
                     progress.addAgilityProgress(additionalExp);
                     break;
 
-                case INTELLIGENCE:
+                case AttributeType.INTELLIGENCE:
                     progress.addIntelligenceProgress(additionalExp);
                     break;
             }
@@ -144,6 +141,8 @@ public class CharacterStateService {
         }
 
         ps.updateCharacter(character);
+
+        // TODO: Use this only for Lvl Up
         refreshCharacter();
 
         return stateAttribute.isLevelStable();
@@ -197,9 +196,9 @@ public class CharacterStateService {
                 .setFreePoints(character.getFreePoints())
                 .setName(character.getCharacterName())
                 .setLevel(calculateCharacterLevel())
-                .setSpell(0, character.getActionBar().getSpell_1() == null ? ps.getSpellByName(SWORD_ATTACK.toString()) : character.getActionBar().getSpell_1())
-                .setSpell(1, character.getActionBar().getSpell_2() == null ? ps.getSpellByName(BOW_ATTACK.toString()) : character.getActionBar().getSpell_2())
-                .setSpell(2, character.getActionBar().getSpell_3() == null ? ps.getSpellByName(FIRE_BALL.toString()) : character.getActionBar().getSpell_3())
+                .setSpell(0, character.getActionBar().getSpell_1() == null ? ps.getSpellByName(DefaultSpells.SWORD_ATTACK) : character.getActionBar().getSpell_1())
+                .setSpell(1, character.getActionBar().getSpell_2() == null ? ps.getSpellByName(DefaultSpells.BOW_ATTACK) : character.getActionBar().getSpell_2())
+                .setSpell(2, character.getActionBar().getSpell_3() == null ? ps.getSpellByName(DefaultSpells.FIRE_BALL) : character.getActionBar().getSpell_3())
                 .setSpell(3, character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4())
                 .setSpell(4, character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5())
                 .setSpell(5, character.getActionBar().getSpell_6() == null ? getDefaultSpell() : character.getActionBar().getSpell_6())
@@ -210,13 +209,9 @@ public class CharacterStateService {
                 .setSpell(10, character.getActionBar().getSpell_11() == null ? getDefaultSpell() : character.getActionBar().getSpell_11())
                 .setSpell(11, character.getActionBar().getSpell_12() == null ? getDefaultSpell() : character.getActionBar().getSpell_12());
 
-        characterState.getHp().setValue(formula.getCharacterHp())
-                .setCurrentValue(characterState.getHp().getValue());
-
-        characterState.getMp().setValue(formula.getCharacterMp())
-                .setCurrentValue(characterState.getMp().getValue());
-
-        characterState.getEnergy().setCurrentValue(characterState.getEnergy().getValue());
+        characterState.getHp().setValue(formula.getCharacterHp()).refresh();
+        characterState.getMp().setValue(formula.getCharacterMp()).refresh();
+        characterState.getEnergy().refresh();
 
         LOGGER.info("Character has been reloaded");
         return characterState;

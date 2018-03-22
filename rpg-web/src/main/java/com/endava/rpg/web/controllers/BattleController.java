@@ -2,8 +2,8 @@ package com.endava.rpg.web.controllers;
 
 import com.endava.rpg.gp.services.battle.BattleService;
 import com.endava.rpg.gp.services.battle.ExpService;
-import com.endava.rpg.gp.services.battle.spells.SpellService;
 import com.endava.rpg.gp.services.battle.location.LocationService;
+import com.endava.rpg.gp.services.battle.spells.SpellService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.util.CombatTextService;
 import com.endava.rpg.web.controllers.utils.Paths;

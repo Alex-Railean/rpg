@@ -21,7 +21,7 @@ public class BeastFactory extends CreepFactory {
     @Override
     protected List<Creep> filterCreep(List<Creep> creeps) {
         return creeps.stream()
-                .filter(c -> c.getCreepType().equalsIgnoreCase(CreepType.BEAST.toString()))
+                .filter(c -> c.getCreepType().equalsIgnoreCase(CreepType.BEAST))
                 .collect(Collectors.toList());
     }
 }

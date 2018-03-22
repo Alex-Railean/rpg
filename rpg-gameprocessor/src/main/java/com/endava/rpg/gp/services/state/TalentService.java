@@ -47,31 +47,26 @@ public class TalentService {
         return BRANCHES.stream().filter(b -> b.getName().equalsIgnoreCase(branch)).findFirst().orElse(null);
     }
 
-    public boolean updateCharacterTalent(Character character, String branch, String talent, int points) {
+    public void updateCharacterTalent(Character character, String branch, String talent, int points) {
         if (branch.equals(TECHNOLOGIES.LINK)) {
             Technologies technologies = character.getTechnologies();
-            return updateBranch(talent, points, technologies);
-        } else
+            updateBranch(talent, points, technologies);
+        } else {
 
             throw new IllegalArgumentException("There is no such talent branch");
-
+        }
     }
 
-    private boolean updateBranch(String talent, int points, Technologies technologies) {
+    private void updateBranch(String talent, int points, Technologies technologies) {
         if (EXO_SPINE.LINK.equals(talent)) {
             if (technologies.getExoSpine() + points <= technologies.getExoSpineLimit()) {
                 PS.updateBranch(technologies.setExoSpine(technologies.getExoSpine() + points));
-                return true;
-            } else {
-                return false;
             }
         } else if (MUSCLE_STIMULANTS.LINK.equals(talent)) {
             if (technologies.getMuscleStimulants() + points <= technologies.getMuscleStimulantsLimit()) {
                 PS.updateBranch(technologies.setMuscleStimulants(technologies.getMuscleStimulants() + points));
-                return true;
-            } else {
-                return false;
             }
+
         } else {
 
             throw new IllegalArgumentException("There is no such talent");

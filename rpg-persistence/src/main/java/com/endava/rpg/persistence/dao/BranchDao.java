@@ -15,19 +15,19 @@ public class BranchDao extends Dao<BranchEntity> {
         super(BranchEntity.class, sessionFactory);
     }
 
-    public <V> BranchEntity getSingleWhere(String columnName, V value) {
+    public <V> BranchEntity getSingleWhere(String columnName, V value) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public <V> List<BranchEntity> getAllWhere(String columnName, V value) {
+    public <V> List<BranchEntity> getAllWhere(String columnName, V value) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public List<BranchEntity> getAll() {
+    public List<BranchEntity> getAll() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public boolean deleteAll() {
+    public boolean deleteAll() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 }

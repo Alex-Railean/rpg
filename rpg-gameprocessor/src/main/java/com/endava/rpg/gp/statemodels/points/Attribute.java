@@ -22,7 +22,7 @@ public class Attribute {
         return progress + additionalExp >= toNextLevel;
     }
 
-    public boolean isLevelStable(){
+    public boolean isLevelStable() {
         return progress < toNextLevel;
     }
 

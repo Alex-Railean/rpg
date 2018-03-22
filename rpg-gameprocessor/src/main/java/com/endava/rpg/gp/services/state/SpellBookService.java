@@ -1,15 +1,12 @@
 package com.endava.rpg.gp.services.state;
 
+import com.endava.rpg.gp.services.battle.spells.constants.DefaultSpells;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
-import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.BOW_ATTACK;
-import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.FIRE_BALL;
-import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.SWORD_ATTACK;
 
 @Service
 public class SpellBookService {
@@ -45,8 +42,8 @@ public class SpellBookService {
 
     public List<Spell> getDefault() {
         return defaultSpells = new ArrayList<>(
-                Arrays.asList(PS.getSpellByName(SWORD_ATTACK.toString()),
-                        PS.getSpellByName(BOW_ATTACK.toString()),
-                        PS.getSpellByName(FIRE_BALL.toString())));
+                Arrays.asList(PS.getSpellByName(DefaultSpells.SWORD_ATTACK),
+                        PS.getSpellByName(DefaultSpells.BOW_ATTACK),
+                        PS.getSpellByName(DefaultSpells.FIRE_BALL)));
     }
 }

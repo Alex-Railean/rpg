@@ -14,7 +14,12 @@ public class Point {
         cs.addPoint(this);
     }
 
-    public Point subtractCurrentValue(Integer dmg){
+    public Point refresh() {
+        this.currentValue = this.value;
+        return this;
+    }
+
+    public Point subtractCurrentValue(Integer dmg) {
         currentValue -= dmg;
         return this;
     }

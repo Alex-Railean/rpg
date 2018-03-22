@@ -15,8 +15,6 @@ public class FormulaService {
 
     private CharacterStateService characterStateService;
 
-    private GameService game;
-
     private SpellService spellService;
 
     private Map<Integer, Map<Integer, Integer>> calculatedDmg = new HashMap<>();
@@ -25,7 +23,7 @@ public class FormulaService {
         Integer points = factor * 5;
 
         for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
-            points += factor + i * game.getGrowthFactor();
+            points += factor + i * GameService.GROWTH_FACTOR;
         }
 
         return points;
@@ -34,7 +32,7 @@ public class FormulaService {
     public Integer getManaCost(Spell spell) {
         return spell.getCost() +
                 characterStateService.getCharacterLevel() +
-                game.getGrowthFactor() * 2;
+                GameService.GROWTH_FACTOR * 2;
     }
 
     public int getDamage(State caster, int damageCoefficient) {
@@ -81,11 +79,11 @@ public class FormulaService {
         Integer hp = 50;
 
         for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
-            hp += 20 + i * game.getGrowthFactor();
+            hp += 20 + i * GameService.GROWTH_FACTOR;
         }
 
         for (int i = 1; i <= characterStateService.getCharacterState().getStrength().getProgressLevel(); i++) {
-            hp += 35 + i * game.getGrowthFactor();
+            hp += 35 + i * GameService.GROWTH_FACTOR;
         }
 
         return hp;
@@ -95,28 +93,24 @@ public class FormulaService {
         Integer mp = 50;
 
         for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
-            mp += 10 + i * game.getGrowthFactor();
+            mp += 10 + i * GameService.GROWTH_FACTOR;
         }
 
         for (int i = 1; i <= characterStateService.getCharacterState().getIntelligence().getProgressLevel(); i++) {
-            mp += 45 + i * game.getGrowthFactor();
+            mp += 45 + i * GameService.GROWTH_FACTOR;
         }
 
         return mp;
     }
 
+    // TODO: The only usage of spellService in class. Try to move
     public Integer getDeservedExp() {
-        return spellService.getLastMovePoints() / 5 * game.getGameRate();
+        return spellService.getLastMovePoints() / 5 * GameService.GAME_RATE;
     }
 
     @Autowired
     private void setCharacterStateService(CharacterStateService characterStateService) {
         this.characterStateService = characterStateService;
-    }
-
-    @Autowired
-    private void setGame(GameService game) {
-        this.game = game;
     }
 
     @Autowired

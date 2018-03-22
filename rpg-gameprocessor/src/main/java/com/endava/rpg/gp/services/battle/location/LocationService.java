@@ -1,9 +1,8 @@
 package com.endava.rpg.gp.services.battle.location;
 
-import com.endava.rpg.gp.services.battle.location.factories.CreepFactory;
 import com.endava.rpg.gp.services.battle.location.enums.Location;
+import com.endava.rpg.gp.services.battle.location.factories.CreepFactory;
 import com.endava.rpg.gp.services.game.Refresher;
-import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.gp.util.Refreshable;
@@ -41,7 +40,7 @@ public class LocationService implements Refreshable {
 
     public Model getCurrentEnemyAndGroup(Model m) {
         currentEnemy = creepGroup.get(ProcessorUtil.getRandomInt(0, creepGroup.size() - 1));
-        m.addAttribute("currentEnemy", currentEnemy);
+        m.addAttribute("currentEnemy", this.currentEnemy);
         m.addAttribute("creepsGroup", this.creepGroup);
 
         return m;

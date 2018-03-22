@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.talents.constants;
 
-public enum  BranchAttribute {
+public enum BranchAttribute {
     TECHNOLOGIES("Technologies", "technologies");
 
     public final String LINK;

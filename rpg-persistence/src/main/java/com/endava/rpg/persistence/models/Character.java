@@ -51,7 +51,6 @@ public class Character implements TableMapping {
     public Character() {
     }
 
-
     public Character addFreePoints(Integer freePoints) {
         this.freePoints += freePoints;
         return this;

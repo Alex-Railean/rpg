@@ -1,9 +1,9 @@
 package com.endava.rpg.gp.services.battle;
 
+import com.endava.rpg.gp.services.battle.spells.constants.AttributeType;
 import com.endava.rpg.gp.services.game.FormulaService;
 import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.CharacterStateService;
-import com.endava.rpg.gp.util.AttributeType;
 import com.endava.rpg.gp.util.Refreshable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,25 +34,25 @@ public class ExpService implements Refreshable {
 
     public void addAttributeExp(String attributeName) {
         switch (attributeName) {
-            case ("strength"):
+            case AttributeType.STRENGTH:
                 strengthEpx += FORMULA.getDeservedExp();
                 LOGGER.info("Strength Epx -> " + strengthEpx);
                 break;
 
-            case ("agility"):
+            case AttributeType.AGILITY:
                 agilityExp += FORMULA.getDeservedExp();
                 LOGGER.info("Agility Exp -> " + agilityExp);
                 break;
 
-            case ("intelligence"):
+            case AttributeType.INTELLIGENCE:
                 intelligenceExp += FORMULA.getDeservedExp();
                 LOGGER.info("Intelligence Exp -> " + intelligenceExp);
                 break;
 
-            case ("creep"):
+            case AttributeType.CREEP:
                 break;
 
-            case ("none"):
+            case AttributeType.NONE:
                 break;
 
             default:
