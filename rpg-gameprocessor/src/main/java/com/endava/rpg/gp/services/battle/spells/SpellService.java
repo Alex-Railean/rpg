@@ -1,5 +1,6 @@
-package com.endava.rpg.gp.services.battle;
+package com.endava.rpg.gp.services.battle.spells;
 
+import com.endava.rpg.gp.services.battle.ExpService;
 import com.endava.rpg.gp.services.game.FormulaService;
 import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.state.ActionBarService;
@@ -57,7 +58,7 @@ public class SpellService implements Refreshable {
 
     public void useSpellTo(Spell usedSpell, State target, State caster) {
         if (usedSpell.getSpellType().equals("Attack")) {
-            int dmg = makeDamage(target, usedSpell.getCoefficient());
+            int dmg = makeDamage(caster, target, usedSpell.getCoefficient());
             int cost = takeCost(usedSpell, caster);
             EXP.addAttributeExp(usedSpell.getAttribute());
             CombatTextService.createSpellRecord(usedSpell, caster, target, dmg, cost);
@@ -85,10 +86,8 @@ public class SpellService implements Refreshable {
     }
 
     private Integer protection(State target, int protectionCoefficient) {
-        protectionCoefficient = FORMULA.getShield(protectionCoefficient);
-
+        protectionCoefficient = FORMULA.getShield(target ,protectionCoefficient);
         target.setShieldPoints(protectionCoefficient);
-
         this.lastMovePoints = protectionCoefficient;
 
         LOGGER.info("Calculated Protection is -> " + protectionCoefficient);
@@ -113,9 +112,8 @@ public class SpellService implements Refreshable {
         }
     }
 
-    //TODO Investigate best approach
-    private Integer makeDamage(State target, int damageCoefficient) {
-        damageCoefficient = FORMULA.getDamage(damageCoefficient);
+    private Integer makeDamage(State caster, State target, int damageCoefficient) {
+        damageCoefficient = FORMULA.getDamage(caster, damageCoefficient);
 
         Double minimumDamage = damageCoefficient - damageCoefficient * 0.15;
         Double maximumDamage = damageCoefficient + damageCoefficient * 0.15;
@@ -123,8 +121,8 @@ public class SpellService implements Refreshable {
         damageCoefficient = ProcessorUtil.getRandomInt(minimumDamage.intValue(), maximumDamage.intValue() + 1);
 
         if (isCritical(target)) {
-            damageCoefficient *= target.getCriticalDmgCoefficient();
-            LOGGER.info("Critical Strike");
+            damageCoefficient *= caster.getCriticalDmgCoefficient();
+            LOGGER.info("Critical Strike!");
         }
 
         int damageAfterShield = damageCoefficient - target.getShieldPoints() <= 0 ?
@@ -133,13 +131,13 @@ public class SpellService implements Refreshable {
         target.setShieldPoints(target.getShieldPoints() - damageCoefficient <= 0 ?
                 0 : target.getShieldPoints() - damageCoefficient);
 
-        target.getHp().setCurrentValue(target.getHp().getCurrentValue() - damageAfterShield);
+        target.getHp().subtractCurrentValue(damageAfterShield);
 
         this.lastMovePoints = damageCoefficient;
 
-        biggestDmg = biggestDmg > damageCoefficient ? biggestDmg : damageCoefficient;
+        biggestDmg = biggestDmg < damageCoefficient ? damageCoefficient : biggestDmg;
 
-        LOGGER.info("Calculated DMG is -> " + damageCoefficient);
+        LOGGER.info("Calculated DMG -> " + damageCoefficient);
 
         return damageCoefficient;
     }

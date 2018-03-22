@@ -17,6 +17,10 @@ import org.springframework.ui.Model;
 
 import java.util.Map;
 
+import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.BOW_ATTACK;
+import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.FIRE_BALL;
+import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.SWORD_ATTACK;
+
 @Service
 public class CharacterStateService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStateService.class);
@@ -193,9 +197,9 @@ public class CharacterStateService {
                 .setFreePoints(character.getFreePoints())
                 .setName(character.getCharacterName())
                 .setLevel(calculateCharacterLevel())
-                .setSpell(0, character.getActionBar().getSpell_1() == null ? getDefaultSpell(1) : character.getActionBar().getSpell_1())
-                .setSpell(1, character.getActionBar().getSpell_2() == null ? getDefaultSpell(2) : character.getActionBar().getSpell_2())
-                .setSpell(2, character.getActionBar().getSpell_3() == null ? getDefaultSpell(3) : character.getActionBar().getSpell_3())
+                .setSpell(0, character.getActionBar().getSpell_1() == null ? ps.getSpellByName(SWORD_ATTACK.toString()) : character.getActionBar().getSpell_1())
+                .setSpell(1, character.getActionBar().getSpell_2() == null ? ps.getSpellByName(BOW_ATTACK.toString()) : character.getActionBar().getSpell_2())
+                .setSpell(2, character.getActionBar().getSpell_3() == null ? ps.getSpellByName(FIRE_BALL.toString()) : character.getActionBar().getSpell_3())
                 .setSpell(3, character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4())
                 .setSpell(4, character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5())
                 .setSpell(5, character.getActionBar().getSpell_6() == null ? getDefaultSpell() : character.getActionBar().getSpell_6())
@@ -224,11 +228,6 @@ public class CharacterStateService {
 
     public String getCharacterName() {
         return characterState.getName();
-    }
-
-    //TODO: Remove hardcode
-    private Spell getDefaultSpell(Integer spellPlace) {
-        return ps.getSpellById(spellPlace);
     }
 
     private Spell getDefaultSpell() {

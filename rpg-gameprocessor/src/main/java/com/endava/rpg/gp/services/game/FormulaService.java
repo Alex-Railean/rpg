@@ -1,10 +1,14 @@
 package com.endava.rpg.gp.services.game;
 
-import com.endava.rpg.gp.services.battle.SpellService;
+import com.endava.rpg.gp.services.battle.spells.SpellService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.Spell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class FormulaService {
@@ -14,6 +18,8 @@ public class FormulaService {
     private GameService game;
 
     private SpellService spellService;
+
+    private Map<Integer, Map<Integer, Integer>> calculatedDmg = new HashMap<>();
 
     public Integer getCreepPoints(Integer factor) {
         Integer points = factor * 5;
@@ -31,20 +37,34 @@ public class FormulaService {
                 game.getGrowthFactor() * 2;
     }
 
-    public int getDamage(int damageCoefficient) {
-        int characterLevel = characterStateService.getCharacterLevel();
-        double levelReducer = 0.1;
+    public int getDamage(State caster, int damageCoefficient) {
+        int lvl = caster.getLevel();
 
-        for (int i = 1; i <= characterLevel; i++) {
-            damageCoefficient += damageCoefficient * levelReducer;
-            levelReducer *= 0.993;
+        if (calculatedDmg.get(lvl) == null) {
+            calculatedDmg = new HashMap<>();
+            calculatedDmg.put(lvl, new HashMap<>());
         }
 
-        return damageCoefficient;
+        if (calculatedDmg.get(lvl).get(damageCoefficient) == null) {
+            double dmgReducer = 0.1;
+            int dmg = damageCoefficient;
+
+            for (int i = 1; i <= lvl; i++) {
+                dmg += dmg * dmgReducer;
+                dmgReducer *= 0.993;
+            }
+
+            calculatedDmg.get(lvl).put(damageCoefficient, dmg);
+
+            return dmg;
+
+        } else {
+            return calculatedDmg.get(lvl).get(damageCoefficient);
+        }
     }
 
-    public int getShield(int damageCoefficient) {
-        return getDamage(damageCoefficient);
+    public int getShield(State target, int damageCoefficient) {
+        return getDamage(target, damageCoefficient);
     }
 
     public Integer getNextLevelExp(Integer attributeLevel) {

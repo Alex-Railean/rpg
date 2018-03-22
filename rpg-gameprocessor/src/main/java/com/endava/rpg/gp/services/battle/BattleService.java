@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.services.battle;
 
 import com.endava.rpg.gp.services.battle.location.LocationService;
+import com.endava.rpg.gp.services.battle.spells.SpellService;
 import com.endava.rpg.gp.services.game.Refresher;
 import com.endava.rpg.gp.services.responsiveness.ResponseService;
 import com.endava.rpg.gp.services.state.CharacterStateService;

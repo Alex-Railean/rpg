@@ -11,6 +11,8 @@ import java.util.List;
 @Component
 public class PersistenceService {
 
+    private final BranchDao BRANCH_DAO;
+
     private final CharacterDao CHARACTER;
 
     private final SpellDao SPELLS;
@@ -19,15 +21,13 @@ public class PersistenceService {
 
     private final ProgressDao PROGRESS;
 
-    private final TechnologiesDao TECHNOLOGIES;
-
     @Autowired
-    private PersistenceService(CharacterDao character, SpellDao spells, CreepDao creeps, ProgressDao progress, TechnologiesDao technologies) {
+    private PersistenceService(BranchDao branch_dao, CharacterDao character, SpellDao spells, CreepDao creeps, ProgressDao progress, TechnologiesDao technologies) {
+        this.BRANCH_DAO = branch_dao;
         this.CHARACTER = character;
         this.SPELLS = spells;
         this.CREEPS = creeps;
         this.PROGRESS = progress;
-        this.TECHNOLOGIES = technologies;
     }
 
     public Character saveCharacter(Character character) {
@@ -78,15 +78,12 @@ public class PersistenceService {
         return SPELLS.deleteAll();
     }
 
-    public Technologies saveTech(Technologies technologies) {
-        //TODO: Move .calculateTotalPoints() to interface
-        technologies.calculateTotalPoints();
-        return TECHNOLOGIES.save(technologies);
+    public BranchEntity saveBranch(BranchEntity branch) {
+        return BRANCH_DAO.save(branch.calculateTotalPoints());
     }
 
-    public Technologies updateTech(Technologies technologies) {
-        technologies.calculateTotalPoints();
-        return TECHNOLOGIES.update(technologies);
+    public BranchEntity updateBranch(BranchEntity branch) {
+        return BRANCH_DAO.update(branch.calculateTotalPoints());
     }
 
     public Character refreshChar(Character character) {

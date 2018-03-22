@@ -2,7 +2,7 @@ package com.endava.rpg.web.controllers;
 
 import com.endava.rpg.gp.services.battle.BattleService;
 import com.endava.rpg.gp.services.battle.ExpService;
-import com.endava.rpg.gp.services.battle.SpellService;
+import com.endava.rpg.gp.services.battle.spells.SpellService;
 import com.endava.rpg.gp.services.battle.location.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.util.CombatTextService;
@@ -79,7 +79,7 @@ public class BattleController {
 
     @RequestMapping(value = Paths.BATTLE_USE_SPELL, method = RequestMethod.GET)
     public String useSpell(RedirectAttributes redirectAttributes, @PathVariable("actionBarId") Integer actionBarId) {
-        if (CHAR_STATE.getBattle() == null || CHAR_STATE.getBattle() == 0) {
+        if (CHAR_STATE.getBattle() == 0) {
             return "redirect:" + Paths.SPELLBOOK;
         } else if (actionBarId == 0) {
             return "redirect:" + Paths.BATTLE + "/" + BATTLE.getBattleId();

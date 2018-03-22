@@ -60,14 +60,14 @@ public class TalentService {
     private boolean updateBranch(String talent, int points, Technologies technologies) {
         if (EXO_SPINE.LINK.equals(talent)) {
             if (technologies.getExoSpine() + points <= technologies.getExoSpineLimit()) {
-                PS.updateTech(technologies.setExoSpine(technologies.getExoSpine() + points));
+                PS.updateBranch(technologies.setExoSpine(technologies.getExoSpine() + points));
                 return true;
             } else {
                 return false;
             }
         } else if (MUSCLE_STIMULANTS.LINK.equals(talent)) {
             if (technologies.getMuscleStimulants() + points <= technologies.getMuscleStimulantsLimit()) {
-                PS.updateTech(technologies.setMuscleStimulants(technologies.getMuscleStimulants() + points));
+                PS.updateBranch(technologies.setMuscleStimulants(technologies.getMuscleStimulants() + points));
                 return true;
             } else {
                 return false;

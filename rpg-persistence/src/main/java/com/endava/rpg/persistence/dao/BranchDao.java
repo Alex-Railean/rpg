@@ -1,17 +1,15 @@
 package com.endava.rpg.persistence.dao;
 
 import com.endava.rpg.persistence.models.BranchEntity;
-import com.endava.rpg.persistence.models.TableMapping;
-import com.endava.rpg.persistence.models.Technologies;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TechnologiesDao extends Dao<Technologies> {
+public class BranchDao extends Dao<BranchEntity> {
 
     @Autowired
-    private TechnologiesDao(SessionFactory sessionFactory) {
-        super(Technologies.class, sessionFactory);
+    private BranchDao(SessionFactory sessionFactory) {
+        super(BranchEntity.class, sessionFactory);
     }
 }

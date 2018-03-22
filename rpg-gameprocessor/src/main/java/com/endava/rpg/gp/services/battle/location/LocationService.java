@@ -21,19 +21,15 @@ import java.util.List;
 public class LocationService implements Refreshable {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationService.class);
 
-    private final CharacterStateService CHAR_STATE;
-
     private List<CreepState> creepGroup;
 
     private CreepState currentEnemy;
 
     @Autowired
-    private LocationService(CharacterStateService characterState, Refresher refresher) {
+    private LocationService(Refresher refresher) {
         refresher.addRefreshable(this);
-        this.CHAR_STATE = characterState;
     }
 
-    // TODO: Refactoring
     public Model getRandomCreepGroup(Model model, Location location, int lvl, CreepFactory creepFactory) {
         this.creepGroup = creepFactory.createCreepGroup(location, lvl);
 

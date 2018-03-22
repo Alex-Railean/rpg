@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "T_TECHNOLOGIES")
-public class Technologies implements TableMapping, Serializable {
+public class Technologies extends BranchEntity implements TableMapping, Serializable {
 
     @Id
     @OneToOne
@@ -27,10 +27,25 @@ public class Technologies implements TableMapping, Serializable {
     @Column(name = "TOTAL_POINTS")
     private Integer totalPoints = 0;
 
-    public Integer calculateTotalPoints() {
-        return totalPoints =
-                muscleStimulants +
-                        exoSpine;
+    @Override
+    public Technologies calculateTotalPoints() {
+        totalPoints = muscleStimulants + exoSpine;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Technologies)) return false;
+
+        Technologies that = (Technologies) o;
+
+        return getCharacter().equals(that.getCharacter());
+    }
+
+    @Override
+    public int hashCode() {
+        return getCharacter().hashCode();
     }
 
     public Integer getTotalPoints() {

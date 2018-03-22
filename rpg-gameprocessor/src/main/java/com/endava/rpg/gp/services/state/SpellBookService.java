@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.BOW_ATTACK;
+import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.FIRE_BALL;
+import static com.endava.rpg.gp.services.battle.spells.DefaultSpells.SWORD_ATTACK;
+
 @Service
 public class SpellBookService {
 
@@ -41,8 +45,8 @@ public class SpellBookService {
 
     public List<Spell> getDefault() {
         return defaultSpells = new ArrayList<>(
-                Arrays.asList(PS.getSpellByName("Sword Attack"),
-                        PS.getSpellByName("Bow Attack"),
-                        PS.getSpellByName("Fire Ball")));
+                Arrays.asList(PS.getSpellByName(SWORD_ATTACK.toString()),
+                        PS.getSpellByName(BOW_ATTACK.toString()),
+                        PS.getSpellByName(FIRE_BALL.toString())));
     }
 }

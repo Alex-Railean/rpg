@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.services.responsiveness;
 
-import com.endava.rpg.gp.services.battle.SpellService;
+import com.endava.rpg.gp.services.battle.spells.SpellService;
 import com.endava.rpg.gp.services.battle.location.LocationService;
 import com.endava.rpg.gp.services.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;

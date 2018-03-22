@@ -19,7 +19,7 @@ public class CharacterState extends State {
 
     private Integer defaultEnergy = 100;
 
-    private Long currentBattle;
+    private Long currentBattle = 0L;
 
     private String location;
 
