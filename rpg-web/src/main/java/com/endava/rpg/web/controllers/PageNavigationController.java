@@ -1,7 +1,7 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.services.game.Refresher;
-import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.game.Refresher;
+import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.web.controllers.utils.Paths;
 import com.endava.rpg.web.controllers.utils.Views;
 import org.slf4j.Logger;

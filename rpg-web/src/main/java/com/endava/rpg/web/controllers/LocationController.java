@@ -1,8 +1,8 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.services.battle.location.LocationService;
-import com.endava.rpg.gp.services.battle.location.factories.BeastFactory;
-import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.battle.location.LocationService;
+import com.endava.rpg.gp.battle.location.factories.BeastFactory;
+import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.web.controllers.utils.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import static com.endava.rpg.gp.services.battle.location.enums.Location.HUNGRY_FOREST;
+import static com.endava.rpg.gp.battle.location.enums.Location.HUNGRY_FOREST;
 
 @Controller
 public class LocationController {

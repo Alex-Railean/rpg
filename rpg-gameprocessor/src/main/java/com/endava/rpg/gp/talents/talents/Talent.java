@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.talents.talents;
 
-import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.persistence.models.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 

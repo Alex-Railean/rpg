@@ -1,8 +1,8 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.services.state.ActionBarService;
-import com.endava.rpg.gp.services.state.CharacterStateService;
-import com.endava.rpg.gp.services.state.SpellBookService;
+import com.endava.rpg.gp.state.ActionBarService;
+import com.endava.rpg.gp.state.CharacterStateService;
+import com.endava.rpg.gp.state.SpellBookService;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;

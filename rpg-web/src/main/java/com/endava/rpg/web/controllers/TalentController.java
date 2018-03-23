@@ -1,7 +1,7 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.services.state.CharacterStateService;
-import com.endava.rpg.gp.services.state.TalentService;
+import com.endava.rpg.gp.state.CharacterStateService;
+import com.endava.rpg.gp.state.TalentService;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.services.PersistenceService;
 import com.endava.rpg.web.controllers.utils.Paths;

@@ -1,7 +1,7 @@
 package com.endava.rpg.gp.adapters;
 
-import com.endava.rpg.gp.services.game.FormulaService;
-import com.endava.rpg.gp.services.state.CharacterStateService;
+import com.endava.rpg.gp.game.FormulaService;
+import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.persistence.models.Creep;
 import org.springframework.beans.factory.annotation.Autowired;
