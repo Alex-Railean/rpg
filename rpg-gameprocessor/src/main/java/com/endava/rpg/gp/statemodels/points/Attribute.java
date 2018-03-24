@@ -11,10 +11,7 @@ public class Attribute {
 
     private Integer progress;
 
-    private FormulaService formulaService;
-
     public Attribute(CharacterState cs) {
-        formulaService = new FormulaService();
         cs.addAttribute(this);
     }
 
@@ -28,7 +25,7 @@ public class Attribute {
 
     public Attribute addProgressLevel(Integer progressLevel) {
         this.progressLevel += progressLevel;
-        this.toNextLevel = formulaService.getNextLevelExp(progressLevel);
+        this.toNextLevel = FormulaService.getNextLevelExp(progressLevel);
         return this;
     }
 
@@ -43,7 +40,7 @@ public class Attribute {
 
     public Attribute setProgressLevel(Integer progressLevel) {
         this.progressLevel = progressLevel;
-        this.toNextLevel = formulaService.getNextLevelExp(progressLevel);
+        this.toNextLevel = FormulaService.getNextLevelExp(progressLevel);
         return this;
     }
 

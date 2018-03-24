@@ -77,16 +77,16 @@ public abstract class Talent {
         this.limit = limit;
     }
 
-    @Autowired
-    public void setCharacterState(CharacterStateService characterState) {
-        this.characterState = characterState;
-    }
-
     public String getURL() {
         return URL;
     }
 
     public void setURL(String URL) {
         this.URL = URL;
+    }
+
+    @Autowired
+    public void setCharacterState(CharacterStateService characterState) {
+        this.characterState = characterState;
     }
 }

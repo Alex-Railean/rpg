@@ -18,7 +18,7 @@ public class TechnologiesBranch extends Branch {
     public TechnologiesBranch(PersistenceService ps) {
         super.setName(TECHNOLOGIES.NAME);
         super.setLinkName(TECHNOLOGIES.LINK);
-        super.setURL("");
+        super.setURL("/resources/img/technologies.jpg");
         this.PS = ps;
     }
 

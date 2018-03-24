@@ -18,11 +18,7 @@
         <img src="/resources/img/testCharacter.jpg" alt="character-image">
     </div>
     <div class="spells">
-    <#list actionBar as abNumber, abSpell>
-        <a href="/battle/use-spell/<#if abSpell.getSpellURL() != "/resources/img/empty.jpg">${abNumber}<#else>0</#if>">
-            <img src="${abSpell.getSpellURL()}" class="spellImg" alt="spell-image">
-        </a>
-    </#list>
+    <#include "action-bar.ftl">
     </div>
     <div class="bars-exp">
         <div class="strength-exp">

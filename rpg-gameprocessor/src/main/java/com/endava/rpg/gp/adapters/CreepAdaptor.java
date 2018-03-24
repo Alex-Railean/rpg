@@ -12,24 +12,21 @@ public class CreepAdaptor {
 
     private final CharacterStateService CHAR_STATE;
 
-    private final FormulaService FORMULA;
-
     @Autowired
-    public CreepAdaptor(CharacterStateService charState, FormulaService formula) {
+    public CreepAdaptor(CharacterStateService charState) {
         this.CHAR_STATE = charState;
-        this.FORMULA = formula;
     }
 
     public CreepState toCreepState(Creep creep) {
         Integer lvl = CHAR_STATE.getCharacterState().getLevel();
         CreepState cs = new CreepState();
 
-        cs.getHp().setValue(FORMULA.getCreepPoints(creep.getHpFactor()))
-                .setCurrentValue(FORMULA.getCreepPoints(creep.getHpFactor()))
+        cs.getHp().setValue(FormulaService.getCreepPoints(creep.getHpFactor()))
+                .setCurrentValue(FormulaService.getCreepPoints(creep.getHpFactor()))
                 .setRegeneration(creep.getHpRegeneration() * lvl);
 
-        cs.getMp().setValue(FORMULA.getCreepPoints(creep.getMpFactor()))
-                .setCurrentValue(FORMULA.getCreepPoints(creep.getMpFactor()))
+        cs.getMp().setValue(FormulaService.getCreepPoints(creep.getMpFactor()))
+                .setCurrentValue(FormulaService.getCreepPoints(creep.getMpFactor()))
                 .setRegeneration(creep.getMpRegeneration() * lvl);
 
         cs.getEnergy().setValue(creep.getEnergy())

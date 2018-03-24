@@ -6,7 +6,7 @@ import com.endava.rpg.persistence.models.Spell;
 import java.util.ArrayList;
 import java.util.List;
 
-public class State {
+public abstract class State {
 
     private List<Point> points = new ArrayList<>();
 

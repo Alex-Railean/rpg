@@ -3,6 +3,7 @@ package com.endava.rpg.gp.state;
 import com.endava.rpg.gp.battle.spells.constants.DefaultSpells;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
+import com.endava.rpg.persistence.services.utils.DescribedSpell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +14,18 @@ public class SpellBookService {
 
     private final PersistenceService PS;
 
-    private final Map<String, List<Spell>> AVAILABLE_SPELLS = new HashMap<>();
+    private final Map<String, List<DescribedSpell>> AVAILABLE_SPELLS = new HashMap<>();
 
-    private List<Spell> defaultSpells;
+    private List<DescribedSpell> defaultSpells;
 
     @Autowired
     public SpellBookService(PersistenceService PS) {
         this.PS = PS;
     }
 
-    public List<Spell> getAvailableSpells(String characterName) {
+    public List<DescribedSpell> getAvailableSpells(String characterName) {
         if (AVAILABLE_SPELLS.get(characterName) == null) {
-            List<Spell> currentAvailableSpells = new ArrayList<>();
+            List<DescribedSpell> currentAvailableSpells = new ArrayList<>();
             currentAvailableSpells.addAll(defaultSpells);
             currentAvailableSpells.addAll(PS.getCharacterByName(characterName).getAvailableSpells());
             AVAILABLE_SPELLS.put(characterName, currentAvailableSpells);
@@ -40,7 +41,7 @@ public class SpellBookService {
         }
     }
 
-    public List<Spell> getDefault() {
+    public List<DescribedSpell> getDefault() {
         return defaultSpells = new ArrayList<>(
                 Arrays.asList(PS.getSpellByName(DefaultSpells.SWORD_ATTACK),
                         PS.getSpellByName(DefaultSpells.BOW_ATTACK),

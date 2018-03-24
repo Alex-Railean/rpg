@@ -10,6 +10,7 @@ import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Progress;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
+import com.endava.rpg.persistence.services.utils.DescribedSpell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ import java.util.Map;
 public class CharacterStateService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStateService.class);
 
-    private PersistenceService ps;
+    private static CharacterState characterState;
 
-    private CharacterState characterState;
+    private PersistenceService ps;
 
     private ActionBarService actionBarService;
 
@@ -36,9 +37,8 @@ public class CharacterStateService {
         return characterState;
     }
 
-    @Autowired
-    private void setCharacterState(CharacterState characterState) {
-        this.characterState = characterState;
+    public static int getLvl(){
+        return characterState.getLevel();
     }
 
     public CharacterState setNewBattle(Long battleId) {
@@ -65,7 +65,7 @@ public class CharacterStateService {
     }
 
     public <M extends Model> M getCharacterModel(M model) {
-        Map<Integer, Spell> actionBar = actionBarService.getActionBarMap();
+        Map<Integer, DescribedSpell> actionBar = actionBarService.getActionBarMap();
         model.addAttribute("characterName", characterState.getName())
                 .addAttribute("characterLevel", characterState.getLevel())
                 .addAttribute("hp", characterState.getHp().getValue())
@@ -251,5 +251,10 @@ public class CharacterStateService {
     @Autowired
     public void setTalent(TalentService talent) {
         this.talent = talent;
+    }
+
+    @Autowired
+    private void setCharacterState(CharacterState characterState) {
+        CharacterStateService.characterState = characterState;
     }
 }

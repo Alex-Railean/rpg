@@ -1,11 +1,13 @@
 package com.endava.rpg.web.controllers;
 
+import com.endava.rpg.gp.battle.spells.description.DmgDescription;
 import com.endava.rpg.gp.state.ActionBarService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.state.SpellBookService;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
+import com.endava.rpg.persistence.services.utils.DescribedSpell;
 import com.endava.rpg.web.controllers.utils.Paths;
 import com.endava.rpg.web.controllers.utils.Views;
 import org.slf4j.Logger;
@@ -45,7 +47,7 @@ public class SpellBookController {
     public String toSpellBook(Model model) {
         model = CHARACTER_STATE.getHeaderData(model)
                 .addAttribute("actionBar", ACTION_BAR.getActionBarMap())
-                .addAttribute("spellBookContent", SPELL_BOOK.getAvailableSpells(CHARACTER_STATE.getCharacterState().getName()));
+                .addAttribute("spellBookContent", DmgDescription.toDmgDescription(SPELL_BOOK.getAvailableSpells(CHARACTER_STATE.getCharacterName())));
         LOGGER.info("Spell Book");
         return Views.SPELL_BOOK;
     }
@@ -57,15 +59,15 @@ public class SpellBookController {
 
         Spell defaultSpell = PS.getSpellByName("No spell");
 
-        Map<Integer, Spell> ab = ACTION_BAR.getActionBarMap();
-        Spell toMove = ab.get(slot);
+        Map<Integer, DescribedSpell> ab = ACTION_BAR.getActionBarMap();
+        Spell toMove = ab.get(slot).getSpell();
 
-        Spell newSpell = SPELL_BOOK.getAvailableSpells(charName)
+        DescribedSpell newSpell = SPELL_BOOK.getAvailableSpells(charName)
                 .stream()
-                .filter(s -> s.getSpellName().equals(spell)).findFirst().orElse(defaultSpell);
+                .filter(s -> s.getSpell().getSpellName().equals(spell)).findFirst().orElse(defaultSpell);
 
         ab.keySet().forEach(k -> {
-            if (ab.get(k).getSpellName().equals(spell)) {
+            if (ab.get(k).getSpell().getSpellName().equals(spell)) {
                 ab.put(k, toMove);
             }
         });
@@ -86,7 +88,7 @@ public class SpellBookController {
         String charName = CHARACTER_STATE.getCharacterState().getName();
         Spell defaultSpell = PS.getSpellByName("No spell");
         Character character = PS.getCharacterByName(charName);
-        Map<Integer, Spell> ab = ACTION_BAR.getActionBarMap();
+        Map<Integer, DescribedSpell> ab = ACTION_BAR.getActionBarMap();
         ab.put(slot, defaultSpell);
 
         ACTION_BAR.setActionBar(character, ab);

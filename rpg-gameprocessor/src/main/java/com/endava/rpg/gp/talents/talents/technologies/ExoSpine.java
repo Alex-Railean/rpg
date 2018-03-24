@@ -20,7 +20,7 @@ public class ExoSpine extends Talent {
         technologies.addTalent(this);
         setName(EXO_SPINE.NAME);
         setLinkName(EXO_SPINE.LINK);
-        setURL("");
+        setURL("/resources/img/exo-spine.jpg");
     }
 
     @Override
@@ -33,9 +33,9 @@ public class ExoSpine extends Talent {
         Double sr = character.getStunResistancePercentage();
 
         character.setStunResistancePercentage(sr + STUN_RESISTANCE * getPoints());
-        setDescription("Increase your character's health by " + HP_COEFFICIENT + "% and stun resistance by " + STUN_RESISTANCE + "%." +
-                "\nHealth bonus: " + HP_COEFFICIENT * getPoints() +
-                "\nStung resistance bonus: " + STUN_RESISTANCE * getPoints());
+        setDescription("Increase the character's health by " + HP_COEFFICIENT + "% and stun resistance by " + STUN_RESISTANCE + "%." +
+                "\nHealth bonus: " + HP_COEFFICIENT * getPoints() + "%" +
+                "\nStung resistance bonus: " + STUN_RESISTANCE * getPoints() + "%");
     }
 
     @Override

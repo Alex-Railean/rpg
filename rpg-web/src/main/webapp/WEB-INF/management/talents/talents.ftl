@@ -7,21 +7,22 @@
 </head>
 <body>
 <#include "../../modules/header.ftl">
-
+<div class="container">
 <#list branches as branch>
-<p>${branch.getName()}</p>
-<a href="/talents/${branch.getLinkName()}/"><img src="${branch.getURL()}" alt="branch-image"></a>
+    <h3>${branch.getName()}</h3>
+    <a href="/talents/${branch.getLinkName()}/"><img src="${branch.getURL()}" alt="branch-image" class="branch-img"></a>
 </#list>
-<div>
-    <a href="/outside">
-        <button type="button" class="btn btn-dark bottom-button">To Outside</button>
-    </a>
-</div>
+    <div>
+        <a href="/outside">
+            <button type="button" class="btn btn-dark bottom-button">To Outside</button>
+        </a>
+    </div>
 <#if warningMessage??>
-<div class="alert alert-primary" role="alert">
-${warningMessage}
-</div>
+    <div class="alert alert-primary" role="alert">
+    ${warningMessage}
+    </div>
 </#if>
+</div>
 </div>
 <script src="/resources/js/main.js"></script>
 </body>

@@ -17,26 +17,9 @@ public class FormulaService {
 
     private SpellService spellService;
 
-    private Map<Integer, Map<Integer, Integer>> calculatedDmg = new HashMap<>();
+    private static Map<Integer, Map<Integer, Integer>> calculatedDmg = new HashMap<>();
 
-    public Integer getCreepPoints(Integer factor) {
-        Integer points = factor * 5;
-
-        for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
-            points += factor + i * GameService.GROWTH_FACTOR;
-        }
-
-        return points;
-    }
-
-    public Integer getManaCost(Spell spell) {
-        return spell.getCost() +
-                characterStateService.getCharacterLevel() +
-                GameService.GROWTH_FACTOR * 2;
-    }
-
-    public int getDamage(State caster, int damageCoefficient) {
-        int lvl = caster.getLevel();
+    public static int getDamage(int lvl, int damageCoefficient) {
 
         if (calculatedDmg.get(lvl) == null) {
             calculatedDmg = new HashMap<>();
@@ -61,11 +44,19 @@ public class FormulaService {
         }
     }
 
-    public int getShield(State target, int damageCoefficient) {
-        return getDamage(target, damageCoefficient);
+    public static Double getMinDmg(int dmg) {
+        return dmg - dmg * 0.15;
     }
 
-    public Integer getNextLevelExp(Integer attributeLevel) {
+    public static Double getMaxDmg(int dmg) {
+        return dmg + dmg * 0.15;
+    }
+
+    public static int getShield(State target, int damageCoefficient) {
+        return getDamage(target.getLevel(), damageCoefficient);
+    }
+
+    public static Integer getNextLevelExp(Integer attributeLevel) {
         Integer exp = 0;
 
         for (int i = 1; i <= attributeLevel; i++) {
@@ -75,10 +66,26 @@ public class FormulaService {
         return exp;
     }
 
+    public static Integer getCreepPoints(Integer factor) {
+        Integer points = factor * 5;
+
+        for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
+            points += factor + i * GameService.GROWTH_FACTOR;
+        }
+
+        return points;
+    }
+
+    public static Integer getManaCost(Spell spell) {
+        return spell.getCost() +
+                CharacterStateService.getLvl() +
+                GameService.GROWTH_FACTOR * 2;
+    }
+
     public Integer getCharacterHp() {
         Integer hp = 50;
 
-        for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
+        for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
             hp += 20 + i * GameService.GROWTH_FACTOR;
         }
 
@@ -92,7 +99,7 @@ public class FormulaService {
     public Integer getCharacterMp() {
         Integer mp = 50;
 
-        for (int i = 1; i <= characterStateService.getCharacterLevel(); i++) {
+        for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
             mp += 10 + i * GameService.GROWTH_FACTOR;
         }
 

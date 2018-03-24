@@ -1,9 +1,11 @@
 package com.endava.rpg.gp.state;
 
+import com.endava.rpg.gp.battle.spells.description.DmgDescription;
+import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.ActionBar;
 import com.endava.rpg.persistence.models.Character;
-import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
+import com.endava.rpg.persistence.services.utils.DescribedSpell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,38 +25,39 @@ public class ActionBarService {
         this.CHAR_STATE = characterState;
     }
 
-    public Map<Integer, Spell> getActionBarMap() {
-        Map<Integer, Spell> actionBar = new TreeMap<>();
-        actionBar.put(1, CHAR_STATE.getCharacterState().getSpell(0));
-        actionBar.put(2, CHAR_STATE.getCharacterState().getSpell(1));
-        actionBar.put(3, CHAR_STATE.getCharacterState().getSpell(2));
-        actionBar.put(4, CHAR_STATE.getCharacterState().getSpell(3));
-        actionBar.put(5, CHAR_STATE.getCharacterState().getSpell(4));
-        actionBar.put(6, CHAR_STATE.getCharacterState().getSpell(5));
-        actionBar.put(7, CHAR_STATE.getCharacterState().getSpell(6));
-        actionBar.put(8, CHAR_STATE.getCharacterState().getSpell(7));
-        actionBar.put(9, CHAR_STATE.getCharacterState().getSpell(8));
-        actionBar.put(10, CHAR_STATE.getCharacterState().getSpell(9));
-        actionBar.put(11, CHAR_STATE.getCharacterState().getSpell(10));
-        actionBar.put(12, CHAR_STATE.getCharacterState().getSpell(11));
+    public Map<Integer, DescribedSpell> getActionBarMap() {
+        Map<Integer, DescribedSpell> actionBar = new TreeMap<>();
+        State cs = CHAR_STATE.getCharacterState();
+        actionBar.put(1, new DmgDescription(cs.getSpell(0)));
+        actionBar.put(2, new DmgDescription(cs.getSpell(1)));
+        actionBar.put(3, new DmgDescription(cs.getSpell(2)));
+        actionBar.put(4, new DmgDescription(cs.getSpell(3)));
+        actionBar.put(5, new DmgDescription(cs.getSpell(4)));
+        actionBar.put(6, new DmgDescription(cs.getSpell(5)));
+        actionBar.put(7, new DmgDescription(cs.getSpell(6)));
+        actionBar.put(8, new DmgDescription(cs.getSpell(7)));
+        actionBar.put(9, new DmgDescription(cs.getSpell(8)));
+        actionBar.put(10, new DmgDescription(cs.getSpell(9)));
+        actionBar.put(11, new DmgDescription(cs.getSpell(10)));
+        actionBar.put(12, new DmgDescription(cs.getSpell(11)));
 
         return actionBar;
     }
 
-    public Character setActionBar(Character character, Map<Integer, Spell> abMap) {
+    public Character setActionBar(Character character, Map<Integer, DescribedSpell> abMap) {
         ActionBar ab = character.getActionBar();
-        ab.setSpell_1(abMap.get(1))
-                .setSpell_2(abMap.get(2))
-                .setSpell_3(abMap.get(3))
-                .setSpell_4(abMap.get(4))
-                .setSpell_5(abMap.get(5))
-                .setSpell_6(abMap.get(6))
-                .setSpell_7(abMap.get(7))
-                .setSpell_8(abMap.get(8))
-                .setSpell_9(abMap.get(9))
-                .setSpell_10(abMap.get(10))
-                .setSpell_11(abMap.get(11))
-                .setSpell_12(abMap.get(12));
+        ab.setSpell_1(abMap.get(1).getSpell())
+                .setSpell_2(abMap.get(2).getSpell())
+                .setSpell_3(abMap.get(3).getSpell())
+                .setSpell_4(abMap.get(4).getSpell())
+                .setSpell_5(abMap.get(5).getSpell())
+                .setSpell_6(abMap.get(6).getSpell())
+                .setSpell_7(abMap.get(7).getSpell())
+                .setSpell_8(abMap.get(8).getSpell())
+                .setSpell_9(abMap.get(9).getSpell())
+                .setSpell_10(abMap.get(10).getSpell())
+                .setSpell_11(abMap.get(11).getSpell())
+                .setSpell_12(abMap.get(12).getSpell());
         return character;
     }
 

@@ -17,7 +17,7 @@ public class BattleService implements Refreshable {
 
     private final LocationService LOCATION;
 
-    private final CharacterStateService CHARACTER_STATE_SERVICE;
+    private final CharacterStateService CHARACTER_STATE;
 
     private final ResponseService RESPONSE;
 
@@ -32,12 +32,12 @@ public class BattleService implements Refreshable {
         refresher.addRefreshable(this);
         this.SPELL_SERVICE = spellService;
         this.LOCATION = creepLocation;
-        this.CHARACTER_STATE_SERVICE = characterState;
+        this.CHARACTER_STATE = characterState;
         this.RESPONSE = spellChoice;
     }
 
     public boolean isEndOfBattle() {
-        return CHARACTER_STATE_SERVICE.isCharacterDead() || LOCATION.getCreepGroup().size() == 0;
+        return CHARACTER_STATE.isCharacterDead() || LOCATION.getCreepGroup().size() == 0;
     }
 
     public void makeATurn(Integer actionBarNumber, CreepState currentEnemy) {
@@ -64,7 +64,7 @@ public class BattleService implements Refreshable {
                     }
                 }));
 
-        CHARACTER_STATE_SERVICE.getCharacterState().getPoints().forEach(p -> {
+        CHARACTER_STATE.getCharacterState().getPoints().forEach(p -> {
             if (p.getCurrentValue() < p.getValue()) {
                 p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
                         p.getValue() :

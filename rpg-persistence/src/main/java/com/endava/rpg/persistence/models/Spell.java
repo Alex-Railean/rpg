@@ -1,10 +1,12 @@
 package com.endava.rpg.persistence.models;
 
+import com.endava.rpg.persistence.services.utils.DescribedSpell;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "T_SPELL")
-public class Spell implements TableMapping {
+public class Spell implements TableMapping, DescribedSpell {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +39,16 @@ public class Spell implements TableMapping {
 
     @Column(name = "TYPE")
     private String spellType;
+
+    @Override
+    public Spell getSpell() {
+        return this;
+    }
+
+    @Override
+    public String getDescription() {
+        return spellName.toUpperCase();
+    }
 
     public Integer getSpellId() {
         return spellId;

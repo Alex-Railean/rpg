@@ -10,9 +10,19 @@
     margin-top: 30px;
 }
 
-.spells .spellImg {
-    width: 38px;
-    height: 38px;
+.spells .spell-img {
+    width: 40px;
+    height: 40px;
+}
+
+.branch-img {
+    width: 138px;
+    height: 138px;
+}
+
+.talent-img {
+    width: 44px;
+    height: 44px;
 }
 
 .character-image img {
@@ -44,6 +54,33 @@
     width: 100%;
     height: 50vh;
     overflow: auto;
+}
+
+.popup {
+    height: 0;
+    color: #fff;
+    position: relative;
+    cursor: pointer;
+}
+
+.popup:after {
+    content: attr(data-popuptext);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 5px;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    position: absolute;
+    transition: 250ms ease;
+    white-space: nowrap;
+    max-height: 0;
+}
+
+.popup:hover:after {
+    opacity: .9;
+    top: 2.5em;
+    max-height: 200px;
+    padding: .6em;
 }
 
 @media (min-width: 992px) {

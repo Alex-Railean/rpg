@@ -18,7 +18,7 @@ public class MuscleStimulants extends Talent {
         technologies.addTalent(this);
         setName(MUSCLE_STIMULANTS.NAME);
         setLinkName(MUSCLE_STIMULANTS.LINK);
-        setURL("");
+        setURL("/resources/img/muscle-stimulants.jpg");
     }
 
     @Override

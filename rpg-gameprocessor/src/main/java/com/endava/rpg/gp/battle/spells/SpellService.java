@@ -30,8 +30,6 @@ public class SpellService implements Refreshable {
 
     private final ExpService EXP;
 
-    private final FormulaService FORMULA;
-
     private Integer lastMovePoints = 0;
 
     private Integer biggestDmg = 0;
@@ -40,14 +38,12 @@ public class SpellService implements Refreshable {
     private SpellService(ActionBarService actionBarService,
                          CharacterStateService characterStateService,
                          ExpService expService,
-                         FormulaService formulaService,
                          Refresher refresher) {
 
         refresher.addRefreshable(this);
         this.ACTION_BAR_SERVICE = actionBarService;
         this.CHAR_STATE = characterStateService;
         this.EXP = expService;
-        this.FORMULA = formulaService;
     }
 
     public void useSpellTo(Integer actionBarNumber, State target) {
@@ -80,14 +76,15 @@ public class SpellService implements Refreshable {
         if (spellSchool.equals(School.PHYSICAL)) {
             return caster.getEnergy().getCurrentValue() - usedSpell.getCost() >= 0;
         } else {
-            return caster.getMp().getCurrentValue() - FORMULA.getManaCost(usedSpell) >= 0;
+            return caster.getMp().getCurrentValue() - FormulaService.getManaCost(usedSpell) >= 0;
         }
     }
 
     private Integer protection(State target, int protectionCoefficient) {
-        protectionCoefficient = FORMULA.getShield(target, protectionCoefficient);
+        protectionCoefficient = FormulaService.getShield(target, protectionCoefficient);
         target.setShieldPoints(protectionCoefficient);
-        this.lastMovePoints = protectionCoefficient;
+
+        if(target instanceof CharacterState) this.lastMovePoints = protectionCoefficient;
 
         LOGGER.info("Calculated Protection -> " + protectionCoefficient);
 
@@ -95,12 +92,12 @@ public class SpellService implements Refreshable {
     }
 
     private Spell getSpellFromActionBar(Integer actionBarNumber) {
-        return ACTION_BAR_SERVICE.getActionBarMap().get(actionBarNumber);
+        return ACTION_BAR_SERVICE.getActionBarMap().get(actionBarNumber).getSpell();
     }
 
     private int takeCost(Spell spell, State caster) {
         String spellType = spell.getSchool();
-        int manaCost = FORMULA.getManaCost(spell);
+        int manaCost = FormulaService.getManaCost(spell);
 
         if (spellType.equals(School.PHYSICAL)) {
             caster.getEnergy().setCurrentValue(caster.getEnergy().getCurrentValue() - spell.getCost());
@@ -112,33 +109,33 @@ public class SpellService implements Refreshable {
     }
 
     private Integer makeDamage(State caster, State target, int damageCoefficient) {
-        damageCoefficient = FORMULA.getDamage(caster, damageCoefficient);
+        int dmg = FormulaService.getDamage(caster.getLevel(), damageCoefficient);
 
-        Double minimumDamage = damageCoefficient - damageCoefficient * 0.15;
-        Double maximumDamage = damageCoefficient + damageCoefficient * 0.15;
+        Double minimumDamage = FormulaService.getMinDmg(dmg);
+        Double maximumDamage = FormulaService.getMaxDmg(dmg);
 
-        damageCoefficient = ProcessorUtil.getRandomInt(minimumDamage.intValue(), maximumDamage.intValue() + 1);
+        dmg = ProcessorUtil.getRandomInt(minimumDamage.intValue(), maximumDamage.intValue() + 1);
 
         if (isCritical(target)) {
-            damageCoefficient *= caster.getCriticalDmgCoefficient();
+            dmg *= caster.getCriticalDmgCoefficient();
             LOGGER.info("Critical Strike!");
         }
 
-        int damageAfterShield = damageCoefficient - target.getShieldPoints() <= 0 ?
-                0 : damageCoefficient - target.getShieldPoints();
+        int damageAfterShield = dmg - target.getShieldPoints() <= 0 ?
+                0 : dmg - target.getShieldPoints();
 
-        target.setShieldPoints(target.getShieldPoints() - damageCoefficient <= 0 ?
-                0 : target.getShieldPoints() - damageCoefficient);
+        target.setShieldPoints(target.getShieldPoints() - dmg <= 0 ?
+                0 : target.getShieldPoints() - dmg);
 
         target.getHp().subtractCurrentValue(damageAfterShield);
 
-        this.lastMovePoints = damageCoefficient;
+        if(caster instanceof CharacterState) this.lastMovePoints = dmg;
 
-        biggestDmg = biggestDmg < damageCoefficient ? damageCoefficient : biggestDmg;
+        if(caster instanceof CharacterState) biggestDmg = biggestDmg < dmg ? dmg : biggestDmg;
 
-        LOGGER.info("Calculated DMG -> " + damageCoefficient);
+        LOGGER.info("Calculated DMG -> " + dmg);
 
-        return damageCoefficient;
+        return dmg;
     }
 
     private boolean isCritical(State target) {
