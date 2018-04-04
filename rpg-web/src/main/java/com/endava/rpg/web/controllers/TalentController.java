@@ -43,7 +43,7 @@ public class TalentController {
     @RequestMapping(value = Paths.TALENTS_BRANCH, method = RequestMethod.GET)
     public String toTalent(Model model, @PathVariable("branch") String branch) {
         model = CHARACTER_STATE.getHeaderData(model)
-                .addAttribute("freePoints", CHARACTER_STATE.getCharacterState().getFreePoints())
+                .addAttribute("freePoints", CharacterStateService.getCharacter().getFreePoints())
                 .addAttribute("branch", TALENT.getBranch(branch));
         LOGGER.info("Branch page");
         return Views.BRANCH;
@@ -52,11 +52,11 @@ public class TalentController {
     @RequestMapping(value = Paths.TALENTS_UPDATE, method = RequestMethod.POST)
     public String addTalents(@PathVariable("branch") String branch, @PathVariable("talent") String talent, int points) {
 
-        if (points == 0 || CHARACTER_STATE.getCharacterState().getFreePoints() - points < 0) {
+        if (points == 0 || CharacterStateService.getCharacter().getFreePoints() - points < 0) {
             return "redirect:" + Paths.TALENTS_BRANCH;
         }
 
-        Character character = PS.getCharacterByName(CHARACTER_STATE.getCharacterName());
+        Character character = PS.getCharacterByName(CharacterStateService.getCharName());
         TALENT.updateCharacterTalent(character, branch, talent, points);
         character.removeFreePoints(points);
         PS.updateCharacter(character);

@@ -3,74 +3,45 @@ package com.endava.rpg.gp.battle.spells;
 import com.endava.rpg.gp.battle.ExpService;
 import com.endava.rpg.gp.battle.spells.constants.School;
 import com.endava.rpg.gp.battle.spells.constants.SpellType;
+import com.endava.rpg.gp.battle.spells.effects.shields.Shield;
+import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.game.FormulaService;
-import com.endava.rpg.gp.game.Refresher;
 import com.endava.rpg.gp.state.ActionBarService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.statemodels.State;
-import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.util.ProcessorUtil;
-import com.endava.rpg.gp.util.Refreshable;
 import com.endava.rpg.persistence.models.Spell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
 @Service
-public class SpellService implements Refreshable {
+public class SpellService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpellService.class);
 
-    private final ActionBarService ACTION_BAR_SERVICE;
-
-    private final CharacterStateService CHAR_STATE;
-
-    private final ExpService EXP;
-
-    private Integer lastMovePoints = 0;
-
-    private Integer biggestDmg = 0;
-
-    @Autowired
-    private SpellService(ActionBarService actionBarService,
-                         CharacterStateService characterStateService,
-                         ExpService expService,
-                         Refresher refresher) {
-
-        refresher.addRefreshable(this);
-        this.ACTION_BAR_SERVICE = actionBarService;
-        this.CHAR_STATE = characterStateService;
-        this.EXP = expService;
-    }
-
-    public void useSpellTo(Integer actionBarNumber, State target) {
+    public static void useSpellTo(Integer actionBarNumber, State target) {
         Spell usedSpell = getSpellFromActionBar(actionBarNumber);
-        useSpellTo(usedSpell, target, CHAR_STATE.getCharacterState());
+        useSpellTo(CharacterStateService.getCharacter(), target, usedSpell);
     }
 
-    public void useSpellTo(Spell usedSpell, State target, State caster) {
+    public static void useSpellTo(State caster, State target, Spell usedSpell) {
         if (usedSpell.getSpellType().equals(SpellType.ATTACK)) {
             int dmg = makeDamage(caster, target, usedSpell.getCoefficient());
             int cost = takeCost(usedSpell, caster);
-            EXP.addAttributeExp(usedSpell.getAttribute());
-            CombatTextService.createSpellRecord(usedSpell, caster, target, dmg, cost);
-        } else {
-            int protection = protection(caster, usedSpell.getCoefficient());
+            ExpService.addAttributeExp(usedSpell.getAttribute());
+            CombatTextService.createAttackRecord(usedSpell, caster, target, dmg, cost);
+        } else if (usedSpell.getSpellType().equals(SpellType.PROTECTION)) {
+            int protection = protection(caster, usedSpell);
             int cost = takeCost(usedSpell, caster);
-            EXP.addAttributeExp(usedSpell.getAttribute());
-            CombatTextService.createSpellRecord(usedSpell, caster, protection, cost);
+            ExpService.addAttributeExp(usedSpell.getAttribute());
+            CombatTextService.createShieldRecord(usedSpell, caster, protection, cost);
         }
     }
 
-    public boolean doesHaveEnoughMana(Integer actionBarNumber) {
-        Spell usedSpell = getSpellFromActionBar(actionBarNumber);
-        return isEnoughMana(usedSpell, CHAR_STATE.getCharacterState());
-    }
-
-    public boolean isEnoughMana(Spell usedSpell, State caster) {
+    public static boolean isEnoughMana(Spell usedSpell, State caster) {
         String spellSchool = usedSpell.getSchool();
 
         if (spellSchool.equals(School.PHYSICAL)) {
@@ -80,22 +51,45 @@ public class SpellService implements Refreshable {
         }
     }
 
-    private Integer protection(State target, int protectionCoefficient) {
-        protectionCoefficient = FormulaService.getShield(target, protectionCoefficient);
-        target.setShieldPoints(protectionCoefficient);
+    public static void damageIt(State target, int dmg) {
+        Shield shield;
 
-        if(target instanceof CharacterState) this.lastMovePoints = protectionCoefficient;
+        do {
+            shield = target.getRandomShield();
 
-        LOGGER.info("Calculated Protection -> " + protectionCoefficient);
+            if (shield != null) {
+                int shieldPoints = shield.getPoints();
 
-        return protectionCoefficient;
+                if (shieldPoints - dmg <= 0) {
+                    shield.setPoints(0);
+                    dmg -= shieldPoints;
+                } else {
+                    shield.setPoints(shieldPoints - dmg);
+                    dmg = 0;
+                }
+            }
+
+        } while (dmg != 0 && shield != null && shield.getPoints() != 0);
+
+        target.getHp().subtractCurrentValue(dmg);
     }
 
-    private Spell getSpellFromActionBar(Integer actionBarNumber) {
-        return ACTION_BAR_SERVICE.getActionBarMap().get(actionBarNumber).getSpell();
+    private static Spell getSpellFromActionBar(Integer actionBarNumber) {
+        return ActionBarService.getActionBarMap().get(actionBarNumber).getSpell();
     }
 
-    private int takeCost(Spell spell, State caster) {
+    private static int protection(State target, Spell shieldSpell) {
+        Shield shield = (Shield) target.addEffect(target, shieldSpell);
+        int shieldPoints = shield.getPoints();
+
+        if (target instanceof CharacterState) CharacterStateService.getCharacter().setLastMovePoints(shieldPoints);
+
+        LOGGER.info("Calculated Protection -> " + shieldPoints);
+
+        return shieldPoints;
+    }
+
+    private static int takeCost(Spell spell, State caster) {
         String spellType = spell.getSchool();
         int manaCost = FormulaService.getManaCost(spell);
 
@@ -108,8 +102,9 @@ public class SpellService implements Refreshable {
         }
     }
 
-    private Integer makeDamage(State caster, State target, int damageCoefficient) {
+    private static Integer makeDamage(State caster, State target, int damageCoefficient) {
         int dmg = FormulaService.getDamage(caster.getLevel(), damageCoefficient);
+        CharacterState character = CharacterStateService.getCharacter();
 
         Double minimumDamage = FormulaService.getMinDmg(dmg);
         Double maximumDamage = FormulaService.getMaxDmg(dmg);
@@ -121,40 +116,28 @@ public class SpellService implements Refreshable {
             LOGGER.info("Critical Strike!");
         }
 
-        int damageAfterShield = dmg - target.getShieldPoints() <= 0 ?
-                0 : dmg - target.getShieldPoints();
+        int dmgForLog = dmg;
 
-        target.setShieldPoints(target.getShieldPoints() - dmg <= 0 ?
-                0 : target.getShieldPoints() - dmg);
+        damageIt(target, dmg);
 
-        target.getHp().subtractCurrentValue(damageAfterShield);
+        if (caster instanceof CharacterState) character.setLastMovePoints(dmgForLog);
 
-        if(caster instanceof CharacterState) this.lastMovePoints = dmg;
+        if (caster instanceof CharacterState && character.getBiggestDmg() < dmgForLog)
+            character.setBiggestDmg(dmgForLog);
 
-        if(caster instanceof CharacterState) biggestDmg = biggestDmg < dmg ? dmg : biggestDmg;
+        LOGGER.info("Calculated DMG -> " + dmgForLog);
 
-        LOGGER.info("Calculated DMG -> " + dmg);
-
-        return dmg;
+        return dmgForLog;
     }
 
-    private boolean isCritical(State target) {
+    private static boolean isCritical(State target) {
         return target instanceof CharacterState ?
                 new Random().nextInt(100) <= 25 :
-                new Random().nextInt(100) <= CHAR_STATE.getCharacterState().getAgility().getProgressLevel();
+                new Random().nextInt(100) <= CharacterStateService.getCharacter().getAgility().getProgressLevel();
     }
 
-    public Integer getLastMovePoints() {
-        return lastMovePoints;
-    }
-
-    public Integer getBiggestDmg() {
-        return biggestDmg;
-    }
-
-    @Override
-    public void refresh() {
-        this.lastMovePoints = 0;
-        this.biggestDmg = 0;
+    public boolean doesHaveEnoughMana(Integer actionBarNumber) {
+        Spell usedSpell = getSpellFromActionBar(actionBarNumber);
+        return isEnoughMana(usedSpell, CharacterStateService.getCharacter());
     }
 }

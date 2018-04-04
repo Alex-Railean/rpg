@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.talents.constants;
+package com.endava.rpg.persistence.services.utils.constants;
 
 public enum TalentAttribute {
     EXO_SPINE("Exo-spine", "exospine"),

@@ -19,8 +19,9 @@ public class Spell implements TableMapping, DescribedSpell {
     @Column(name = "COOLDOWN")
     private Integer cooldown;
 
-    @Column(name = "EFFECT_ID")
-    private Integer effectId;
+    @OneToOne
+    @JoinColumn(name = "EFFECT")
+    private EffectCore effectCore;
 
     @Column(name = "COEFFICIENT")
     private Integer coefficient;
@@ -39,6 +40,12 @@ public class Spell implements TableMapping, DescribedSpell {
 
     @Column(name = "TYPE")
     private String spellType;
+
+    @Column(name = "REQUIRED")
+    private Integer required;
+
+    @Column(name = "BRANCH")
+    private String branch;
 
     @Override
     public Spell getSpell() {
@@ -72,12 +79,12 @@ public class Spell implements TableMapping, DescribedSpell {
         return this;
     }
 
-    public Integer getEffectId() {
-        return effectId;
+    public EffectCore getEffectCore() {
+        return effectCore;
     }
 
-    public Spell setEffectId(Integer effectId) {
-        this.effectId = effectId;
+    public Spell setEffectCore(EffectCore effectId) {
+        this.effectCore = effectId;
         return this;
     }
 
@@ -132,6 +139,24 @@ public class Spell implements TableMapping, DescribedSpell {
 
     public Spell setSpellType(String spellType) {
         this.spellType = spellType;
+        return this;
+    }
+
+    public Integer getRequired() {
+        return required;
+    }
+
+    public Spell setRequired(Integer required) {
+        this.required = required;
+        return this;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public Spell setBranch(String branch) {
+        this.branch = branch;
         return this;
     }
 }

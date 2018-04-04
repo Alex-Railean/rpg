@@ -56,31 +56,15 @@
     overflow: auto;
 }
 
-.popup {
-    height: 0;
-    color: #fff;
-    position: relative;
-    cursor: pointer;
+.effect-img {
+    width: 30px !important;
+    height: 30px !important;
+    border: solid 1px rgba(0, 0, 0, 0.28);
+    margin-right: 2px;
 }
 
-.popup:after {
-    content: attr(data-popuptext);
-    background: rgba(0, 0, 0, 0.85);
-    border-radius: 5px;
-    opacity: 0;
-    top: 0;
-    left: 0;
-    position: absolute;
-    transition: 250ms ease;
-    white-space: nowrap;
-    max-height: 0;
-}
+.slot {
 
-.popup:hover:after {
-    opacity: .9;
-    top: 2.5em;
-    max-height: 200px;
-    padding: .6em;
 }
 
 @media (min-width: 992px) {

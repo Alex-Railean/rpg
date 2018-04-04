@@ -15,37 +15,34 @@ import org.springframework.ui.Model;
 public class ExpService implements Refreshable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpService.class);
 
+    private static Integer strengthEpx = 0;
+
+    private static Integer agilityExp = 0;
+
+    private static Integer intelligenceExp = 0;
+
     private final CharacterStateService CHAR_STATE;
 
-    private final FormulaService FORMULA;
-
-    private Integer strengthEpx = 0;
-
-    private Integer agilityExp = 0;
-
-    private Integer intelligenceExp = 0;
-
     @Autowired
-    private ExpService(CharacterStateService characterStateService, FormulaService formulaService, Refresher refresher) {
-        refresher.addRefreshable(this);
+    private ExpService(CharacterStateService characterStateService) {
+        Refresher.addRefreshable(this);
         this.CHAR_STATE = characterStateService;
-        this.FORMULA = formulaService;
     }
 
-    public void addAttributeExp(String attributeName) {
+    public static void addAttributeExp(String attributeName) {
         switch (attributeName) {
             case AttributeType.STRENGTH:
-                strengthEpx += FORMULA.getDeservedExp();
+                strengthEpx += FormulaService.getDeservedExp();
                 LOGGER.info("Strength Epx -> " + strengthEpx);
                 break;
 
             case AttributeType.AGILITY:
-                agilityExp += FORMULA.getDeservedExp();
+                agilityExp += FormulaService.getDeservedExp();
                 LOGGER.info("Agility Exp -> " + agilityExp);
                 break;
 
             case AttributeType.INTELLIGENCE:
-                intelligenceExp += FORMULA.getDeservedExp();
+                intelligenceExp += FormulaService.getDeservedExp();
                 LOGGER.info("Intelligence Exp -> " + intelligenceExp);
                 break;
 
@@ -67,22 +64,22 @@ public class ExpService implements Refreshable {
 
         do {
             isStrengthStable = CHAR_STATE.updateProgress(strengthEpx,
-                    CHAR_STATE.getCharacterState().getStrength(),
+                    CharacterStateService.getCharacter().getStrength(),
                     AttributeType.STRENGTH);
 
             isAgilityStable = CHAR_STATE.updateProgress(agilityExp,
-                    CHAR_STATE.getCharacterState().getAgility(),
+                    CharacterStateService.getCharacter().getAgility(),
                     AttributeType.AGILITY);
 
             isIntelligenceStable = CHAR_STATE.updateProgress(intelligenceExp,
-                    CHAR_STATE.getCharacterState().getIntelligence(),
+                    CharacterStateService.getCharacter().getIntelligence(),
                     AttributeType.INTELLIGENCE);
 
         } while (!(isStrengthStable && isAgilityStable && isIntelligenceStable));
     }
 
     private int getDeservedExp(int exp) {
-        return CHAR_STATE.isCharacterDead() ? exp / 4 : exp;
+        return CharacterStateService.isCharDead() ? exp / 4 : exp;
     }
 
     public Model getExpModel(Model model) {
@@ -94,8 +91,8 @@ public class ExpService implements Refreshable {
     }
 
     public void refresh() {
-        this.strengthEpx = 0;
-        this.agilityExp = 0;
-        this.intelligenceExp = 0;
+        strengthEpx = 0;
+        agilityExp = 0;
+        intelligenceExp = 0;
     }
 }

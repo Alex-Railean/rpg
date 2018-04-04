@@ -1,11 +1,13 @@
 package com.endava.rpg.gp.battle;
 
-import com.endava.rpg.gp.battle.location.LocationService;
+import com.endava.rpg.gp.battle.location.EnemyService;
 import com.endava.rpg.gp.battle.spells.SpellService;
+import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.game.Refresher;
 import com.endava.rpg.gp.responsiveness.ResponseService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
+import com.endava.rpg.gp.statemodels.points.Point;
 import com.endava.rpg.gp.util.Refreshable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,70 +15,53 @@ import org.springframework.stereotype.Service;
 @Service
 public class BattleService implements Refreshable {
 
-    private final SpellService SPELL_SERVICE;
-
-    private final LocationService LOCATION;
-
-    private final CharacterStateService CHARACTER_STATE;
-
     private final ResponseService RESPONSE;
 
     private Long battleId;
 
     @Autowired
-    private BattleService(SpellService spellService,
-                          LocationService creepLocation,
-                          CharacterStateService characterState,
-                          ResponseService spellChoice,
-                          Refresher refresher) {
-        refresher.addRefreshable(this);
-        this.SPELL_SERVICE = spellService;
-        this.LOCATION = creepLocation;
-        this.CHARACTER_STATE = characterState;
+    private BattleService(ResponseService spellChoice) {
+        Refresher.addRefreshable(this);
         this.RESPONSE = spellChoice;
     }
 
     public boolean isEndOfBattle() {
-        return CHARACTER_STATE.isCharacterDead() || LOCATION.getCreepGroup().size() == 0;
+        return CharacterStateService.isCharDead() || EnemyService.getCreepGroup().size() == 0;
     }
 
     public void makeATurn(Integer actionBarNumber, CreepState currentEnemy) {
-        SPELL_SERVICE.useSpellTo(actionBarNumber, currentEnemy);
+        SpellService.useSpellTo(actionBarNumber, currentEnemy);
         RESPONSE.creepResponse();
+        useEffects();
         seekDeath();
         useRegeneration();
     }
 
     public void waitATurn() {
+        CombatTextService.createWaitMessage(CharacterStateService.getCharacter());
         RESPONSE.creepResponse();
+        useEffects();
         seekDeath();
         useRegeneration();
     }
 
+    private void useEffects() {
+        EnemyService.getCreepGroup()
+                .forEach(CreepState::useEffects);
+
+        CharacterStateService.getCharacter().useEffects();
+    }
+
     private void useRegeneration() {
-        LOCATION.getCreepGroup()
-                .forEach(creep -> creep.getPoints().forEach(p -> {
-                    if (p.getCurrentValue() < p.getValue()) {
-                        p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
-                                p.getValue() :
-                                p.getCurrentValue() + p.getRegeneration());
+        EnemyService.getCreepGroup()
+                .forEach(creep -> creep.getPoints().forEach(Point::useRegeneration));
 
-                    }
-                }));
-
-        CHARACTER_STATE.getCharacterState().getPoints().forEach(p -> {
-            if (p.getCurrentValue() < p.getValue()) {
-                p.setCurrentValue(p.getCurrentValue() + p.getRegeneration() >= p.getValue() ?
-                        p.getValue() :
-                        p.getCurrentValue() + p.getRegeneration());
-
-            }
-        });
+        CharacterStateService.getCharacter().getPoints().forEach(Point::useRegeneration);
     }
 
     private void seekDeath() {
-        if (LOCATION.isCurrentEnemyDead()) {
-            LOCATION.getCreepGroup().remove(LOCATION.getCurrentEnemy());
+        if (EnemyService.isCurrentEnemyDead()) {
+            EnemyService.getCreepGroup().remove(EnemyService.getCurrentEnemy());
         }
     }
 

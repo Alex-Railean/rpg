@@ -23,75 +23,84 @@ import java.util.Map;
 public class CharacterStateService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStateService.class);
 
-    private static CharacterState characterState;
+    private static CharacterState CHAR_STATE;
 
-    private PersistenceService ps;
+    private PersistenceService PS;
 
-    private ActionBarService actionBarService;
-
-    private FormulaService formula;
-
-    private TalentService talent;
-
-    public CharacterState getCharacterState() {
-        return characterState;
+    @Autowired
+    private CharacterStateService(CharacterState characterState, PersistenceService ps) {
+        CHAR_STATE = characterState;
+        this.PS = ps;
     }
 
-    public static int getLvl(){
-        return characterState.getLevel();
+    public static CharacterState getCharacter() {
+        return CHAR_STATE;
+    }
+
+    public static void dispelEffects() {
+        CHAR_STATE.getEffects().clear();
+    }
+
+    public static String getCharName() {
+        return CHAR_STATE.getName();
+    }
+
+    public static int getLvl() {
+        return CHAR_STATE.getLevel();
+    }
+
+    public static boolean isCharDead() {
+        return CHAR_STATE.getHp().getCurrentValue() <= 0;
     }
 
     public CharacterState setNewBattle(Long battleId) {
         LOGGER.info("New Battle was Defined");
-        return characterState.setCurrentBattle(battleId);
+        return CHAR_STATE.setCurrentBattle(battleId);
     }
 
     public CharacterState resetBattle() {
-        return characterState.setCurrentBattle(0L);
+        return CHAR_STATE.setCurrentBattle(0L);
     }
 
     public Long getBattle() {
-        return characterState.getCurrentBattle();
+        return CHAR_STATE.getCurrentBattle();
     }
 
     public CharacterState setNewLocation(String location) {
         LOGGER.info("New Location -> " + location);
-        ps.updateCharacter(ps.getCharacterByName(characterState.getName()).setLocation(location));
-        return characterState.setLocation(location);
+        PS.updateCharacter(PS.getCharacterByName(CHAR_STATE.getName()).setLocation(location));
+        return CHAR_STATE.setLocation(location);
     }
 
     public String getLocation() {
-        return characterState.getLocation();
+        return CHAR_STATE.getLocation();
     }
 
     public <M extends Model> M getCharacterModel(M model) {
-        Map<Integer, DescribedSpell> actionBar = actionBarService.getActionBarMap();
-        model.addAttribute("characterName", characterState.getName())
-                .addAttribute("characterLevel", characterState.getLevel())
-                .addAttribute("hp", characterState.getHp().getValue())
-                .addAttribute("currentHp", characterState.getHp().getCurrentValue())
-                .addAttribute("mp", characterState.getMp().getValue())
-                .addAttribute("currentMp", characterState.getMp().getCurrentValue())
-                .addAttribute("energy", characterState.getEnergy().getValue())
-                .addAttribute("currentEnergy", characterState.getEnergy().getCurrentValue())
+        Map<Integer, DescribedSpell> actionBar = ActionBarService.getActionBarMap();
+        model.addAttribute("characterName", CHAR_STATE.getName())
+                .addAttribute("characterLevel", CHAR_STATE.getLevel())
+                .addAttribute("hp", CHAR_STATE.getHp().getValue())
+                .addAttribute("currentHp", CHAR_STATE.getHp().getCurrentValue())
+                .addAttribute("mp", CHAR_STATE.getMp().getValue())
+                .addAttribute("currentMp", CHAR_STATE.getMp().getCurrentValue())
+                .addAttribute("energy", CHAR_STATE.getEnergy().getValue())
+                .addAttribute("currentEnergy", CHAR_STATE.getEnergy().getCurrentValue())
                 .addAttribute("actionBar", actionBar)
-                .addAttribute("strengthLevel", characterState.getStrength().getProgressLevel())
-                .addAttribute("strength", characterState.getStrength().getProgress())
-                .addAttribute("strengthNextLevel", characterState.getStrength().getToNextLevel())
-                .addAttribute("agilityLevel", characterState.getAgility().getProgressLevel())
-                .addAttribute("agility", characterState.getAgility().getProgress())
-                .addAttribute("agilityNextLevel", characterState.getAgility().getToNextLevel())
-                .addAttribute("intelligenceLevel", characterState.getIntelligence().getProgressLevel())
-                .addAttribute("intelligence", characterState.getIntelligence().getProgress())
-                .addAttribute("intelligenceNextLevel", characterState.getIntelligence().getToNextLevel())
-                .addAttribute("freePoints", characterState.getFreePoints())
-                .addAttribute("shield", characterState.getShieldPoints());
+                .addAttribute("strengthLevel", CHAR_STATE.getStrength().getProgressLevel())
+                .addAttribute("strength", CHAR_STATE.getStrength().getProgress())
+                .addAttribute("strengthNextLevel", CHAR_STATE.getStrength().getToNextLevel())
+                .addAttribute("agilityLevel", CHAR_STATE.getAgility().getProgressLevel())
+                .addAttribute("agility", CHAR_STATE.getAgility().getProgress())
+                .addAttribute("agilityNextLevel", CHAR_STATE.getAgility().getToNextLevel())
+                .addAttribute("intelligenceLevel", CHAR_STATE.getIntelligence().getProgressLevel())
+                .addAttribute("intelligence", CHAR_STATE.getIntelligence().getProgress())
+                .addAttribute("intelligenceNextLevel", CHAR_STATE.getIntelligence().getToNextLevel())
+                .addAttribute("freePoints", CHAR_STATE.getFreePoints())
+                .addAttribute("shield", CHAR_STATE.getShieldPoints())
+                .addAttribute("effects", CharacterStateService.getCharacter().getEffects());
 
         return model;
-    }
-
-    public boolean isCharacterDead() {
-        return characterState.getHp().getCurrentValue() <= 0;
     }
 
     public boolean updateProgress(Integer additionalExp, Attribute stateAttribute, String type) {
@@ -99,7 +108,7 @@ public class CharacterStateService {
             return true;
         }
 
-        Character character = ps.getCharacterByName(characterState.getName());
+        Character character = PS.getCharacterByName(CHAR_STATE.getName());
         Progress progress = character.getProgress();
 
         if (stateAttribute.isItNextLevel(additionalExp)) {
@@ -140,7 +149,7 @@ public class CharacterStateService {
             stateAttribute.addProgress(additionalExp);
         }
 
-        ps.updateCharacter(character);
+        PS.updateCharacter(character);
 
         // TODO: Use this only for Lvl Up
         refreshCharacter();
@@ -149,56 +158,56 @@ public class CharacterStateService {
     }
 
     public CharacterState refreshCharacter() {
-        return defineCharacter(characterState.getName());
+        return defineCharacter(CHAR_STATE.getName());
     }
 
     public CharacterState defineCharacter(String characterName) {
         Character character;
 
-        if ((character = ps.getCharacterByName(characterName)) != null) {
-            talent.defineTalents(character);
+        if ((character = PS.getCharacterByName(characterName)) != null) {
+            TalentService.defineTalents(character);
             CharacterState characterState = reloadCharacter(character);
-            talent.affect();
+            TalentService.affect();
             LOGGER.info("An existing Character was defined");
             return characterState;
         }
 
-        character = ps.saveCharacter(new Character(
+        character = PS.saveCharacter(new Character(
                 characterName,
                 new Progress(),
                 new ActionBar()));
-        talent.createAll(character);
-        ps.refreshChar(character);
-        talent.defineTalents(character);
+        TalentService.createAll(character);
+        PS.refreshChar(character);
+        TalentService.defineTalents(character);
         CharacterState characterState = reloadCharacter(character);
-        talent.affect();
+        TalentService.affect();
         LOGGER.info("A New Character was Created");
         return characterState;
     }
 
     public <M extends Model> M getHeaderData(M model) {
-        model.addAttribute("characterName", getCharacterState().getName())
-                .addAttribute("characterLevel", getCharacterState().getLevel());
+        model.addAttribute("characterName", CHAR_STATE.getName())
+                .addAttribute("characterLevel", CHAR_STATE.getLevel());
         return model;
     }
 
     private CharacterState reloadCharacter(Character character) {
-        characterState.getStrength().setProgressLevel(character.getProgress().getStrengthProgressLevel())
+        CHAR_STATE.getStrength().setProgressLevel(character.getProgress().getStrengthProgressLevel())
                 .setProgress(character.getProgress().getStrengthProgress());
 
-        characterState.getAgility().setProgressLevel(character.getProgress().getAgilityProgressLevel())
+        CHAR_STATE.getAgility().setProgressLevel(character.getProgress().getAgilityProgressLevel())
                 .setProgress(character.getProgress().getAgilityProgress());
 
-        characterState.getIntelligence().setProgressLevel(character.getProgress().getIntelligenceProgressLevel())
+        CHAR_STATE.getIntelligence().setProgressLevel(character.getProgress().getIntelligenceProgressLevel())
                 .setProgress(character.getProgress().getIntelligenceProgress());
 
-        characterState.setLocation(character.getLocation())
+        CHAR_STATE.setLocation(character.getLocation())
                 .setFreePoints(character.getFreePoints())
                 .setName(character.getCharacterName())
                 .setLevel(calculateCharacterLevel())
-                .setSpell(0, character.getActionBar().getSpell_1() == null ? ps.getSpellByName(DefaultSpells.SWORD_ATTACK) : character.getActionBar().getSpell_1())
-                .setSpell(1, character.getActionBar().getSpell_2() == null ? ps.getSpellByName(DefaultSpells.BOW_ATTACK) : character.getActionBar().getSpell_2())
-                .setSpell(2, character.getActionBar().getSpell_3() == null ? ps.getSpellByName(DefaultSpells.FIRE_BALL) : character.getActionBar().getSpell_3())
+                .setSpell(0, character.getActionBar().getSpell_1() == null ? PS.getSpellByName(DefaultSpells.SWORD_ATTACK) : character.getActionBar().getSpell_1())
+                .setSpell(1, character.getActionBar().getSpell_2() == null ? PS.getSpellByName(DefaultSpells.BOW_ATTACK) : character.getActionBar().getSpell_2())
+                .setSpell(2, character.getActionBar().getSpell_3() == null ? PS.getSpellByName(DefaultSpells.FIRE_BALL) : character.getActionBar().getSpell_3())
                 .setSpell(3, character.getActionBar().getSpell_4() == null ? getDefaultSpell() : character.getActionBar().getSpell_4())
                 .setSpell(4, character.getActionBar().getSpell_5() == null ? getDefaultSpell() : character.getActionBar().getSpell_5())
                 .setSpell(5, character.getActionBar().getSpell_6() == null ? getDefaultSpell() : character.getActionBar().getSpell_6())
@@ -209,52 +218,19 @@ public class CharacterStateService {
                 .setSpell(10, character.getActionBar().getSpell_11() == null ? getDefaultSpell() : character.getActionBar().getSpell_11())
                 .setSpell(11, character.getActionBar().getSpell_12() == null ? getDefaultSpell() : character.getActionBar().getSpell_12());
 
-        characterState.getHp().setValue(formula.getCharacterHp()).refresh();
-        characterState.getMp().setValue(formula.getCharacterMp()).refresh();
-        characterState.getEnergy().refresh();
+        CHAR_STATE.getHp().setValue(FormulaService.getCharacterHp()).refresh();
+        CHAR_STATE.getMp().setValue(FormulaService.getCharacterMp()).refresh();
+        CHAR_STATE.getEnergy().refresh();
 
         LOGGER.info("Character has been reloaded");
-        return characterState;
-    }
-
-    public int getCharacterLevel() {
-        return characterState.getLevel();
-    }
-
-    public String getCharacterName() {
-        return characterState.getName();
+        return CHAR_STATE;
     }
 
     private Spell getDefaultSpell() {
-        return ps.getSpellByName("No spell");
+        return PS.getSpellByName("No spell");
     }
 
     private Integer calculateCharacterLevel() {
-        return characterState.getAttributes().stream().mapToInt(Attribute::getProgressLevel).sum() - 2;
-    }
-
-    @Autowired
-    private void setPs(PersistenceService ps) {
-        this.ps = ps;
-    }
-
-    @Autowired
-    private void setActionBarService(ActionBarService actionBarService) {
-        this.actionBarService = actionBarService;
-    }
-
-    @Autowired
-    private void setFormula(FormulaService formula) {
-        this.formula = formula;
-    }
-
-    @Autowired
-    public void setTalent(TalentService talent) {
-        this.talent = talent;
-    }
-
-    @Autowired
-    private void setCharacterState(CharacterState characterState) {
-        CharacterStateService.characterState = characterState;
+        return CHAR_STATE.getAttributes().stream().mapToInt(Attribute::getProgressLevel).sum() - 2;
     }
 }

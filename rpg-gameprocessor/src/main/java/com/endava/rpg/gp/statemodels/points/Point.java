@@ -14,6 +14,15 @@ public class Point {
         cs.addPoint(this);
     }
 
+    public void useRegeneration() {
+        if (currentValue < value) {
+            currentValue = currentValue + regeneration >= value ?
+                    value :
+                    currentValue + regeneration;
+
+        }
+    }
+
     public Point refresh() {
         this.currentValue = this.value;
         return this;

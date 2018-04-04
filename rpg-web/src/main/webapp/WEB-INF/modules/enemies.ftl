@@ -18,6 +18,9 @@
         <div class="character-image">
             <img src="/resources/img/infectedWolf.jpg" alt="creep-image">
         </div>
+    <#list currentEnemy.getEffects() as effect>
+        <img src="${effect.getURL()}" alt="effect-image" title="${effect.getDescription()}" class="effect-img">
+    </#list>
     </div>
 <#list creepsGroup as creep>
     <span> ${creep.getName()}

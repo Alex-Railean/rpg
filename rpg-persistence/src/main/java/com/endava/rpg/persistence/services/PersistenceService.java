@@ -3,6 +3,7 @@ package com.endava.rpg.persistence.services;
 import com.endava.rpg.persistence.dao.*;
 import com.endava.rpg.persistence.models.*;
 import com.endava.rpg.persistence.models.Character;
+import com.endava.rpg.persistence.services.utils.constants.BranchAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +22,25 @@ public class PersistenceService {
 
     private final ProgressDao PROGRESS;
 
+    private final TechnologiesDao TECHNOLOGIES;
+
+    private final EffectCoreDao EFFECT;
+
     @Autowired
-    private PersistenceService(BranchDao branch_dao, CharacterDao character, SpellDao spells, CreepDao creeps, ProgressDao progress, TechnologiesDao technologies) {
+    private PersistenceService(BranchDao branch_dao,
+                               CharacterDao character,
+                               SpellDao spells,
+                               CreepDao creeps,
+                               ProgressDao progress,
+                               TechnologiesDao technologies,
+                               EffectCoreDao effect) {
         this.BRANCH_DAO = branch_dao;
         this.CHARACTER = character;
         this.SPELLS = spells;
         this.CREEPS = creeps;
         this.PROGRESS = progress;
+        this.TECHNOLOGIES = technologies;
+        this.EFFECT = effect;
     }
 
     public Character saveCharacter(Character character) {
@@ -48,6 +61,10 @@ public class PersistenceService {
 
     public Spell saveSpell(Spell spell) {
         return SPELLS.save(spell);
+    }
+
+    public EffectCore saveEffect(EffectCore e) {
+        return EFFECT.save(e);
     }
 
     public Spell getSpellById(Integer id) {
@@ -88,5 +105,21 @@ public class PersistenceService {
 
     public Character refreshChar(Character character) {
         return CHARACTER.refresh(character);
+    }
+
+    public Technologies getTechOf(Character character) {
+        return TECHNOLOGIES.getSingleWhere("character", character);
+    }
+
+    public List<Spell> getTechSpells() {
+        return SPELLS.getAllWhere("branch", BranchAttribute.TECHNOLOGIES.NAME);
+    }
+
+    public EffectCore getEffect(String name) {
+        return EFFECT.getSingleWhere("name", name);
+    }
+
+    public List<EffectCore> getAllEffects() {
+        return EFFECT.getAll();
     }
 }

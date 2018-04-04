@@ -1,10 +1,8 @@
 package com.endava.rpg.gp.game;
 
-import com.endava.rpg.gp.battle.spells.SpellService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.Spell;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,10 +10,6 @@ import java.util.Map;
 
 @Service
 public class FormulaService {
-
-    private CharacterStateService characterStateService;
-
-    private SpellService spellService;
 
     private static Map<Integer, Map<Integer, Integer>> calculatedDmg = new HashMap<>();
 
@@ -52,6 +46,10 @@ public class FormulaService {
         return dmg + dmg * 0.15;
     }
 
+    public static Integer getDeservedExp() {
+        return CharacterStateService.getCharacter().getLastMovePoints() / 5 * GameService.GAME_RATE;
+    }
+
     public static int getShield(State target, int damageCoefficient) {
         return getDamage(target.getLevel(), damageCoefficient);
     }
@@ -82,46 +80,31 @@ public class FormulaService {
                 GameService.GROWTH_FACTOR * 2;
     }
 
-    public Integer getCharacterHp() {
+    public static Integer getCharacterHp() {
         Integer hp = 50;
 
         for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
             hp += 20 + i * GameService.GROWTH_FACTOR;
         }
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getStrength().getProgressLevel(); i++) {
+        for (int i = 1; i <= CharacterStateService.getCharacter().getStrength().getProgressLevel(); i++) {
             hp += 35 + i * GameService.GROWTH_FACTOR;
         }
 
         return hp;
     }
 
-    public Integer getCharacterMp() {
+    public static Integer getCharacterMp() {
         Integer mp = 50;
 
         for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
             mp += 10 + i * GameService.GROWTH_FACTOR;
         }
 
-        for (int i = 1; i <= characterStateService.getCharacterState().getIntelligence().getProgressLevel(); i++) {
+        for (int i = 1; i <= CharacterStateService.getCharacter().getIntelligence().getProgressLevel(); i++) {
             mp += 45 + i * GameService.GROWTH_FACTOR;
         }
 
         return mp;
-    }
-
-    // TODO: The only usage of spellService in class. Try to move
-    public Integer getDeservedExp() {
-        return spellService.getLastMovePoints() / 5 * GameService.GAME_RATE;
-    }
-
-    @Autowired
-    private void setCharacterStateService(CharacterStateService characterStateService) {
-        this.characterStateService = characterStateService;
-    }
-
-    @Autowired
-    private void setSpellService(SpellService spellService) {
-        this.spellService = spellService;
     }
 }

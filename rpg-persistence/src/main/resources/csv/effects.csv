@@ -1,0 +1,3 @@
+name            ; duration ; URL                               ; description
+Defence Stance  ; -1       ; /resources/img/defencestance.jpg  ; Defence Stance
+Unstable Shield ; 8        ; /resources/img/unstableshield.jpg ; Absorbs incoming damage in an amount depending on your level. When shield disappears (for any reason) it explodes and damages all enemies. Damage equals to the last absorption.

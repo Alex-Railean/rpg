@@ -1,6 +1,6 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.battle.spells.description.DmgDescription;
+import com.endava.rpg.gp.battle.spells.description.DescrService;
 import com.endava.rpg.gp.state.ActionBarService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.state.SpellBookService;
@@ -46,20 +46,21 @@ public class SpellBookController {
     @RequestMapping(value = Paths.SPELLBOOK, method = RequestMethod.GET)
     public String toSpellBook(Model model) {
         model = CHARACTER_STATE.getHeaderData(model)
-                .addAttribute("actionBar", ACTION_BAR.getActionBarMap())
-                .addAttribute("spellBookContent", DmgDescription.toDmgDescription(SPELL_BOOK.getAvailableSpells(CHARACTER_STATE.getCharacterName())));
+                .addAttribute("actionBar", ActionBarService.getActionBarMap())
+                .addAttribute("spellBookContent",
+                        DescrService.addFull(SPELL_BOOK.getAvailableSpells(CharacterStateService.getCharName())));
         LOGGER.info("Spell Book");
         return Views.SPELL_BOOK;
     }
 
     @RequestMapping(value = Paths.SPELLBOOK_SPELL, method = RequestMethod.POST)
     public String updateActionBar(@PathVariable("spell") String spell, Integer slot) {
-        String charName = CHARACTER_STATE.getCharacterState().getName();
+        String charName = CharacterStateService.getCharacter().getName();
         Character character = PS.getCharacterByName(charName);
 
         Spell defaultSpell = PS.getSpellByName("No spell");
 
-        Map<Integer, DescribedSpell> ab = ACTION_BAR.getActionBarMap();
+        Map<Integer, DescribedSpell> ab = ActionBarService.getActionBarMap();
         Spell toMove = ab.get(slot).getSpell();
 
         DescribedSpell newSpell = SPELL_BOOK.getAvailableSpells(charName)
@@ -85,10 +86,10 @@ public class SpellBookController {
 
     @RequestMapping(value = Paths.SPELLBOOK_REMOVE, method = RequestMethod.GET)
     public String removeSpell(@PathVariable("slot") Integer slot) {
-        String charName = CHARACTER_STATE.getCharacterState().getName();
+        String charName = CharacterStateService.getCharacter().getName();
         Spell defaultSpell = PS.getSpellByName("No spell");
         Character character = PS.getCharacterByName(charName);
-        Map<Integer, DescribedSpell> ab = ACTION_BAR.getActionBarMap();
+        Map<Integer, DescribedSpell> ab = ActionBarService.getActionBarMap();
         ab.put(slot, defaultSpell);
 
         ACTION_BAR.setActionBar(character, ab);

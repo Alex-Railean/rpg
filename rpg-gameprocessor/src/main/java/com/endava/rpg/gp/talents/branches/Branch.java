@@ -19,6 +19,8 @@ public abstract class Branch {
 
     public abstract void create(Character character);
 
+    public abstract void addAvailableSpells(Character character);
+
     public void addTalent(Talent t) {
         talentsOfBranch.add(t);
     }

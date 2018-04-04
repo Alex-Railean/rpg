@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.adapters;
 
 import com.endava.rpg.persistence.models.Creep;
+import com.endava.rpg.persistence.models.EffectCore;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
 import org.slf4j.Logger;
@@ -20,20 +21,22 @@ public class CSVAdapter {
     }
 
     public static Spell toSpell(String[] csvSpell) {
-        LOGGER.info("CSV row was Converted to Spell Object");
+        LOGGER.info("CSV row was converted to Spell Object");
         return new Spell().setSpellName(csvSpell[0])
                 .setCooldown(Integer.parseInt(csvSpell[1]))
-                .setEffectId(Integer.parseInt(csvSpell[2]))
+                .setEffectCore(ps.getEffect(csvSpell[2]))
                 .setCoefficient(Integer.parseInt(csvSpell[3]))
                 .setSpellURL(csvSpell[4])
                 .setCost(Integer.parseInt(csvSpell[5]))
                 .setSchool(csvSpell[6])
                 .setAttribute(csvSpell[7])
-                .setSpellType(csvSpell[8]);
+                .setSpellType(csvSpell[8])
+                .setRequired(Integer.parseInt(csvSpell[9]))
+                .setBranch(csvSpell[10]);
     }
 
     public static Creep toCreep(String[] csvCreep) {
-        LOGGER.info("CSV row was Converted to Creep Object");
+        LOGGER.info("CSV row was converted to Creep Object");
         return new Creep().setCreepName(csvCreep[0])
                 .setHpFactor(Integer.parseInt(csvCreep[1]))
                 .setHpRegeneration(Integer.parseInt(csvCreep[2]))
@@ -46,5 +49,13 @@ public class CSVAdapter {
                 .setSpell_3(csvCreep[9].equals("null") ? ps.getSpellByName("No spell") : ps.getSpellByName(csvCreep[9]))
                 .setCreepType(csvCreep[10])
                 .setCreepLocation(csvCreep[11]);
+    }
+
+    public static EffectCore toEffectCore(String[] csvEffect) {
+        LOGGER.info("CSV row was converted to EffectCore Object");
+        return new EffectCore().setName(csvEffect[0])
+                .setDuration(Integer.parseInt(csvEffect[1]))
+                .setURL(csvEffect[2])
+                .setDescription(csvEffect[3]);
     }
 }

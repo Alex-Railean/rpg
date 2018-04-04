@@ -17,6 +17,9 @@
     <div class="character-image">
         <img src="/resources/img/testCharacter.jpg" alt="character-image">
     </div>
+<#list effects as effect>
+    <img src="${effect.getURL()}" alt="effect-image" title="${effect.getDescription()}" class="effect-img">
+</#list>
     <div class="spells">
     <#include "action-bar.ftl">
     </div>

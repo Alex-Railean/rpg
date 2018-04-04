@@ -11,7 +11,7 @@ public abstract class Talent {
 
     protected CharacterStateService characterState;
 
-    protected List<Talent> dependency = new ArrayList<>();
+    private List<Talent> dependency = new ArrayList<>();
 
     private String name;
 

@@ -28,9 +28,17 @@ public class PostConstructService {
 
     @PostConstruct
     private void injectAll() {
+        injectAllEffects();
         injectAllSpells();
         injectAllCreeps();
         SPELLBOOK.getDefault();
+    }
+
+    private void injectAllEffects() {
+        List<String[]> effects = new CSVReader("effects.csv").getData();
+        if (PS.getAllEffects().size() < effects.size()) {
+            effects.forEach(e -> PS.saveEffect(CSVAdapter.toEffectCore(e)));
+        }
     }
 
     private void injectAllSpells() {

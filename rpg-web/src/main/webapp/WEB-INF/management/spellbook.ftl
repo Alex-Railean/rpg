@@ -12,9 +12,8 @@
         <div class="spells">
         <#list spellBookContent as spell>
             <form action="/spellbook/${spell.getSpell().getSpellName()}" method="POST" class="spellbook-form">
-                <span class="popup" data-description="${spell.getDescription()}">
-                    <img src="${spell.getSpell().getSpellURL()}" class="spell-img" alt="spell-image">
-                </span>
+                <img src="${spell.getSpell().getSpellURL()}" class="spell-img" alt="spell-image"
+                     title="${spell.getDescription()}">
                 <select class="custom-select mb-2 mr-sm-2 mb-sm-0 slot" id="inlineFormCustomSelect" name="slot">
                     <#list actionBar as abNumber, abImage>
                         <option value="${abNumber}">${abNumber}</option>
@@ -28,11 +27,10 @@
     <div class="row">
         <div class="spells">
         <#list actionBar as abNumber, abSpell>
-            <span class="popup" data-description="${abSpell.getDescription()}">
             <a href="/spellbook/remove/${abNumber}">
-                <img src="${abSpell.getSpell().getSpellURL()}" class="spell-img" alt="spell-image">
+                <img src="${abSpell.getSpell().getSpellURL()}" class="spell-img" alt="spell-image"
+                     title="${abSpell.getDescription()}">
             </a>
-            </span>
         </#list>
         </div>
     </div>

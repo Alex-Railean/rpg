@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.battle.spells.description;
+package com.endava.rpg.gp.battle.spells.description.spells;
 
 import com.endava.rpg.gp.game.FormulaService;
 import com.endava.rpg.gp.state.CharacterStateService;
@@ -16,6 +16,10 @@ public class DmgDescription implements DescribedSpell {
         this.describedSpell = d;
     }
 
+    public static List<DescribedSpell> toDmgDescription(List<DescribedSpell> spells) {
+        return spells.stream().map(DmgDescription::new).collect(Collectors.toList());
+    }
+
     @Override
     public Spell getSpell() {
         return describedSpell.getSpell();
@@ -26,9 +30,5 @@ public class DmgDescription implements DescribedSpell {
         Integer dmg = FormulaService.getDamage(CharacterStateService.getLvl(), getSpell().getCoefficient());
         String dmgDescription = "DMG -> " + FormulaService.getMinDmg(dmg) + "-" + FormulaService.getMaxDmg(dmg);
         return describedSpell.getDescription() + "\n" + dmgDescription;
-    }
-
-    public static List<DescribedSpell> toDmgDescription(List<DescribedSpell> spells){
-        return spells.stream().map(DmgDescription::new).collect(Collectors.toList());
     }
 }

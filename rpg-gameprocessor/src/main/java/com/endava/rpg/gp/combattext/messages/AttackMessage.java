@@ -4,33 +4,24 @@ import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.Spell;
 
 public class AttackMessage implements CombatMessage {
-    private final Spell SPELL;
+    private String costMessage;
 
-    private final State CASTER;
-
-    private final State TARGET;
-
-    private final int DMG;
-
-    private final int COST;
+    private String mainMessage;
 
     public AttackMessage(Spell spell, State caster, State target, int dmg, int cost) {
-        this.SPELL = spell;
-        this.CASTER = caster;
-        this.TARGET = target;
-        this.DMG = dmg;
-        this.COST = cost;
+        this.costMessage = "(Cost: " + cost + ")";
+        this.mainMessage = caster.getName() + " used the " + spell.getSpellName() + " on " +
+                target.getName() + "(" + target.getHp().getCurrentValue() + "/" + target.getHp().getValue() + ")" + "(" + target.getShieldPoints() + ")"
+                + " -" + dmg;
     }
 
     @Override
     public String getCostMessage() {
-        return "(Cost: " + COST + ")";
+        return this.costMessage;
     }
 
     @Override
     public String getMainMessage() {
-        return CASTER.getName() + " used the " + SPELL.getSpellName() + " on " +
-                TARGET.getName() + "(" + TARGET.getHp().getCurrentValue() + "/" + TARGET.getHp().getValue() + ")" + "(" + TARGET.getShieldPoints() + ")"
-                + " -" + DMG;
+        return this.mainMessage;
     }
 }

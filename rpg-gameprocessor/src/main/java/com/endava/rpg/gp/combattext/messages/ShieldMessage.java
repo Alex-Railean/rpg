@@ -4,30 +4,24 @@ import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.Spell;
 
 public class ShieldMessage implements CombatMessage {
-    private Spell SPELL;
+    private String costMessage;
 
-    private State CASTER;
-
-    private int BENEFIT;
-
-    private int COST;
+    private String mainMessage;
 
     public ShieldMessage(Spell spell, State caster, int benefit, int cost) {
-        this.SPELL = spell;
-        this.CASTER = caster;
-        this.BENEFIT = benefit;
-        this.COST = cost;
+        this.costMessage = "(Cost: " + cost + ")";
+        this.mainMessage = caster.getName() + " used the " + spell.getSpellName() + ", " +
+                caster.getName() + "(" + caster.getHp().getCurrentValue() + "/" + caster.getHp().getValue() + ")" + "(" + caster.getShieldPoints() + ")"
+                + " +" + benefit + " of shield points";
     }
 
     @Override
     public String getCostMessage() {
-        return "(Cost: " + COST + ")";
+        return this.costMessage;
     }
 
     @Override
     public String getMainMessage() {
-        return CASTER.getName() + " used the " + SPELL.getSpellName() + ", " +
-                CASTER.getName() + "(" + CASTER.getHp().getCurrentValue() + "/" + CASTER.getHp().getValue() + ")" + "(" + CASTER.getShieldPoints() + ")"
-                + " +" + BENEFIT + " of shield points";
+        return this.mainMessage;
     }
 }

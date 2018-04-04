@@ -1,6 +1,6 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.battle.location.LocationService;
+import com.endava.rpg.gp.battle.location.EnemyService;
 import com.endava.rpg.gp.battle.location.factories.BeastFactory;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.web.controllers.utils.Paths;
@@ -20,21 +20,21 @@ public class LocationController {
 
     private final CharacterStateService CHAR_STATE;
 
-    private final LocationService LOCATION;
+    private final EnemyService ENEMY;
 
     private final BeastFactory BEAST_FACTORY;
 
     @Autowired
-    public LocationController(CharacterStateService characterStateService, LocationService locationService, BeastFactory beastFactory) {
+    public LocationController(CharacterStateService characterStateService, EnemyService enemyService, BeastFactory beastFactory) {
         this.CHAR_STATE = characterStateService;
-        this.LOCATION = locationService;
+        this.ENEMY = enemyService;
         this.BEAST_FACTORY = beastFactory;
     }
 
     @RequestMapping(value = Paths.HUNGRY_FOREST, method = RequestMethod.GET)
     public String toHungryForest(Model model) {
         model = CHAR_STATE.getCharacterModel(model);
-        model = LOCATION.getRandomCreepGroup(model, HUNGRY_FOREST, CHAR_STATE.getCharacterLevel(), BEAST_FACTORY);
+        model = ENEMY.getRandomCreepGroup(model, HUNGRY_FOREST, CharacterStateService.getLvl(), BEAST_FACTORY);
         LOGGER.info("Hungry Forest");
         return HUNGRY_FOREST.VIEW;
     }

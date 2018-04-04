@@ -9,13 +9,13 @@ import java.util.List;
 @Component
 public final class Refresher {
 
-    private List<Refreshable> refreshables = new ArrayList<>();
+    private static final List<Refreshable> refreshables = new ArrayList<>();
 
-    public void addRefreshable(Refreshable r) {
+    public static void addRefreshable(Refreshable r) {
         refreshables.add(r);
     }
 
-    public void refresh() {
+    public static void refresh() {
         refreshables.forEach(Refreshable::refresh);
     }
 }

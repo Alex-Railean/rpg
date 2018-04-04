@@ -2,8 +2,12 @@
     <div class="card-body">
         <p class="card-text">
         <#list combatText as ct>
-        ${ct.getCostMessage()}<br>
-        ${ct.getMainMessage()}<br><br>
+            <#if ct.getCostMessage()??>
+            ${ct.getCostMessage()}<br>
+            </#if>
+            <#if ct.getMainMessage()??>
+            ${ct.getMainMessage()}<br><br>
+            </#if>
         </#list>
         </p>
     </div>

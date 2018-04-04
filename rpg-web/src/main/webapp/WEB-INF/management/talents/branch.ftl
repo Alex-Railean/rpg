@@ -10,9 +10,7 @@
 <div class="container">
     <h3>${branch.getName()}</h3>
 <#list branch.getTalents() as talent>
-    <span class="popup" data-popuptext="${talent.getDescription()}">
-        <img src="${talent.getURL()}" alt="talent-image" class="talent-img">
-    </span>
+    <img src="${talent.getURL()}" alt="talent-image" class="talent-img" title="${talent.getDescription()}">
     <div>
         <p>${talent.getPoints()}/${talent.getLimit()}</p>
         <form action="points/${talent.getLinkName()}" method="POST">

@@ -49,6 +49,7 @@ public class PRGPersistenceConf {
                 ActionBar.class,
                 Spell.class,
                 Technologies.class,
+                EffectCore.class,
                 Creep.class);
         return factoryBean;
     }

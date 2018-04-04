@@ -2,10 +2,10 @@ package com.endava.rpg.web.controllers;
 
 import com.endava.rpg.gp.battle.BattleService;
 import com.endava.rpg.gp.battle.ExpService;
-import com.endava.rpg.gp.battle.location.LocationService;
+import com.endava.rpg.gp.battle.location.EnemyService;
 import com.endava.rpg.gp.battle.spells.SpellService;
-import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.combattext.CombatTextService;
+import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.web.controllers.utils.Paths;
 import com.endava.rpg.web.controllers.utils.Views;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class BattleController {
 
     private final CharacterStateService CHAR_STATE;
 
-    private final LocationService LOCATION;
+    private final EnemyService ENEMY;
 
     private final BattleService BATTLE;
 
@@ -36,12 +36,12 @@ public class BattleController {
 
     @Autowired
     public BattleController(CharacterStateService characterStateService,
-                            LocationService locationService,
+                            EnemyService enemyService,
                             BattleService battleService,
                             ExpService expService,
                             SpellService spellService) {
         this.CHAR_STATE = characterStateService;
-        this.LOCATION = locationService;
+        this.ENEMY = enemyService;
         this.BATTLE = battleService;
         this.EXP = expService;
         this.SPELL_SERVICE = spellService;
@@ -63,7 +63,7 @@ public class BattleController {
             if (!BATTLE.isEndOfBattle()) {
                 LOGGER.info("The Battle continues");
                 model = CHAR_STATE.getCharacterModel(model);
-                model = LOCATION.getCurrentEnemyAndGroup(model);
+                model = ENEMY.getCurrentEnemyAndGroup(model);
                 model.addAttribute("combatText", CombatTextService.getCombatText());
                 return Views.BATTLE;
             }
@@ -71,6 +71,7 @@ public class BattleController {
             LOGGER.info("End of Battle");
 
             CHAR_STATE.resetBattle();
+            CharacterStateService.dispelEffects();
             return "redirect:" + Paths.EXP;
         }
         LOGGER.warn("Could not find battle with id: " + battleId);
@@ -86,7 +87,7 @@ public class BattleController {
         }
 
         if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
-            BATTLE.makeATurn(actionBarId, LOCATION.getCurrentEnemy());
+            BATTLE.makeATurn(actionBarId, EnemyService.getCurrentEnemy());
         } else {
             redirectAttributes.addFlashAttribute("warningMessage", "Not Enough Mana or Energy");
         }

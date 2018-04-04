@@ -17,12 +17,9 @@ public class PageNavigationController {
 
     private final CharacterStateService CHAR_STATE;
 
-    private final Refresher REFRESHER;
-
     @Autowired
-    public PageNavigationController(CharacterStateService characterStateService, Refresher refresher) {
+    public PageNavigationController(CharacterStateService characterStateService) {
         this.CHAR_STATE = characterStateService;
-        this.REFRESHER = refresher;
     }
 
     @RequestMapping(value = Paths.ROOT, method = RequestMethod.GET)
@@ -33,7 +30,7 @@ public class PageNavigationController {
 
     @RequestMapping(value = Paths.ROOT, method = RequestMethod.POST)
     public String toLocation(String characterName) {
-        REFRESHER.refresh();
+        Refresher.refresh();
         CHAR_STATE.defineCharacter(characterName);
         LOGGER.info("Current Location");
         return "redirect:/" + CHAR_STATE.getLocation();

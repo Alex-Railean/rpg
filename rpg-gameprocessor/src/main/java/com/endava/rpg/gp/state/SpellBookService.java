@@ -1,7 +1,6 @@
 package com.endava.rpg.gp.state;
 
 import com.endava.rpg.gp.battle.spells.constants.DefaultSpells;
-import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
 import com.endava.rpg.persistence.services.utils.DescribedSpell;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,16 +1,25 @@
 package com.endava.rpg.gp.statemodels;
 
+import com.endava.rpg.gp.battle.spells.effects.Effect;
+import com.endava.rpg.gp.battle.spells.effects.EffectFactory;
+import com.endava.rpg.gp.battle.spells.effects.shields.Shield;
 import com.endava.rpg.gp.statemodels.points.Point;
+import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.persistence.models.Spell;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class State {
 
-    private List<Point> points = new ArrayList<>();
+    private final List<Point> POINTS = new ArrayList<>();
 
-    private List<Spell> spells = new ArrayList<>();
+    private final List<Spell> SPELLS = new ArrayList<>();
+
+    private Set<Effect> effects = new HashSet<>();
 
     private String name;
 
@@ -22,33 +31,50 @@ public abstract class State {
 
     private Point energy = new Point(this);
 
-    private Integer shieldPoints = 0;
-
     private Double criticalDmgCoefficient = 1.8;
 
+    public void useEffects() {
+        effects.forEach(Effect::decreaseDuration);
+        effects.forEach(Effect::affectTarget);
+        removeEffects();
+    }
+
+    public Effect addEffect(State target, Spell s) {
+        Effect e = new EffectFactory().createEffect(target, s);
+        effects.remove(e);
+        effects.add(e);
+        return e;
+    }
+
+    private void removeEffects() {
+        Set<Effect> infiniteEffects = effects.stream().filter(e -> e.getDuration() == -1).collect(Collectors.toSet());
+        effects = effects.stream().filter(e -> e.getDuration() > 0).collect(Collectors.toSet());
+        effects.addAll(infiniteEffects);
+    }
+
     public List<Spell> getSpells() {
-        return spells;
+        return SPELLS;
     }
 
     public Spell getSpell(int i) {
-        return spells.get(i);
+        return SPELLS.get(i);
     }
 
     public State setSpell(int i, Spell s) {
-        if (spells.size() <= i) {
-            spells.add(i, s);
+        if (SPELLS.size() <= i) {
+            SPELLS.add(i, s);
         } else {
-            spells.set(i, s);
+            SPELLS.set(i, s);
         }
         return this;
     }
 
     public void addPoint(Point point) {
-        this.points.add(point);
+        this.POINTS.add(point);
     }
 
     public List<Point> getPoints() {
-        return points;
+        return POINTS;
     }
 
     public String getName() {
@@ -94,12 +120,23 @@ public abstract class State {
     }
 
     public Integer getShieldPoints() {
-        return shieldPoints;
+        return effects.stream()
+                .filter(e -> e instanceof Shield)
+                .map(e -> (Shield) e)
+                .mapToInt(Shield::getPoints)
+                .sum();
     }
 
-    public State setShieldPoints(Integer shieldPoints) {
-        this.shieldPoints = shieldPoints;
-        return this;
+    public Shield getRandomShield() {
+        Set<Shield> shields = effects.stream()
+                .filter(e -> e instanceof Shield)
+                .map(e -> (Shield) e)
+                .collect(Collectors.toSet());
+
+        return shields.size() != 0 ? shields.stream()
+                .skip(ProcessorUtil.getRandomInt(0, shields.size() - 1))
+                .findFirst()
+                .orElse(null) : null;
     }
 
     public Double getCriticalDmgCoefficient() {
@@ -109,5 +146,9 @@ public abstract class State {
     public State setCriticalDmgCoefficient(Double criticalDmgCoefficient) {
         this.criticalDmgCoefficient = criticalDmgCoefficient;
         return this;
+    }
+
+    public Set<Effect> getEffects() {
+        return effects;
     }
 }

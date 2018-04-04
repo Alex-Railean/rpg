@@ -7,7 +7,7 @@ import com.endava.rpg.persistence.models.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.endava.rpg.gp.talents.constants.TalentAttribute.MUSCLE_STIMULANTS;
+import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.MUSCLE_STIMULANTS;
 
 @Component
 public class MuscleStimulants extends Talent {
@@ -23,10 +23,11 @@ public class MuscleStimulants extends Talent {
 
     @Override
     public void affect() {
-        CharacterState character = characterState.getCharacterState();
+        CharacterState character = characterState.getCharacter();
         character.getEnergy().setValue(character.getDefaultEnergy() + COEFFICIENT * getPoints());
         character.getEnergy().setCurrentValue(character.getDefaultEnergy() + COEFFICIENT * getPoints());
-        setDescription("Increase the character's energy by " + COEFFICIENT + "." +
+        setDescription("Muscle Stimulants. " +
+                "\nIncrease the character's energy by " + COEFFICIENT + ". " +
                 "\nEnergy bonus: " + COEFFICIENT * getPoints());
     }
 

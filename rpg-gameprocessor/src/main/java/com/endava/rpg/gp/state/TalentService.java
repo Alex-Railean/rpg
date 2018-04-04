@@ -1,7 +1,6 @@
 package com.endava.rpg.gp.state;
 
 import com.endava.rpg.gp.talents.branches.Branch;
-import com.endava.rpg.gp.talents.branches.strength.TechnologiesBranch;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Technologies;
 import com.endava.rpg.persistence.services.PersistenceService;
@@ -11,31 +10,31 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.endava.rpg.gp.talents.constants.BranchAttribute.TECHNOLOGIES;
-import static com.endava.rpg.gp.talents.constants.TalentAttribute.EXO_SPINE;
-import static com.endava.rpg.gp.talents.constants.TalentAttribute.MUSCLE_STIMULANTS;
+import static com.endava.rpg.persistence.services.utils.constants.BranchAttribute.TECHNOLOGIES;
+import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.EXO_SPINE;
+import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.MUSCLE_STIMULANTS;
 
 @Service
 public class TalentService {
-    private final List<Branch> BRANCHES = new ArrayList<>();
+    private static final List<Branch> BRANCHES = new ArrayList<>();
 
     private final PersistenceService PS;
 
     @Autowired
-    public TalentService(TechnologiesBranch tech, PersistenceService ps) {
+    public TalentService(PersistenceService ps) {
         this.PS = ps;
-        this.BRANCHES.add(tech);
     }
 
-    public void affect() {
+    public static void affect() {
         BRANCHES.forEach(Branch::affect);
     }
 
-    public void defineTalents(Character character) {
+    public static void defineTalents(Character character) {
         BRANCHES.forEach(b -> b.define(character));
+        BRANCHES.forEach(b -> b.addAvailableSpells(character));
     }
 
-    public void createAll(Character character) {
+    public static void createAll(Character character) {
         BRANCHES.forEach(b -> b.create(character));
     }
 

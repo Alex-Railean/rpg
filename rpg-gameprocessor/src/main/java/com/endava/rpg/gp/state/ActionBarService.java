@@ -1,6 +1,8 @@
 package com.endava.rpg.gp.state;
 
-import com.endava.rpg.gp.battle.spells.description.DmgDescription;
+import com.endava.rpg.gp.battle.spells.constants.SpellType;
+import com.endava.rpg.gp.battle.spells.description.DescrService;
+import com.endava.rpg.gp.battle.spells.description.spells.EffectDescription;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.ActionBar;
 import com.endava.rpg.persistence.models.Character;
@@ -17,31 +19,34 @@ public class ActionBarService {
 
     private final PersistenceService PS;
 
-    private final CharacterStateService CHAR_STATE;
-
     @Autowired
-    private ActionBarService(PersistenceService ps, CharacterStateService characterState) {
+    private ActionBarService(PersistenceService ps) {
         this.PS = ps;
-        this.CHAR_STATE = characterState;
     }
 
-    public Map<Integer, DescribedSpell> getActionBarMap() {
+    public static Map<Integer, DescribedSpell> getActionBarMap() {
         Map<Integer, DescribedSpell> actionBar = new TreeMap<>();
-        State cs = CHAR_STATE.getCharacterState();
-        actionBar.put(1, new DmgDescription(cs.getSpell(0)));
-        actionBar.put(2, new DmgDescription(cs.getSpell(1)));
-        actionBar.put(3, new DmgDescription(cs.getSpell(2)));
-        actionBar.put(4, new DmgDescription(cs.getSpell(3)));
-        actionBar.put(5, new DmgDescription(cs.getSpell(4)));
-        actionBar.put(6, new DmgDescription(cs.getSpell(5)));
-        actionBar.put(7, new DmgDescription(cs.getSpell(6)));
-        actionBar.put(8, new DmgDescription(cs.getSpell(7)));
-        actionBar.put(9, new DmgDescription(cs.getSpell(8)));
-        actionBar.put(10, new DmgDescription(cs.getSpell(9)));
-        actionBar.put(11, new DmgDescription(cs.getSpell(10)));
-        actionBar.put(12, new DmgDescription(cs.getSpell(11)));
+        State cs = CharacterStateService.getCharacter();
+        actionBar.put(1, addDescription(cs.getSpell(0)));
+        actionBar.put(2, addDescription(cs.getSpell(1)));
+        actionBar.put(3, addDescription(cs.getSpell(2)));
+        actionBar.put(4, addDescription(cs.getSpell(3)));
+        actionBar.put(5, addDescription(cs.getSpell(4)));
+        actionBar.put(6, addDescription(cs.getSpell(5)));
+        actionBar.put(7, addDescription(cs.getSpell(6)));
+        actionBar.put(8, addDescription(cs.getSpell(7)));
+        actionBar.put(9, addDescription(cs.getSpell(8)));
+        actionBar.put(10, addDescription(cs.getSpell(9)));
+        actionBar.put(11, addDescription(cs.getSpell(10)));
+        actionBar.put(12, addDescription(cs.getSpell(11)));
 
         return actionBar;
+    }
+
+    private static DescribedSpell addDescription(DescribedSpell s) {
+        return s.getSpell().getSpellType().equals(SpellType.ATTACK) ?
+                DescrService.addFull(s) :
+                new EffectDescription(s);
     }
 
     public Character setActionBar(Character character, Map<Integer, DescribedSpell> abMap) {
@@ -62,9 +67,9 @@ public class ActionBarService {
     }
 
     public void reloadActionBar() {
-        Character character = PS.getCharacterByName(CHAR_STATE.getCharacterState().getName());
+        Character character = PS.getCharacterByName(CharacterStateService.getCharacter().getName());
         ActionBar actionBar = character.getActionBar();
-        CHAR_STATE.getCharacterState().setSpell(0, actionBar.getSpell_1())
+        CharacterStateService.getCharacter().setSpell(0, actionBar.getSpell_1())
                 .setSpell(1, actionBar.getSpell_2())
                 .setSpell(2, actionBar.getSpell_3())
                 .setSpell(3, actionBar.getSpell_4())

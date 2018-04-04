@@ -1,15 +1,17 @@
 package com.endava.rpg.gp.statemodels;
 
+import com.endava.rpg.gp.game.Refresher;
 import com.endava.rpg.gp.statemodels.points.Attribute;
+import com.endava.rpg.gp.util.Refreshable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CharacterState extends State {
+public class CharacterState extends State implements Refreshable {
 
-    private List<Attribute> attributes = new ArrayList<>();
+    private final List<Attribute> ATTRIBUTES = new ArrayList<>();
 
     private Attribute strength = new Attribute(this);
 
@@ -27,19 +29,30 @@ public class CharacterState extends State {
 
     private Integer freePoints;
 
+    private Integer lastMovePoints = 0;
+
+    private Integer biggestDmg = 0;
+
     public CharacterState() {
         getHp().setRegeneration(3);
         getMp().setRegeneration(5);
         getEnergy().setRegeneration(10);
         getEnergy().setCurrentValue(100);
+        Refresher.addRefreshable(this);
+    }
+
+    @Override
+    public void refresh() {
+        this.biggestDmg = 0;
+        this.lastMovePoints = 0;
     }
 
     public void addAttribute(Attribute a) {
-        attributes.add(a);
+        ATTRIBUTES.add(a);
     }
 
     public List<Attribute> getAttributes() {
-        return attributes;
+        return ATTRIBUTES;
     }
 
     public Attribute getStrength() {
@@ -107,5 +120,21 @@ public class CharacterState extends State {
     public CharacterState setFreePoints(Integer freePoints) {
         this.freePoints = freePoints;
         return this;
+    }
+
+    public Integer getLastMovePoints() {
+        return lastMovePoints;
+    }
+
+    public void setLastMovePoints(Integer lastMovePoints) {
+        this.lastMovePoints = lastMovePoints;
+    }
+
+    public Integer getBiggestDmg() {
+        return biggestDmg;
+    }
+
+    public void setBiggestDmg(Integer biggestDmg) {
+        this.biggestDmg = biggestDmg;
     }
 }
