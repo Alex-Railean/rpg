@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class PersistenceService {
 
-    private final BranchDao BRANCH_DAO;
+    private final BranchDao BRANCHES;
 
     private final CharacterDao CHARACTER;
 
@@ -24,7 +24,7 @@ public class PersistenceService {
 
     private final TechnologiesDao TECHNOLOGIES;
 
-    private final EffectCoreDao EFFECT;
+    private final EffectCoreDao EFFECTS;
 
     @Autowired
     private PersistenceService(BranchDao branch_dao,
@@ -34,13 +34,13 @@ public class PersistenceService {
                                ProgressDao progress,
                                TechnologiesDao technologies,
                                EffectCoreDao effect) {
-        this.BRANCH_DAO = branch_dao;
+        this.BRANCHES = branch_dao;
         this.CHARACTER = character;
         this.SPELLS = spells;
         this.CREEPS = creeps;
         this.PROGRESS = progress;
         this.TECHNOLOGIES = technologies;
-        this.EFFECT = effect;
+        this.EFFECTS = effect;
     }
 
     public Character saveCharacter(Character character) {
@@ -64,7 +64,7 @@ public class PersistenceService {
     }
 
     public EffectCore saveEffect(EffectCore e) {
-        return EFFECT.save(e);
+        return EFFECTS.save(e);
     }
 
     public Spell getSpellById(Integer id) {
@@ -96,11 +96,11 @@ public class PersistenceService {
     }
 
     public BranchEntity saveBranch(BranchEntity branch) {
-        return BRANCH_DAO.save(branch.calculateTotalPoints());
+        return BRANCHES.save(branch.calculateTotalPoints());
     }
 
     public BranchEntity updateBranch(BranchEntity branch) {
-        return BRANCH_DAO.update(branch.calculateTotalPoints());
+        return BRANCHES.update(branch.calculateTotalPoints());
     }
 
     public Character refreshChar(Character character) {
@@ -116,10 +116,10 @@ public class PersistenceService {
     }
 
     public EffectCore getEffect(String name) {
-        return EFFECT.getSingleWhere("name", name);
+        return EFFECTS.getSingleWhere("name", name);
     }
 
     public List<EffectCore> getAllEffects() {
-        return EFFECT.getAll();
+        return EFFECTS.getAll();
     }
 }

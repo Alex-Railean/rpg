@@ -1,6 +1,6 @@
 package com.endava.rpg.web.controllers;
 
-import com.endava.rpg.gp.battle.spells.description.DescrService;
+import com.endava.rpg.gp.battle.spells.description.DescriptionService;
 import com.endava.rpg.gp.state.ActionBarService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.state.SpellBookService;
@@ -48,7 +48,7 @@ public class SpellBookController {
         model = CHARACTER_STATE.getHeaderData(model)
                 .addAttribute("actionBar", ActionBarService.getActionBarMap())
                 .addAttribute("spellBookContent",
-                        DescrService.addFull(SPELL_BOOK.getAvailableSpells(CharacterStateService.getCharName())));
+                        DescriptionService.addFull(SPELL_BOOK.getAvailableSpells(CharacterStateService.getCharName())));
         LOGGER.info("Spell Book");
         return Views.SPELL_BOOK;
     }

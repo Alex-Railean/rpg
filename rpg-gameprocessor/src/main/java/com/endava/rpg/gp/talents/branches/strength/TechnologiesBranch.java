@@ -41,10 +41,15 @@ public class TechnologiesBranch extends Branch {
     @Override
     public void addAvailableSpells(Character character) {
         Technologies tech = PS.getTechOf(character);
-        List<Spell> spells = PS.getTechSpells();
-        spells = spells.stream()
-                .filter(s -> s.getRequired() >= tech.getTotalPoints()).collect(Collectors.toList());
-        character.getAvailableSpells().addAll(spells);
+        List<Spell> techSpells = PS.getTechSpells();
+        List<Spell> available = character.getAvailableSpells();
+
+        techSpells = techSpells.stream()
+                .filter(t -> t.getRequired() <= tech.getTotalPoints())
+                .filter(t -> available.stream().noneMatch(a -> a.getSpellId().equals(t.getSpellId())))
+                .collect(Collectors.toList());
+
+        available.addAll(techSpells);
 
         PS.updateCharacter(character);
     }

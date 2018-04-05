@@ -1,7 +1,7 @@
 package com.endava.rpg.gp.state;
 
 import com.endava.rpg.gp.battle.spells.constants.SpellType;
-import com.endava.rpg.gp.battle.spells.description.DescrService;
+import com.endava.rpg.gp.battle.spells.description.DescriptionService;
 import com.endava.rpg.gp.battle.spells.description.spells.EffectDescription;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.ActionBar;
@@ -45,7 +45,7 @@ public class ActionBarService {
 
     private static DescribedSpell addDescription(DescribedSpell s) {
         return s.getSpell().getSpellType().equals(SpellType.ATTACK) ?
-                DescrService.addFull(s) :
+                DescriptionService.addFull(s) :
                 new EffectDescription(s);
     }
 

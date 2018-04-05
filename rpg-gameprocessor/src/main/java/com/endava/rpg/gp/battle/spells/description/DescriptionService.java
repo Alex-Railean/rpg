@@ -6,7 +6,7 @@ import com.endava.rpg.persistence.services.utils.DescribedSpell;
 
 import java.util.List;
 
-public class DescrService {
+public class DescriptionService {
     public static DescribedSpell addFull(DescribedSpell ds) {
         return new EffectDescription(new DmgDescription(ds));
     }
