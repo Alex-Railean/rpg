@@ -1,5 +1,6 @@
 package com.endava.rpg.gp.battle.spells.effects;
 
+import com.endava.rpg.gp.battle.spells.description.effects.EffectData;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
 
@@ -13,14 +14,19 @@ public abstract class Effect {
 
     private String URL;
 
-    private State target;
+    private State holder;
 
-    protected Effect(State target, EffectCore ec) {
+    protected Effect(State holder, EffectCore ec) {
         this.name = ec.getName();
         this.description = ec.getDescription();
         this.duration = ec.getDuration();
         this.URL = ec.getURL();
-        this.target = target;
+        this.holder = holder;
+        this.description = EffectData.modify(this).getRawDescription();
+    }
+
+    public boolean remove(Effect e) {
+        return holder.getEffects().remove(e);
     }
 
     public abstract void affectTarget();
@@ -56,7 +62,7 @@ public abstract class Effect {
     }
 
     public String getDescription() {
-        return description;
+        return EffectData.updateDuration(this);
     }
 
     public Effect setDescription(String description) {
@@ -82,7 +88,11 @@ public abstract class Effect {
         return this;
     }
 
-    public State getTarget() {
-        return target;
+    public State getHolder() {
+        return holder;
+    }
+
+    public String getRawDescription() {
+        return description;
     }
 }

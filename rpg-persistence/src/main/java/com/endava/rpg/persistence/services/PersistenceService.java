@@ -24,6 +24,8 @@ public class PersistenceService {
 
     private final TechnologiesDao TECHNOLOGIES;
 
+    private final AspectsDao ASPECTS;
+
     private final EffectCoreDao EFFECTS;
 
     @Autowired
@@ -33,6 +35,7 @@ public class PersistenceService {
                                CreepDao creeps,
                                ProgressDao progress,
                                TechnologiesDao technologies,
+                               AspectsDao aspects,
                                EffectCoreDao effect) {
         this.BRANCHES = branch_dao;
         this.CHARACTER = character;
@@ -40,6 +43,7 @@ public class PersistenceService {
         this.CREEPS = creeps;
         this.PROGRESS = progress;
         this.TECHNOLOGIES = technologies;
+        this.ASPECTS = aspects;
         this.EFFECTS = effect;
     }
 
@@ -107,12 +111,20 @@ public class PersistenceService {
         return CHARACTER.refresh(character);
     }
 
-    public Technologies getTechOf(Character character) {
-        return TECHNOLOGIES.getSingleWhere("character", character);
+    public Technologies getTechOf(Character c) {
+        return TECHNOLOGIES.getSingleWhere("character", c);
+    }
+
+    public BranchEntity getAspectsOf(Character c) {
+        return ASPECTS.getSingleWhere("character", c);
     }
 
     public List<Spell> getTechSpells() {
         return SPELLS.getAllWhere("branch", BranchAttribute.TECHNOLOGIES.NAME);
+    }
+
+    public List<Spell> getAspectsSpells() {
+        return SPELLS.getAllWhere("branch", BranchAttribute.ASPECTS.NAME);
     }
 
     public EffectCore getEffect(String name) {

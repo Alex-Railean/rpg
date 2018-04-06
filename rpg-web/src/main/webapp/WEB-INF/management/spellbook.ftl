@@ -8,7 +8,7 @@
 <body>
 <#include "../modules/header.ftl">
 <div class="container">
-    <div class="row">
+    <div class="row col">
         <div class="spells">
         <#list spellBookContent as spell>
             <form action="/spellbook/${spell.getSpell().getSpellName()}" method="POST" class="spellbook-form">
@@ -24,7 +24,7 @@
         </#list>
         </div>
     </div>
-    <div class="row">
+    <div class="row col">
         <div class="spells">
         <#list actionBar as abNumber, abSpell>
             <a href="/spellbook/remove/${abNumber}">

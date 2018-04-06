@@ -47,6 +47,19 @@ public class Spell implements TableMapping, DescribedSpell {
     @Column(name = "BRANCH")
     private String branch;
 
+    @Transient
+    private Integer currentCooldown = 0;
+
+    public void onCooldown() {
+        this.currentCooldown = this.cooldown;
+    }
+
+    public void tickCooldown() {
+        if (this.currentCooldown > 0) {
+            this.currentCooldown -= 1;
+        }
+    }
+
     @Override
     public Spell getSpell() {
         return this;
@@ -158,5 +171,13 @@ public class Spell implements TableMapping, DescribedSpell {
     public Spell setBranch(String branch) {
         this.branch = branch;
         return this;
+    }
+
+    public Integer getCurrentCooldown() {
+        return currentCooldown;
+    }
+
+    public void setCurrentCooldown(Integer currentCooldown) {
+        this.currentCooldown = currentCooldown;
     }
 }

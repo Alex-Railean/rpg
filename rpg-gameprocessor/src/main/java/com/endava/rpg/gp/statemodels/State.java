@@ -41,15 +41,23 @@ public abstract class State {
 
     public Effect addEffect(State target, Spell s) {
         Effect e = new EffectFactory().createEffect(target, s);
-        effects.remove(e);
+        Effect sameEffect = this.effects.stream()
+                .filter(se -> se.equals(e))
+                .findFirst()
+                .orElse(null);
+
+        if (sameEffect != null) e.remove(sameEffect);
+
         effects.add(e);
         return e;
     }
 
     private void removeEffects() {
-        Set<Effect> infiniteEffects = effects.stream().filter(e -> e.getDuration() == -1).collect(Collectors.toSet());
-        effects = effects.stream().filter(e -> e.getDuration() > 0).collect(Collectors.toSet());
-        effects.addAll(infiniteEffects);
+        effects.forEach(e -> {
+            if (e.getDuration() != -1 && e.getDuration() <= 0) {
+                e.remove(e);
+            }
+        });
     }
 
     public List<Spell> getSpells() {

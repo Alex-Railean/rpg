@@ -11,13 +11,14 @@ public class DefenceStance extends Effect implements Shield {
 
     public DefenceStance(State target, Spell s) {
         super(target, s.getEffectCore());
+        target.getEffects().remove(this);
         points = FormulaService.getShield(target, s.getCoefficient());
     }
 
     @Override
     public void affectTarget() {
         if (points <= 0) {
-            getTarget().getEffects().remove(this);
+            getHolder().getEffects().remove(this);
         }
     }
 

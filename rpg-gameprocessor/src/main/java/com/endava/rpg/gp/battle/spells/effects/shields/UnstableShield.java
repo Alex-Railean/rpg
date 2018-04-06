@@ -20,10 +20,19 @@ public class UnstableShield extends Effect implements Shield {
     }
 
     @Override
+    public boolean remove(Effect e) {
+        Shield s = (Shield) e;
+        s.setPoints(0);
+        e.affectTarget();
+
+        return getHolder().getEffects().remove(e);
+    }
+
+    @Override
     public void affectTarget() {
         if (points <= 0) {
             EnemyService.getCreepGroup().forEach(c -> SpellService.damageIt(c, explosionDamage));
-            getTarget().getEffects().remove(this);
+            getHolder().getEffects().remove(this);
             CombatTextService.createCustomMessage("(Effect)",
                     getName() + " damaged all enemy group. Damage: -" + explosionDamage);
         }

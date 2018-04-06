@@ -5,6 +5,7 @@ import com.endava.rpg.gp.battle.spells.SpellService;
 import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.game.Refresher;
 import com.endava.rpg.gp.responsiveness.ResponseService;
+import com.endava.rpg.gp.state.ActionBarService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.statemodels.points.Point;
@@ -35,6 +36,7 @@ public class BattleService implements Refreshable {
         useEffects();
         seekDeath();
         useRegeneration();
+        ActionBarService.tickCooldowns();
     }
 
     public void waitATurn() {
@@ -43,6 +45,7 @@ public class BattleService implements Refreshable {
         useEffects();
         seekDeath();
         useRegeneration();
+        ActionBarService.tickCooldowns();
     }
 
     private void useEffects() {

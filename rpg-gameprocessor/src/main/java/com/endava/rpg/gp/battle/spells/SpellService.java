@@ -31,11 +31,13 @@ public class SpellService {
         if (usedSpell.getSpellType().equals(SpellType.ATTACK)) {
             int dmg = makeDamage(caster, target, usedSpell.getCoefficient());
             int cost = takeCost(usedSpell, caster);
+            usedSpell.onCooldown();
             ExpService.addAttributeExp(usedSpell.getAttribute());
             CombatTextService.createAttackRecord(usedSpell, caster, target, dmg, cost);
         } else if (usedSpell.getSpellType().equals(SpellType.PROTECTION)) {
             int protection = protection(caster, usedSpell);
             int cost = takeCost(usedSpell, caster);
+            usedSpell.onCooldown();
             ExpService.addAttributeExp(usedSpell.getAttribute());
             CombatTextService.createShieldRecord(usedSpell, caster, protection, cost);
         }
@@ -74,7 +76,7 @@ public class SpellService {
         target.getHp().subtractCurrentValue(dmg);
     }
 
-    private static Spell getSpellFromActionBar(Integer actionBarNumber) {
+    public static Spell getSpellFromActionBar(Integer actionBarNumber) {
         return ActionBarService.getActionBarMap().get(actionBarNumber).getSpell();
     }
 

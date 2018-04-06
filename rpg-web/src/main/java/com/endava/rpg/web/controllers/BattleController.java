@@ -86,10 +86,14 @@ public class BattleController {
             return "redirect:" + Paths.BATTLE + "/" + BATTLE.getBattleId();
         }
 
-        if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
-            BATTLE.makeATurn(actionBarId, EnemyService.getCurrentEnemy());
+        if (SpellService.getSpellFromActionBar(actionBarId).getCurrentCooldown() == 0) {
+            if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
+                BATTLE.makeATurn(actionBarId, EnemyService.getCurrentEnemy());
+            } else {
+                redirectAttributes.addFlashAttribute("warningMessage", "Not Enough Mana or Energy");
+            }
         } else {
-            redirectAttributes.addFlashAttribute("warningMessage", "Not Enough Mana or Energy");
+            redirectAttributes.addFlashAttribute("warningMessage", "This spell isn't ready");
         }
 
         return "redirect:" + Paths.BATTLE + "/" + BATTLE.getBattleId();

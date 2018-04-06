@@ -1,5 +1,6 @@
 package com.endava.rpg.gp.battle.spells.description.spells;
 
+import com.endava.rpg.gp.battle.spells.constants.SpellType;
 import com.endava.rpg.gp.game.FormulaService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.persistence.models.Spell;
@@ -27,8 +28,12 @@ public class DmgDescription implements DescribedSpell {
 
     @Override
     public String getDescription() {
-        Integer dmg = FormulaService.getDamage(CharacterStateService.getLvl(), getSpell().getCoefficient());
-        String dmgDescription = "DMG -> " + FormulaService.getMinDmg(dmg) + "-" + FormulaService.getMaxDmg(dmg);
-        return describedSpell.getDescription() + "\n" + dmgDescription;
+        if (describedSpell.getSpell().getSpellType().equals(SpellType.ATTACK)) {
+            Integer dmg = FormulaService.getDamage(CharacterStateService.getLvl(), getSpell().getCoefficient());
+            String dmgDescription = "DMG -> " + FormulaService.getMinDmg(dmg) + "-" + FormulaService.getMaxDmg(dmg);
+            return describedSpell.getDescription() + "\n" + dmgDescription;
+        } else {
+            return describedSpell.getDescription();
+        }
     }
 }

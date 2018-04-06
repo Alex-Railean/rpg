@@ -1,8 +1,6 @@
 package com.endava.rpg.gp.state;
 
-import com.endava.rpg.gp.battle.spells.constants.SpellType;
 import com.endava.rpg.gp.battle.spells.description.DescriptionService;
-import com.endava.rpg.gp.battle.spells.description.spells.EffectDescription;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.ActionBar;
 import com.endava.rpg.persistence.models.Character;
@@ -27,26 +25,24 @@ public class ActionBarService {
     public static Map<Integer, DescribedSpell> getActionBarMap() {
         Map<Integer, DescribedSpell> actionBar = new TreeMap<>();
         State cs = CharacterStateService.getCharacter();
-        actionBar.put(1, addDescription(cs.getSpell(0)));
-        actionBar.put(2, addDescription(cs.getSpell(1)));
-        actionBar.put(3, addDescription(cs.getSpell(2)));
-        actionBar.put(4, addDescription(cs.getSpell(3)));
-        actionBar.put(5, addDescription(cs.getSpell(4)));
-        actionBar.put(6, addDescription(cs.getSpell(5)));
-        actionBar.put(7, addDescription(cs.getSpell(6)));
-        actionBar.put(8, addDescription(cs.getSpell(7)));
-        actionBar.put(9, addDescription(cs.getSpell(8)));
-        actionBar.put(10, addDescription(cs.getSpell(9)));
-        actionBar.put(11, addDescription(cs.getSpell(10)));
-        actionBar.put(12, addDescription(cs.getSpell(11)));
+        actionBar.put(1, DescriptionService.addFull(cs.getSpell(0)));
+        actionBar.put(2, DescriptionService.addFull(cs.getSpell(1)));
+        actionBar.put(3, DescriptionService.addFull(cs.getSpell(2)));
+        actionBar.put(4, DescriptionService.addFull(cs.getSpell(3)));
+        actionBar.put(5, DescriptionService.addFull(cs.getSpell(4)));
+        actionBar.put(6, DescriptionService.addFull(cs.getSpell(5)));
+        actionBar.put(7, DescriptionService.addFull(cs.getSpell(6)));
+        actionBar.put(8, DescriptionService.addFull(cs.getSpell(7)));
+        actionBar.put(9, DescriptionService.addFull(cs.getSpell(8)));
+        actionBar.put(10, DescriptionService.addFull(cs.getSpell(9)));
+        actionBar.put(11, DescriptionService.addFull(cs.getSpell(10)));
+        actionBar.put(12, DescriptionService.addFull(cs.getSpell(11)));
 
         return actionBar;
     }
 
-    private static DescribedSpell addDescription(DescribedSpell s) {
-        return s.getSpell().getSpellType().equals(SpellType.ATTACK) ?
-                DescriptionService.addFull(s) :
-                new EffectDescription(s);
+    public static void tickCooldowns() {
+        getActionBarMap().values().forEach(s -> s.getSpell().tickCooldown());
     }
 
     public Character setActionBar(Character character, Map<Integer, DescribedSpell> abMap) {

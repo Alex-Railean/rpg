@@ -1,7 +1,5 @@
 package com.endava.rpg.persistence.models;
 
-import com.endava.rpg.persistence.services.utils.EffectData;
-
 import javax.persistence.*;
 
 @Entity
@@ -28,11 +26,6 @@ public class EffectCore implements TableMapping {
     @Transient
     private boolean modified = false;
 
-    public EffectCore modify() {
-        this.modified = true;
-        return this;
-    }
-
     public Integer getEffectId() {
         return effectId;
     }
@@ -47,8 +40,8 @@ public class EffectCore implements TableMapping {
     }
 
     public String getDescription() {
-        if (!this.modified) {
-            return EffectData.modify(this).getDescription();
+        if (this.duration != -1) {
+            return this.description + " Duration: " + this.duration;
         }
         return description;
     }
