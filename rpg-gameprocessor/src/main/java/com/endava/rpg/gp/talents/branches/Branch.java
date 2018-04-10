@@ -33,12 +33,12 @@ public abstract class Branch {
     }
 
     public void addAvailableSpells(Character character) {
-        BranchEntity tech = getBranchEntity(character);
+        BranchEntity branch = getBranchEntity(character);
         List<Spell> branchSpells = getBranchSpells();
         List<Spell> available = character.getAvailableSpells();
 
         branchSpells = branchSpells.stream()
-                .filter(t -> t.getRequired() <= tech.getTotalPoints())
+                .filter(t -> t.getRequired() <= branch.getTotalPoints())
                 .filter(t -> available.stream().noneMatch(a -> a.getSpellId().equals(t.getSpellId())))
                 .collect(Collectors.toList());
 

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "T_TECHNOLOGIES")
+@Table(name = "T_ASPECTS")
 public class Aspects extends BranchEntity implements TableMapping, Serializable {
 
     @Id

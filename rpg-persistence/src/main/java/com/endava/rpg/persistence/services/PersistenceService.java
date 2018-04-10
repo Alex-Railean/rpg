@@ -3,7 +3,6 @@ package com.endava.rpg.persistence.services;
 import com.endava.rpg.persistence.dao.*;
 import com.endava.rpg.persistence.models.*;
 import com.endava.rpg.persistence.models.Character;
-import com.endava.rpg.persistence.services.utils.constants.BranchAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -71,10 +70,6 @@ public class PersistenceService {
         return EFFECTS.save(e);
     }
 
-    public Spell getSpellById(Integer id) {
-        return SPELLS.getSingleWhere("spellId", id);
-    }
-
     public Spell getSpellByName(String name) {
         return SPELLS.getSingleWhere("spellName", name);
     }
@@ -91,14 +86,6 @@ public class PersistenceService {
         return CREEPS.getAllWhere("creepLocation", location);
     }
 
-    public Progress updateProgress(Progress progress) {
-        return PROGRESS.update(progress);
-    }
-
-    public boolean deleteAllSpells() {
-        return SPELLS.deleteAll();
-    }
-
     public BranchEntity saveBranch(BranchEntity branch) {
         return BRANCHES.save(branch.calculateTotalPoints());
     }
@@ -111,20 +98,12 @@ public class PersistenceService {
         return CHARACTER.refresh(character);
     }
 
-    public Technologies getTechOf(Character c) {
-        return TECHNOLOGIES.getSingleWhere("character", c);
+    public <E extends BranchEntity> E getBranchOf(Class<E> entity, Character c) {
+        return BRANCHES.getSingleWhere(entity, "character", c);
     }
 
-    public BranchEntity getAspectsOf(Character c) {
-        return ASPECTS.getSingleWhere("character", c);
-    }
-
-    public List<Spell> getTechSpells() {
-        return SPELLS.getAllWhere("branch", BranchAttribute.TECHNOLOGIES.NAME);
-    }
-
-    public List<Spell> getAspectsSpells() {
-        return SPELLS.getAllWhere("branch", BranchAttribute.ASPECTS.NAME);
+    public List<Spell> getBranchSpells(String branchName) {
+        return SPELLS.getBranchSpells(branchName);
     }
 
     public EffectCore getEffect(String name) {

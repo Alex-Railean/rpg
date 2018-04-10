@@ -13,15 +13,15 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
-public class PostConstructService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostConstructService.class);
+public class DeployService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeployService.class);
 
     private final PersistenceService PS;
 
     private final SpellBookService SPELLBOOK;
 
     @Autowired
-    private PostConstructService(PersistenceService ps, SpellBookService sbs) {
+    private DeployService(PersistenceService ps, SpellBookService sbs) {
         this.PS = ps;
         this.SPELLBOOK = sbs;
     }
