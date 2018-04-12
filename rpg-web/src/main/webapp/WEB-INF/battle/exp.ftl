@@ -29,7 +29,7 @@
                 </tr>
                 </tbody>
             </table>
-            <a href="/continue">
+            <a href="/outside">
                 <button type="button" class="btn btn-dark">Continue</button>
             </a>
         </div>
