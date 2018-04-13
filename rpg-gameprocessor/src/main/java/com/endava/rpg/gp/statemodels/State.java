@@ -46,7 +46,19 @@ public abstract class State {
                 .findFirst()
                 .orElse(null);
 
-        if (sameEffect != null) e.remove(sameEffect);
+        if (sameEffect != null) e.remove();
+
+        effects.add(e);
+        return e;
+    }
+
+    public Effect addEffect(Effect e) {
+        Effect sameEffect = this.effects.stream()
+                .filter(se -> se.equals(e))
+                .findFirst()
+                .orElse(null);
+
+        if (sameEffect != null) e.remove();
 
         effects.add(e);
         return e;
@@ -54,8 +66,8 @@ public abstract class State {
 
     private void removeEffects() {
         effects.forEach(e -> {
-            if (e.getDuration() != -1 && e.getDuration() <= 0) {
-                e.remove(e);
+            if (e.getCurrentDuration() != -1 && e.getCurrentDuration() <= 0) {
+                e.remove();
             }
         });
     }

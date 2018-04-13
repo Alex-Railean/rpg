@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class BattleService implements Refreshable {
 
+    private static boolean activeTurn = false;
+
     private final ResponseService RESPONSE;
 
     private Long battleId;
@@ -26,23 +28,29 @@ public class BattleService implements Refreshable {
         this.RESPONSE = spellChoice;
     }
 
+    public static boolean isActiveTurn() {
+        return activeTurn;
+    }
+
     public boolean isEndOfBattle() {
         return CharacterStateService.isCharDead() || EnemyService.getCreepGroup().size() == 0;
     }
 
     public void makeATurn(Integer actionBarNumber, CreepState currentEnemy) {
+        activeTurn = true;
         SpellService.useSpellTo(actionBarNumber, currentEnemy);
         RESPONSE.creepResponse();
         useEffects();
         seekDeath();
         useRegeneration();
         ActionBarService.tickCooldowns();
+        activeTurn = false;
     }
 
     public void waitATurn() {
         CombatTextService.createWaitMessage(CharacterStateService.getCharacter());
-        RESPONSE.creepResponse();
         useEffects();
+        RESPONSE.creepResponse();
         seekDeath();
         useRegeneration();
         ActionBarService.tickCooldowns();

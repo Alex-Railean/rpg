@@ -1,5 +1,6 @@
 package com.endava.rpg.gp.talents.talents.technologies;
 
+import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.talents.branches.strength.TechnologiesBranch;
 import com.endava.rpg.gp.talents.talents.Talent;
@@ -23,7 +24,7 @@ public class MuscleStimulants extends Talent {
 
     @Override
     public void affect() {
-        CharacterState character = characterState.getCharacter();
+        CharacterState character = CharacterStateService.getCharacter();
         character.getEnergy().setValue(character.getDefaultEnergy() + COEFFICIENT * getPoints());
         character.getEnergy().setCurrentValue(character.getDefaultEnergy() + COEFFICIENT * getPoints());
         setDescription("Muscle Stimulants" +

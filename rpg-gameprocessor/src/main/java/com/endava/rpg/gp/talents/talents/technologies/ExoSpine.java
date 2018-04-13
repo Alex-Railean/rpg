@@ -37,7 +37,7 @@ public class ExoSpine extends Talent {
         setDescription("Exo-spine" +
                 "\nIncrease the character's health by " + HP_COEFFICIENT + "% and stun resistance by " + STUN_RESISTANCE + "%" +
                 "\nHealth bonus: " + HP_COEFFICIENT * getPoints() + "%" +
-                "\nStung resistance bonus: " + STUN_RESISTANCE * getPoints() + "%");
+                "\nStun resistance bonus: " + STUN_RESISTANCE * getPoints() + "%");
     }
 
     @Override

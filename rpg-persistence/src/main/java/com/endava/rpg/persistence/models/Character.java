@@ -42,6 +42,9 @@ public class Character implements TableMapping {
     @OneToOne(mappedBy = "character")
     private Technologies technologies;
 
+    @OneToOne(mappedBy = "character")
+    private Aspects aspects;
+
     public Character(String characterName, Progress progress, ActionBar actionBar) {
         this.characterName = characterName;
         this.progress = progress;
@@ -124,6 +127,15 @@ public class Character implements TableMapping {
 
     public Character setTechnologies(Technologies technologies) {
         this.technologies = technologies;
+        return this;
+    }
+
+    public Aspects getAspects() {
+        return aspects;
+    }
+
+    public Character setAspects(Aspects aspects) {
+        this.aspects = aspects;
         return this;
     }
 }

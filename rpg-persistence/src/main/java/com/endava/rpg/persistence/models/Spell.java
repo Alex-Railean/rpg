@@ -62,6 +62,16 @@ public class Spell implements TableMapping, DescribedSpell, Serializable {
         }
     }
 
+    public Spell subtractCoefficient(Integer decrease) {
+        this.coefficient -= decrease;
+        return this;
+    }
+
+    public Spell addCoefficient(Integer increase) {
+        this.coefficient += increase;
+        return this;
+    }
+
     @Override
     @JsonBackReference
     public Spell getSpell() {

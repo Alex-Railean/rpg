@@ -4,7 +4,7 @@ import com.endava.rpg.gp.battle.spells.effects.Effect;
 
 public class EffectData {
     public static Effect modify(Effect e) {
-        if (e.getDuration() != -1) {
+        if (e.getCurrentDuration() != -1) {
             e.setDescription(e.getRawDescription() + "\nDuration: $duration");
         }
 
@@ -16,6 +16,6 @@ public class EffectData {
     }
 
     public static String updateDuration(Effect e) {
-        return e.getRawDescription().replace("$duration", String.valueOf(e.getDuration()));
+        return e.getRawDescription().replace("$duration", String.valueOf(e.getCurrentDuration()));
     }
 }

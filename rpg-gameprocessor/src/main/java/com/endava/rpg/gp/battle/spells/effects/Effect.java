@@ -15,6 +15,8 @@ public abstract class Effect implements Serializable {
 
     private Integer duration;
 
+    private Integer currentDuration;
+
     private String URL;
 
     private State holder;
@@ -23,20 +25,21 @@ public abstract class Effect implements Serializable {
         this.name = ec.getName();
         this.description = ec.getDescription();
         this.duration = ec.getDuration();
+        this.currentDuration = ec.getDuration();
         this.URL = ec.getURL();
         this.holder = holder;
         this.description = EffectData.modify(this).getRawDescription();
     }
 
-    public boolean remove(Effect e) {
-        return holder.getEffects().remove(e);
+    public boolean remove() {
+        return holder.getEffects().remove(this);
     }
 
     public abstract void affectTarget();
 
     public void decreaseDuration() {
-        if (duration != -1) {
-            duration -= 1;
+        if (currentDuration != -1) {
+            currentDuration -= 1;
         }
     }
 
@@ -82,6 +85,14 @@ public abstract class Effect implements Serializable {
         return this;
     }
 
+    public Integer getCurrentDuration() {
+        return currentDuration;
+    }
+
+    public void setCurrentDuration(Integer currentDuration) {
+        this.currentDuration = currentDuration;
+    }
+
     public String getURL() {
         return URL;
     }
@@ -96,7 +107,15 @@ public abstract class Effect implements Serializable {
         return holder;
     }
 
+    public void setHolder(State holder) {
+        this.holder = holder;
+    }
+
     public String getRawDescription() {
         return description;
+    }
+
+    public void refreshDuration() {
+        this.currentDuration = this.duration;
     }
 }

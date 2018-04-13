@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.state;
 
 import com.endava.rpg.gp.talents.branches.Branch;
+import com.endava.rpg.persistence.models.Aspects;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Technologies;
 import com.endava.rpg.persistence.services.PersistenceService;
@@ -10,9 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.endava.rpg.persistence.services.utils.constants.BranchAttribute.ASPECTS;
 import static com.endava.rpg.persistence.services.utils.constants.BranchAttribute.TECHNOLOGIES;
-import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.EXO_SPINE;
-import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.MUSCLE_STIMULANTS;
+import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.*;
 
 @Service
 public class TalentService {
@@ -54,22 +55,36 @@ public class TalentService {
         if (branch.equals(TECHNOLOGIES.LINK)) {
             Technologies technologies = character.getTechnologies();
             updateBranch(talent, points, technologies);
+        } else if (branch.equals(ASPECTS.LINK)) {
+            Aspects aspects = character.getAspects();
+            updateBranch(talent, points, aspects);
         } else {
 
             throw new IllegalArgumentException("There is no such talent branch");
         }
     }
 
-    private void updateBranch(String talent, int points, Technologies technologies) {
+    private void updateBranch(String talent, int points, Technologies branchEntity) {
         if (EXO_SPINE.LINK.equals(talent)) {
-            if (technologies.getExoSpine() + points <= technologies.getExoSpineLimit()) {
-                PS.updateBranch(technologies.setExoSpine(technologies.getExoSpine() + points));
+            if (branchEntity.getExoSpine() + points <= branchEntity.getExoSpineLimit()) {
+                PS.updateBranch(branchEntity.addExoSpine(points));
             }
         } else if (MUSCLE_STIMULANTS.LINK.equals(talent)) {
-            if (technologies.getMuscleStimulants() + points <= technologies.getMuscleStimulantsLimit()) {
-                PS.updateBranch(technologies.setMuscleStimulants(technologies.getMuscleStimulants() + points));
+            if (branchEntity.getMuscleStimulants() + points <= branchEntity.getMuscleStimulantsLimit()) {
+                PS.updateBranch(branchEntity.addMuscleStimulants(points));
             }
 
+        } else {
+
+            throw new IllegalArgumentException("There is no such talent");
+        }
+    }
+
+    private void updateBranch(String talent, int points, Aspects branchEntity) {
+        if (CURSED_BLADE.LINK.equals(talent)) {
+            if (branchEntity.getCursedBlade() + points <= branchEntity.getCursedBladeLimit()) {
+                PS.updateBranch(branchEntity.addCursedBlade(points));
+            }
         } else {
 
             throw new IllegalArgumentException("There is no such talent");

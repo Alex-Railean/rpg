@@ -20,12 +20,11 @@ public class UnstableShield extends Effect implements Shield {
     }
 
     @Override
-    public boolean remove(Effect e) {
-        Shield s = (Shield) e;
-        s.setPoints(0);
-        e.affectTarget();
+    public boolean remove() {
+        setPoints(0);
+        affectTarget();
 
-        return getHolder().getEffects().remove(e);
+        return super.remove();
     }
 
     @Override

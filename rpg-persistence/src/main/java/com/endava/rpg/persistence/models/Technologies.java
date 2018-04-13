@@ -53,6 +53,16 @@ public class Technologies extends BranchEntity implements TableMapping, Serializ
         return totalPoints;
     }
 
+    public Technologies addExoSpine(int increase) {
+        this.exoSpine += increase;
+        return this;
+    }
+
+    public Technologies addMuscleStimulants(int increase) {
+        this.exoSpine += increase;
+        return this;
+    }
+
     public Character getCharacter() {
         return character;
     }

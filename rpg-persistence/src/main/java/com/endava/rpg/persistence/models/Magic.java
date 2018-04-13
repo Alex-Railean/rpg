@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "T_MAGIC")
-public class Magic extends BranchEntity implements TableMapping, Serializable{
+public class Magic extends BranchEntity implements TableMapping, Serializable {
 
     @Id
     @OneToOne
