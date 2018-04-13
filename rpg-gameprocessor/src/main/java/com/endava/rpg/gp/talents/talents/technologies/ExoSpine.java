@@ -34,8 +34,8 @@ public class ExoSpine extends Talent {
         Double sr = character.getStunResistancePercentage();
 
         character.setStunResistancePercentage(sr + STUN_RESISTANCE * getPoints());
-        setDescription("Exo-spine. " +
-                "\nIncrease the character's health by " + HP_COEFFICIENT + "% and stun resistance by " + STUN_RESISTANCE + "%." +
+        setDescription("Exo-spine" +
+                "\nIncrease the character's health by " + HP_COEFFICIENT + "% and stun resistance by " + STUN_RESISTANCE + "%" +
                 "\nHealth bonus: " + HP_COEFFICIENT * getPoints() + "%" +
                 "\nStung resistance bonus: " + STUN_RESISTANCE * getPoints() + "%");
     }

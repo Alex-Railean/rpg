@@ -23,11 +23,11 @@ public class Progress implements TableMapping {
     @Column(name = "AGILITY_PROGRESS")
     private Integer agilityProgress = 0;
 
-    @Column(name = "INTELLIGENCE_PROGRESS_LEVEL")
-    private Integer intelligenceProgressLevel = 1;
+    @Column(name = "INTELLECT_PROGRESS_LEVEL")
+    private Integer intellectProgressLevel = 1;
 
-    @Column(name = "INTELLIGENCE_PROGRESS")
-    private Integer intelligenceProgress = 0;
+    @Column(name = "INTELLECT_PROGRESS")
+    private Integer intellectProgress = 0;
 
     public Progress addStrengthProgress(Integer strengthProgress) {
         this.strengthProgress += strengthProgress;
@@ -49,13 +49,13 @@ public class Progress implements TableMapping {
         return this;
     }
 
-    public Progress addIntelligenceProgressLevel(Integer intelligenceProgressLevel) {
-        this.intelligenceProgressLevel += intelligenceProgressLevel;
+    public Progress addIntellectProgressLevel(Integer intellectProgressLevel) {
+        this.intellectProgressLevel += intellectProgressLevel;
         return this;
     }
 
-    public Progress addIntelligenceProgress(Integer intelligenceProgress) {
-        this.intelligenceProgress += intelligenceProgress;
+    public Progress addIntellectProgress(Integer intellectProgress) {
+        this.intellectProgress += intellectProgress;
         return this;
     }
 
@@ -99,21 +99,21 @@ public class Progress implements TableMapping {
         return this;
     }
 
-    public Integer getIntelligenceProgressLevel() {
-        return intelligenceProgressLevel;
+    public Integer getIntellectProgressLevel() {
+        return intellectProgressLevel;
     }
 
-    public Progress setIntelligenceProgressLevel(Integer intelligenceProgressLevel) {
-        this.intelligenceProgressLevel = intelligenceProgressLevel;
+    public Progress setIntellectProgressLevel(Integer intellectProgressLevel) {
+        this.intellectProgressLevel = intellectProgressLevel;
         return this;
     }
 
-    public Integer getIntelligenceProgress() {
-        return intelligenceProgress;
+    public Integer getIntellectProgress() {
+        return intellectProgress;
     }
 
-    public Progress setIntelligenceProgress(Integer intelligenceProgress) {
-        this.intelligenceProgress = intelligenceProgress;
+    public Progress setIntellectProgress(Integer intellectProgress) {
+        this.intellectProgress = intellectProgress;
         return this;
     }
 }

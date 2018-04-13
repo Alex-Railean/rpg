@@ -30,10 +30,10 @@
         <div class="agility-exp">
         ${agility}/${agilityNextLevel} (${agilityLevel})
         </div>
-        <div class="intelligence-exp">
-        ${intelligence}/${intelligenceNextLevel} (${intelligenceLevel})
+        <div class="intellect-exp">
+        ${intellect}/${intellectNextLevel} (${intellectLevel})
         </div>
-        <div><a href="/talents" class="talents-link">Talents (${freePoints})</a></div>
+        <div><a href="/branches" class="talents-link">Talents (${freePoints})</a></div>
     </div>
 <#if combatText??>
     <a href="/battle/wait">

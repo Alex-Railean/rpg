@@ -1,5 +1,6 @@
 package com.endava.rpg.gp.talents.branches;
 
+import com.endava.rpg.gp.state.TalentService;
 import com.endava.rpg.gp.talents.talents.Talent;
 import com.endava.rpg.persistence.models.BranchEntity;
 import com.endava.rpg.persistence.models.Character;
@@ -21,11 +22,12 @@ public abstract class Branch {
 
     private String URL;
 
-    protected Branch(PersistenceService ps, String name, String linkName, String URL) {
+    protected Branch(PersistenceService ps, TalentService talentService, String name, String linkName, String URL) {
         this.name = name;
         this.linkName = linkName;
         this.URL = URL;
         this.PS = ps;
+        talentService.addBranch(this);
     }
 
     public void define(Character character) {

@@ -18,7 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -48,9 +50,9 @@ public class SpellBookController {
         model = CHARACTER_STATE.getHeaderData(model)
                 .addAttribute("actionBar", ActionBarService.getActionBarMap())
                 .addAttribute("spellBookContent",
-                        DescriptionService.addFull(SPELL_BOOK.getAvailableSpells(CharacterStateService.getCharName())));
+                        DescriptionService.addFull(SPELL_BOOK.getAvailableSpells()));
         LOGGER.info("Spell Book");
-        return Views.SPELL_BOOK;
+        return Views.SPELLBOOK;
     }
 
     @RequestMapping(value = Paths.SPELLBOOK_SPELL, method = RequestMethod.POST)
@@ -58,14 +60,14 @@ public class SpellBookController {
         String charName = CharacterStateService.getCharacter().getName();
         Character character = PS.getCharacterByName(charName);
 
-        Spell defaultSpell = PS.getSpellByName("No spell");
+        Spell noSpell = PS.getSpellByName("No spell");
 
         Map<Integer, DescribedSpell> ab = ActionBarService.getActionBarMap();
         Spell toMove = ab.get(slot).getSpell();
 
-        DescribedSpell newSpell = SPELL_BOOK.getAvailableSpells(charName)
+        DescribedSpell newSpell = SPELL_BOOK.getAvailableSpells()
                 .stream()
-                .filter(s -> s.getSpell().getSpellName().equals(spell)).findFirst().orElse(defaultSpell);
+                .filter(s -> s.getSpell().getSpellName().equals(spell)).findFirst().orElse(noSpell);
 
         ab.keySet().forEach(k -> {
             if (ab.get(k).getSpell().getSpellName().equals(spell)) {
@@ -99,5 +101,32 @@ public class SpellBookController {
         LOGGER.info("Action bar has been changed");
 
         return "redirect:" + Paths.SPELLBOOK;
+    }
+
+    // API
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.SPELLBOOK, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public HashMap<String, Object> toSpellBookApi(Model model) {
+        model = CHARACTER_STATE.getHeaderData(model)
+                .addAttribute("actionBar", ActionBarService.getActionBarMap())
+                .addAttribute("spellBookContent",
+                        DescriptionService.addFull(SPELL_BOOK.getAvailableSpells()));
+        LOGGER.info("Spell Book");
+        model.addAttribute("action", Paths.SPELLBOOK);
+
+        return new HashMap<>(model.asMap());
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.SPELLBOOK_SPELL, method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String updateActionBarApi(@PathVariable("spell") String spell, Integer slot) {
+        return updateActionBar(spell, slot);
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.SPELLBOOK_REMOVE, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String removeSpellApi(@PathVariable("slot") Integer slot) {
+        return removeSpell(slot);
     }
 }

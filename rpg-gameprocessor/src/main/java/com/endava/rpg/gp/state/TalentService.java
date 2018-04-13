@@ -42,6 +42,10 @@ public class TalentService {
         return BRANCHES;
     }
 
+    public void addBranch(Branch b) {
+        BRANCHES.add(b);
+    }
+
     public Branch getBranch(String branch) {
         return BRANCHES.stream().filter(b -> b.getName().equalsIgnoreCase(branch)).findFirst().orElse(null);
     }

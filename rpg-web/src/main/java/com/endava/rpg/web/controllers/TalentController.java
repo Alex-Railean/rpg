@@ -14,6 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
 
 @Controller
 public class TalentController {
@@ -32,28 +35,28 @@ public class TalentController {
         this.PS = ps;
     }
 
-    @RequestMapping(value = Paths.TALENTS, method = RequestMethod.GET)
+    @RequestMapping(value = Paths.BRANCHES, method = RequestMethod.GET)
     public String toTalents(Model model) {
         model = CHARACTER_STATE.getHeaderData(model)
                 .addAttribute("branches", TALENT.getBranches());
         LOGGER.info("Talent page");
-        return Views.TALENTS;
+        return Views.BRANCHES;
     }
 
-    @RequestMapping(value = Paths.TALENTS_BRANCH, method = RequestMethod.GET)
-    public String toTalent(Model model, @PathVariable("branch") String branch) {
+    @RequestMapping(value = Paths.BRANCHES_TALENTS, method = RequestMethod.GET)
+    public String toTalent(Model model, @PathVariable("talents") String branch) {
         model = CHARACTER_STATE.getHeaderData(model)
                 .addAttribute("freePoints", CharacterStateService.getCharacter().getFreePoints())
                 .addAttribute("branch", TALENT.getBranch(branch));
         LOGGER.info("Branch page");
-        return Views.BRANCH;
+        return Views.TALENTS;
     }
 
-    @RequestMapping(value = Paths.TALENTS_UPDATE, method = RequestMethod.POST)
-    public String addTalents(@PathVariable("branch") String branch, @PathVariable("talent") String talent, int points) {
+    @RequestMapping(value = Paths.BRANCHES_UPDATE, method = RequestMethod.POST)
+    public String addTalents(@PathVariable("talents") String branch, @PathVariable("talent") String talent, int points) {
 
         if (points == 0 || CharacterStateService.getCharacter().getFreePoints() - points < 0) {
-            return "redirect:" + Paths.TALENTS_BRANCH;
+            return "redirect:" + Paths.BRANCHES_TALENTS;
         }
 
         Character character = PS.getCharacterByName(CharacterStateService.getCharName());
@@ -63,6 +66,36 @@ public class TalentController {
         CHARACTER_STATE.refreshCharacter();
         LOGGER.info("Talents have been updated");
 
-        return "redirect:" + Paths.TALENTS_BRANCH;
+        return "redirect:" + Paths.BRANCHES_TALENTS;
+    }
+
+    // API
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.BRANCHES, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public HashMap<String, Object> toTalentsApi(Model model) {
+        model = CHARACTER_STATE.getHeaderData(model)
+                .addAttribute("branches", TALENT.getBranches());
+        LOGGER.info("Talent page");
+        model.addAttribute("action", Paths.BRANCHES);
+
+        return new HashMap<>(model.asMap());
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.BRANCHES_TALENTS, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public HashMap<String, Object> toTalentApi(Model model, @PathVariable("talents") String branch) {
+        model = CHARACTER_STATE.getHeaderData(model)
+                .addAttribute("freePoints", CharacterStateService.getCharacter().getFreePoints())
+                .addAttribute("branch", TALENT.getBranch(branch));
+        LOGGER.info("Branch page");
+        model.addAttribute("action", Paths.BRANCHES_TALENTS);
+        return new HashMap<>(model.asMap());
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.BRANCHES_UPDATE, method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String addTalentsApi(@PathVariable("branch") String branch, @PathVariable("talent") String talent, int points) {
+        return addTalents(branch, talent, points);
     }
 }

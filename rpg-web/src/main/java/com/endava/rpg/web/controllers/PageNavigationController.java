@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class PageNavigationController {
@@ -36,15 +37,23 @@ public class PageNavigationController {
         return "redirect:/" + CHAR_STATE.getLocation();
     }
 
-    @RequestMapping(value = Paths.CONTINUE, method = RequestMethod.GET)
-    public String continueGame() {
-        LOGGER.info("Current Location");
-        return "redirect:/" + CHAR_STATE.getLocation();
-    }
-
     @RequestMapping(value = Paths.OUTSIDE, method = RequestMethod.GET)
     public String toOutside() {
         LOGGER.info("Current Location");
         return "redirect:/" + CHAR_STATE.getLocation();
+    }
+
+    // API
+
+    @RequestMapping(value = Paths.API_ROOT, method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String toLocationApi(String characterName) {
+        return toLocation(characterName);
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.OUTSIDE, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String toOutsideApi() {
+        return toOutside();
     }
 }

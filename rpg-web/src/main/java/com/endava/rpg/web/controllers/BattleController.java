@@ -16,9 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
+import java.util.HashMap;
 
 @Controller
 public class BattleController {
@@ -112,9 +114,82 @@ public class BattleController {
     @RequestMapping(value = Paths.EXP, method = RequestMethod.GET)
     public String getExp(Model model) {
         EXP.updateProgresses();
-        model = CHAR_STATE.getCharacterModel(model);
+        model = CHAR_STATE.getHeaderData(model);
         model = EXP.getExpModel(model);
         CombatTextService.clearCombatText();
         return Views.EXP;
+    }
+
+    // API
+    @RequestMapping(value = Paths.API_ROOT + Paths.BATTLE, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String toBattleApi() {
+        return toBattle();
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.TO_BATTLE, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public HashMap<String, Object> currentBattleApi(Model model, @PathVariable("battleId") Long battleId) {
+        if (CHAR_STATE.getBattle().equals(battleId)) {
+            if (!BATTLE.isEndOfBattle()) {
+                model = CHAR_STATE.getCharacterModel(model);
+                model = ENEMY.getCurrentEnemyAndGroup(model);
+                model.addAttribute("combatText", CombatTextService.getCombatText());
+                model.addAttribute("action", Paths.BATTLE);
+                return new HashMap<>(model.asMap());
+            }
+
+            LOGGER.info("End of Battle");
+
+            CHAR_STATE.resetBattle();
+            CharacterStateService.dispelEffects();
+            model.addAttribute("action", "redirect:" + Paths.EXP);
+            return new HashMap<>(model.asMap());
+        }
+        LOGGER.warn("Could not find battle with id: " + battleId);
+        model.addAttribute("action", "redirect:/" + CHAR_STATE.getLocation());
+        return new HashMap<>(model.asMap());
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.BATTLE_USE_SPELL, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public HashMap<String, Object> useSpellApi(Model model, @PathVariable("actionBarId") Integer actionBarId) {
+        if (CHAR_STATE.getBattle() == 0) {
+            model.addAttribute("action", "redirect:" + Paths.SPELLBOOK);
+            return new HashMap<>(model.asMap());
+        } else if (actionBarId == 0) {
+            model.addAttribute("action", "redirect:" + Paths.BATTLE + "/" + BATTLE.getBattleId());
+            return new HashMap<>(model.asMap());
+        }
+
+        if (SpellService.getSpellFromActionBar(actionBarId).getCurrentCooldown() == 0) {
+            if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
+                BATTLE.makeATurn(actionBarId, EnemyService.getCurrentEnemy());
+            } else {
+                model.addAttribute("warningMessage", "Not Enough Mana or Energy");
+            }
+        } else {
+            model.addAttribute("warningMessage", "This spell isn't ready");
+        }
+
+        model.addAttribute("action", "redirect:" + Paths.BATTLE + "/" + BATTLE.getBattleId());
+        return new HashMap<>(model.asMap());
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.BATTLE_WAIT, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String waitATurnApi() {
+        return waitATurn();
+    }
+
+    @RequestMapping(value = Paths.API_ROOT + Paths.EXP, method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public HashMap<String, Object> getExpApi(Model model) {
+        EXP.updateProgresses();
+        model = CHAR_STATE.getHeaderData(model);
+        model = EXP.getExpModel(model);
+        CombatTextService.clearCombatText();
+        model.addAttribute("action", Paths.EXP);
+        return new HashMap<>(model.asMap());
     }
 }

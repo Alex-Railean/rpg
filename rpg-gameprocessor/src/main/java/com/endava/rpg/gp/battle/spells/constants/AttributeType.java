@@ -4,7 +4,7 @@ public final class AttributeType {
     public static final String
             STRENGTH = "strength",
             AGILITY = "agility",
-            INTELLIGENCE = "intelligence",
+            INTELLECT = "intellect",
             CREEP = "creep",
             NONE = "none";
 

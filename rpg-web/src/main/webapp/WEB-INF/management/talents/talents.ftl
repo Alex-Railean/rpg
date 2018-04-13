@@ -8,10 +8,23 @@
 <body>
 <#include "../../modules/header.ftl">
 <div class="container">
-<#list branches as branch>
     <h3>${branch.getName()}</h3>
-    <a href="/talents/${branch.getLinkName()}/"><img src="${branch.getURL()}" alt="branch-image" class="branch-img"></a>
-</#list>
+    <div class="talents">
+    <#list branch.getTalents() as talent>
+        <div class="talent">
+            <div>
+                <img src="${talent.getURL()}" alt="talent-image" class="talent-img" title="${talent.getDescription()}">
+            </div>
+            <p>${talent.getPoints()}/${talent.getLimit()}</p>
+            <form action="points/${talent.getLinkName()}" method="POST">
+                <input class="form-control talent-counter" type="number" value="0" id="example-number-input"
+                       max="${talent.getLimit() - talent.getPoints()}" min="0" name="points">
+                <button type="submit" class="btn btn-dark points-button">+</button>
+            </form>
+        </div>
+    </#list>
+    </div>
+    <h4>Free Points: ${freePoints}</h4>
     <div>
         <a href="/outside">
             <button type="button" class="btn btn-dark bottom-button">To Outside</button>
@@ -22,7 +35,6 @@
     ${warningMessage}
     </div>
 </#if>
-</div>
 </div>
 <script src="/resources/js/main.js"></script>
 </body>

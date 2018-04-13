@@ -1,12 +1,14 @@
 package com.endava.rpg.persistence.models;
 
 import com.endava.rpg.persistence.services.utils.DescribedSpell;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "T_SPELL")
-public class Spell implements TableMapping, DescribedSpell {
+public class Spell implements TableMapping, DescribedSpell, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +63,7 @@ public class Spell implements TableMapping, DescribedSpell {
     }
 
     @Override
+    @JsonBackReference
     public Spell getSpell() {
         return this;
     }

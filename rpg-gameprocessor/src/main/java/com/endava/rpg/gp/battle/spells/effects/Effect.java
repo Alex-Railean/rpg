@@ -3,8 +3,11 @@ package com.endava.rpg.gp.battle.spells.effects;
 import com.endava.rpg.gp.battle.spells.description.effects.EffectData;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-public abstract class Effect {
+import java.io.Serializable;
+
+public abstract class Effect implements Serializable {
 
     private String name;
 
@@ -88,6 +91,7 @@ public abstract class Effect {
         return this;
     }
 
+    @JsonBackReference
     public State getHolder() {
         return holder;
     }

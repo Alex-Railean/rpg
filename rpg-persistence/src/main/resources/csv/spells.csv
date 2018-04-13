@@ -1,7 +1,7 @@
 spellName        ; cooldown; effect            ; dmgCoefficient; spellURL                          ; cost  ; school   ; attribute   ; spellType    ; required ; branch
 Sword Attack     ; 0       ; none              ; 20            ; /resources/img/swordattack.jpg    ; 15    ; physical ; strength    ; attack       ; 0        ; none
 Bow Attack       ; 0       ; none              ; 30            ; /resources/img/bowshot.jpg        ; 25    ; physical ; agility     ; attack       ; 0        ; none
-Fire Ball        ; 0       ; none              ; 40            ; /resources/img/fireball.jpg       ; 65    ; magical  ; intelligence; attack       ; 0        ; none
+Fire Ball        ; 0       ; none              ; 40            ; /resources/img/fireball.jpg       ; 65    ; magical  ; intellect   ; attack       ; 0        ; none
 No spell         ; 0       ; none              ; 0             ; /resources/img/empty.jpg          ; 0     ; none     ; none        ; none         ; 0        ; none
 Bite             ; 0       ; none              ; 20            ; /resources/img/bite.jpg           ; 30    ; physical ; creep       ; attack       ; 0        ; none
 Defence Stance   ; 0       ; Defence Stance    ; 35            ; /resources/img/defencestance.jpg  ; 100   ; physical ; creep       ; protection   ; 0        ; none

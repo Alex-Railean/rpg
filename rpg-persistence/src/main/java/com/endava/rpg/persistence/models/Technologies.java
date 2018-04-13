@@ -48,6 +48,7 @@ public class Technologies extends BranchEntity implements TableMapping, Serializ
         return getCharacter().hashCode();
     }
 
+    @Override
     public Integer getTotalPoints() {
         return totalPoints;
     }

@@ -94,9 +94,9 @@ public class CharacterStateService {
                 .addAttribute("agilityLevel", CHAR_STATE.getAgility().getProgressLevel())
                 .addAttribute("agility", CHAR_STATE.getAgility().getProgress())
                 .addAttribute("agilityNextLevel", CHAR_STATE.getAgility().getToNextLevel())
-                .addAttribute("intelligenceLevel", CHAR_STATE.getIntelligence().getProgressLevel())
-                .addAttribute("intelligence", CHAR_STATE.getIntelligence().getProgress())
-                .addAttribute("intelligenceNextLevel", CHAR_STATE.getIntelligence().getToNextLevel())
+                .addAttribute("intellectLevel", CHAR_STATE.getIntellect().getProgressLevel())
+                .addAttribute("intellect", CHAR_STATE.getIntellect().getProgress())
+                .addAttribute("intellectNextLevel", CHAR_STATE.getIntellect().getToNextLevel())
                 .addAttribute("freePoints", CHAR_STATE.getFreePoints())
                 .addAttribute("shield", CHAR_STATE.getShieldPoints())
                 .addAttribute("effects", CharacterStateService.getCharacter().getEffects());
@@ -124,9 +124,9 @@ public class CharacterStateService {
                             .addAgilityProgress(additionalExp - stateAttribute.getToNextLevel());
                     break;
 
-                case AttributeType.INTELLIGENCE:
-                    progress.addIntelligenceProgressLevel(1)
-                            .addIntelligenceProgress(additionalExp - stateAttribute.getToNextLevel());
+                case AttributeType.INTELLECT:
+                    progress.addIntellectProgressLevel(1)
+                            .addIntellectProgress(additionalExp - stateAttribute.getToNextLevel());
                     break;
             }
 
@@ -142,8 +142,8 @@ public class CharacterStateService {
                     progress.addAgilityProgress(additionalExp);
                     break;
 
-                case AttributeType.INTELLIGENCE:
-                    progress.addIntelligenceProgress(additionalExp);
+                case AttributeType.INTELLECT:
+                    progress.addIntellectProgress(additionalExp);
                     break;
             }
 
@@ -199,8 +199,8 @@ public class CharacterStateService {
         CHAR_STATE.getAgility().setProgressLevel(character.getProgress().getAgilityProgressLevel())
                 .setProgress(character.getProgress().getAgilityProgress());
 
-        CHAR_STATE.getIntelligence().setProgressLevel(character.getProgress().getIntelligenceProgressLevel())
-                .setProgress(character.getProgress().getIntelligenceProgress());
+        CHAR_STATE.getIntellect().setProgressLevel(character.getProgress().getIntellectProgressLevel())
+                .setProgress(character.getProgress().getIntellectProgress());
 
         CHAR_STATE.setLocation(character.getLocation())
                 .setFreePoints(character.getFreePoints())

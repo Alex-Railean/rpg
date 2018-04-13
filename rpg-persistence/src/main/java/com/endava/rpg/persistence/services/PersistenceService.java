@@ -19,30 +19,18 @@ public class PersistenceService {
 
     private final CreepDao CREEPS;
 
-    private final ProgressDao PROGRESS;
-
-    private final TechnologiesDao TECHNOLOGIES;
-
-    private final AspectsDao ASPECTS;
-
     private final EffectCoreDao EFFECTS;
 
     @Autowired
-    private PersistenceService(BranchDao branch_dao,
+    private PersistenceService(BranchDao branch,
                                CharacterDao character,
                                SpellDao spells,
                                CreepDao creeps,
-                               ProgressDao progress,
-                               TechnologiesDao technologies,
-                               AspectsDao aspects,
                                EffectCoreDao effect) {
-        this.BRANCHES = branch_dao;
+        this.BRANCHES = branch;
         this.CHARACTER = character;
         this.SPELLS = spells;
         this.CREEPS = creeps;
-        this.PROGRESS = progress;
-        this.TECHNOLOGIES = technologies;
-        this.ASPECTS = aspects;
         this.EFFECTS = effect;
     }
 

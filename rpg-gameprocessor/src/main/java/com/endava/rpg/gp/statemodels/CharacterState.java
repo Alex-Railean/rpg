@@ -5,11 +5,12 @@ import com.endava.rpg.gp.statemodels.points.Attribute;
 import com.endava.rpg.gp.util.Refreshable;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CharacterState extends State implements Refreshable {
+public class CharacterState extends State implements Refreshable, Serializable {
 
     private final List<Attribute> ATTRIBUTES = new ArrayList<>();
 
@@ -17,7 +18,7 @@ public class CharacterState extends State implements Refreshable {
 
     private Attribute agility = new Attribute(this);
 
-    private Attribute intelligence = new Attribute(this);
+    private Attribute intellect = new Attribute(this);
 
     private Integer defaultEnergy = 100;
 
@@ -71,12 +72,12 @@ public class CharacterState extends State implements Refreshable {
         this.agility = agility;
     }
 
-    public Attribute getIntelligence() {
-        return intelligence;
+    public Attribute getIntellect() {
+        return intellect;
     }
 
-    public void setIntelligence(Attribute intelligence) {
-        this.intelligence = intelligence;
+    public void setIntellect(Attribute intellect) {
+        this.intellect = intellect;
     }
 
     public Long getCurrentBattle() {

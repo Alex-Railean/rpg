@@ -101,7 +101,7 @@ public class FormulaService {
             mp += 10 + i * GameService.GROWTH_FACTOR;
         }
 
-        for (int i = 1; i <= CharacterStateService.getCharacter().getIntelligence().getProgressLevel(); i++) {
+        for (int i = 1; i <= CharacterStateService.getCharacter().getIntellect().getProgressLevel(); i++) {
             mp += 45 + i * GameService.GROWTH_FACTOR;
         }
 

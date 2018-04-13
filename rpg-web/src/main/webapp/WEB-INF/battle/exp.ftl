@@ -25,7 +25,7 @@
                     <td>To Agility progress: ${agilityExp} exp</td>
                 </tr>
                 <tr>
-                    <td>To Intelligence progress: ${intelligenceExp} exp</td>
+                    <td>To Intellect progress: ${intellectExp} exp</td>
                 </tr>
                 </tbody>
             </table>

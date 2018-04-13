@@ -3,7 +3,9 @@ package com.endava.rpg.gp.statemodels.points;
 import com.endava.rpg.gp.game.FormulaService;
 import com.endava.rpg.gp.statemodels.CharacterState;
 
-public class Attribute {
+import java.io.Serializable;
+
+public class Attribute implements Serializable {
 
     private Integer progressLevel;
 

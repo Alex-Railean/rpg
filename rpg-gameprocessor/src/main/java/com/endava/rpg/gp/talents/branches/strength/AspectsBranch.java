@@ -7,7 +7,6 @@ import com.endava.rpg.persistence.models.BranchEntity;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.PersistenceService;
-import com.endava.rpg.persistence.services.utils.constants.BranchAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,7 @@ public class AspectsBranch extends Branch {
 
     @Autowired
     public AspectsBranch(PersistenceService ps, TalentService talentService) {
-        super(ps, ASPECTS.NAME, ASPECTS.LINK, ASPECTS.URL);
-        talentService.getBranches().add(this);
+        super(ps, talentService, ASPECTS.NAME, ASPECTS.LINK, ASPECTS.URL);
     }
 
     @Override
@@ -36,6 +34,6 @@ public class AspectsBranch extends Branch {
 
     @Override
     protected List<Spell> getBranchSpells() {
-        return PS.getBranchSpells(BranchAttribute.ASPECTS.NAME);
+        return PS.getBranchSpells(ASPECTS.NAME);
     }
 }

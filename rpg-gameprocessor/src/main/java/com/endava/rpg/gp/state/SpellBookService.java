@@ -22,7 +22,8 @@ public class SpellBookService {
         this.PS = PS;
     }
 
-    public List<DescribedSpell> getAvailableSpells(String characterName) {
+    public List<DescribedSpell> getAvailableSpells() {
+        String characterName = CharacterStateService.getCharName();
         if (AVAILABLE_SPELLS.get(characterName) == null) {
             List<DescribedSpell> currentAvailableSpells = new ArrayList<>();
             currentAvailableSpells.addAll(defaultSpells);
@@ -35,7 +36,7 @@ public class SpellBookService {
                 return AVAILABLE_SPELLS.get(characterName);
             } else {
                 AVAILABLE_SPELLS.remove(characterName);
-                return getAvailableSpells(characterName);
+                return getAvailableSpells();
             }
         }
     }

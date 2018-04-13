@@ -2,7 +2,9 @@ package com.endava.rpg.gp.statemodels.points;
 
 import com.endava.rpg.gp.statemodels.State;
 
-public class Point {
+import java.io.Serializable;
+
+public class Point implements Serializable {
 
     private Integer value;
 

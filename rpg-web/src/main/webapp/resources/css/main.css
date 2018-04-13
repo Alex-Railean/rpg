@@ -20,6 +20,15 @@
     height: 138px;
 }
 
+.branch {
+    float: left;
+    margin-right: 80px;
+}
+
+.branches {
+    overflow: hidden;
+}
+
 .talent-img {
     width: 44px;
     height: 44px;
@@ -93,6 +102,16 @@
     left: 0;
     background-color: #000;
     opacity: 0.8;
+}
+
+.talent {
+    float: left;
+    margin-right: 30px;
+    text-align: center;
+}
+
+.talents {
+    overflow: hidden;
 }
 
 @media (min-width: 992px) {

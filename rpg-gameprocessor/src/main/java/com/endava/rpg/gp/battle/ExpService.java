@@ -19,7 +19,7 @@ public class ExpService implements Refreshable {
 
     private static Integer agilityExp = 0;
 
-    private static Integer intelligenceExp = 0;
+    private static Integer intellectExp = 0;
 
     private final CharacterStateService CHAR_STATE;
 
@@ -41,9 +41,9 @@ public class ExpService implements Refreshable {
                 LOGGER.info("Agility Exp -> " + agilityExp);
                 break;
 
-            case AttributeType.INTELLIGENCE:
-                intelligenceExp += FormulaService.getDeservedExp();
-                LOGGER.info("Intelligence Exp -> " + intelligenceExp);
+            case AttributeType.INTELLECT:
+                intellectExp += FormulaService.getDeservedExp();
+                LOGGER.info("Intellect Exp -> " + intellectExp);
                 break;
 
             case AttributeType.CREEP:
@@ -60,7 +60,7 @@ public class ExpService implements Refreshable {
     public void updateProgresses() {
         boolean isStrengthStable;
         boolean isAgilityStable;
-        boolean isIntelligenceStable;
+        boolean isIntellectStable;
 
         do {
             isStrengthStable = CHAR_STATE.updateProgress(strengthEpx,
@@ -71,11 +71,11 @@ public class ExpService implements Refreshable {
                     CharacterStateService.getCharacter().getAgility(),
                     AttributeType.AGILITY);
 
-            isIntelligenceStable = CHAR_STATE.updateProgress(intelligenceExp,
-                    CharacterStateService.getCharacter().getIntelligence(),
-                    AttributeType.INTELLIGENCE);
+            isIntellectStable = CHAR_STATE.updateProgress(intellectExp,
+                    CharacterStateService.getCharacter().getIntellect(),
+                    AttributeType.INTELLECT);
 
-        } while (!(isStrengthStable && isAgilityStable && isIntelligenceStable));
+        } while (!(isStrengthStable && isAgilityStable && isIntellectStable));
     }
 
     private int getDeservedExp(int exp) {
@@ -85,7 +85,7 @@ public class ExpService implements Refreshable {
     public Model getExpModel(Model model) {
         model.addAttribute("strengthEpx", getDeservedExp(strengthEpx));
         model.addAttribute("agilityExp", getDeservedExp(agilityExp));
-        model.addAttribute("intelligenceExp", getDeservedExp(intelligenceExp));
+        model.addAttribute("intellectExp", getDeservedExp(intellectExp));
         refresh();
         return model;
     }
@@ -93,6 +93,6 @@ public class ExpService implements Refreshable {
     public void refresh() {
         strengthEpx = 0;
         agilityExp = 0;
-        intelligenceExp = 0;
+        intellectExp = 0;
     }
 }

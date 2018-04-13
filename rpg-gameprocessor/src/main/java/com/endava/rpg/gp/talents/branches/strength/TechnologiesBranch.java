@@ -7,7 +7,6 @@ import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.models.Technologies;
 import com.endava.rpg.persistence.services.PersistenceService;
-import com.endava.rpg.persistence.services.utils.constants.BranchAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,7 @@ public class TechnologiesBranch extends Branch {
 
     @Autowired
     public TechnologiesBranch(PersistenceService ps, TalentService talentService) {
-        super(ps, TECHNOLOGIES.NAME, TECHNOLOGIES.LINK, TECHNOLOGIES.URL);
-        talentService.getBranches().add(this);
+        super(ps, talentService, TECHNOLOGIES.NAME, TECHNOLOGIES.LINK, TECHNOLOGIES.URL);
     }
 
     @Override
@@ -36,6 +34,6 @@ public class TechnologiesBranch extends Branch {
 
     @Override
     protected List<Spell> getBranchSpells() {
-        return PS.getBranchSpells(BranchAttribute.TECHNOLOGIES.NAME);
+        return PS.getBranchSpells(TECHNOLOGIES.NAME);
     }
 }
