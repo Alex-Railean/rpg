@@ -7,7 +7,9 @@ public enum BranchAttribute {
 
     ARMS("Arms", "arms", "/resources/img/arms.jpg"),
 
-    SHADOW("Shadow", "shadow", "/resources/img/shadow.jpg");
+    SHADOW("Shadow", "shadow", "/resources/img/shadow.jpg"),
+
+    MAGIC("Magic", "magic", "/resources/img/magic.jpg");
 
     public final String LINK;
 

@@ -23,6 +23,7 @@
 .branch {
     float: left;
     margin-right: 80px;
+    text-align: center;
 }
 
 .branches {

@@ -50,6 +50,9 @@ public class PRGPersistenceConf {
                 Spell.class,
                 Technologies.class,
                 Aspects.class,
+                Arms.class,
+                Shadow.class,
+                Magic.class,
                 EffectCore.class,
                 Creep.class);
         return factoryBean;
