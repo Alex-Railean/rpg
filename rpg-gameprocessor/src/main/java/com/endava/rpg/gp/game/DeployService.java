@@ -20,10 +20,13 @@ public class DeployService {
 
     private final SpellBookService SPELLBOOK;
 
+    private final CSVAdapter ADAPTER;
+
     @Autowired
-    private DeployService(PersistenceService ps, SpellBookService sbs) {
+    private DeployService(PersistenceService ps, SpellBookService sbs, CSVAdapter adapter) {
         this.PS = ps;
         this.SPELLBOOK = sbs;
+        this.ADAPTER = adapter;
     }
 
     @PostConstruct
@@ -37,14 +40,14 @@ public class DeployService {
     private void injectAllEffects() {
         List<String[]> effects = new CSVReader("effects.csv").getData();
         if (PS.getAllEffects().size() < effects.size()) {
-            effects.forEach(e -> PS.saveEffect(CSVAdapter.toEffectCore(e)));
+            effects.forEach(e -> PS.saveEffect(ADAPTER.toEffectCore(e)));
         }
     }
 
     private void injectAllSpells() {
         List<String[]> spells = new CSVReader("spells.csv").getData();
         if (PS.getAllSpells().size() < spells.size()) {
-            spells.forEach(spell -> PS.saveSpell(CSVAdapter.toSpell(spell)));
+            spells.forEach(spell -> PS.saveSpell(ADAPTER.toSpell(spell)));
         }
 
         LOGGER.info("All Spells from CSV are saved in DB");
@@ -53,7 +56,7 @@ public class DeployService {
     private void injectAllCreeps() {
         List<String[]> creeps = new CSVReader("creeps.csv").getData();
         if (PS.getAllCreeps().size() < creeps.size()) {
-            creeps.forEach(creep -> PS.saveCreep(CSVAdapter.toCreep(creep)));
+            creeps.forEach(creep -> PS.saveCreep(ADAPTER.toCreep(creep)));
         }
 
         LOGGER.info("All Creeps from CSV are saved in DB");

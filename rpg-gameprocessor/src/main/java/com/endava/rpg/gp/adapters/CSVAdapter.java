@@ -13,18 +13,18 @@ import org.springframework.stereotype.Component;
 public class CSVAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVAdapter.class);
 
-    private static PersistenceService ps;
+    private final PersistenceService PS;
 
     @Autowired
     private CSVAdapter(PersistenceService ps) {
-        CSVAdapter.ps = ps;
+        this.PS = ps;
     }
 
-    public static Spell toSpell(String[] csvSpell) {
+    public Spell toSpell(String[] csvSpell) {
         LOGGER.info("CSV row was converted to Spell Object");
         return new Spell().setSpellName(csvSpell[0])
                 .setCooldown(Integer.parseInt(csvSpell[1]))
-                .setEffectCore(ps.getEffect(csvSpell[2]))
+                .setEffectCore(PS.getEffect(csvSpell[2]))
                 .setCoefficient(Integer.parseInt(csvSpell[3]))
                 .setSpellURL(csvSpell[4])
                 .setCost(Integer.parseInt(csvSpell[5]))
@@ -35,7 +35,7 @@ public class CSVAdapter {
                 .setBranch(csvSpell[10]);
     }
 
-    public static Creep toCreep(String[] csvCreep) {
+    public Creep toCreep(String[] csvCreep) {
         LOGGER.info("CSV row was converted to Creep Object");
         return new Creep().setCreepName(csvCreep[0])
                 .setHpFactor(Integer.parseInt(csvCreep[1]))
@@ -44,14 +44,14 @@ public class CSVAdapter {
                 .setMpRegeneration(Integer.parseInt(csvCreep[4]))
                 .setEnergy(Integer.parseInt(csvCreep[5]))
                 .setEnergyRegeneration(Integer.parseInt(csvCreep[6]))
-                .setSpell_1(csvCreep[7].equals("null") ? ps.getSpellByName("No spell") : ps.getSpellByName(csvCreep[7]))
-                .setSpell_2(csvCreep[8].equals("null") ? ps.getSpellByName("No spell") : ps.getSpellByName(csvCreep[8]))
-                .setSpell_3(csvCreep[9].equals("null") ? ps.getSpellByName("No spell") : ps.getSpellByName(csvCreep[9]))
+                .setSpell_1(csvCreep[7].equals("null") ? PS.getSpellByName("No spell") : PS.getSpellByName(csvCreep[7]))
+                .setSpell_2(csvCreep[8].equals("null") ? PS.getSpellByName("No spell") : PS.getSpellByName(csvCreep[8]))
+                .setSpell_3(csvCreep[9].equals("null") ? PS.getSpellByName("No spell") : PS.getSpellByName(csvCreep[9]))
                 .setCreepType(csvCreep[10])
                 .setCreepLocation(csvCreep[11]);
     }
 
-    public static EffectCore toEffectCore(String[] csvEffect) {
+    public EffectCore toEffectCore(String[] csvEffect) {
         LOGGER.info("CSV row was converted to EffectCore Object");
         return new EffectCore().setName(csvEffect[0])
                 .setDuration(Integer.parseInt(csvEffect[1]))
