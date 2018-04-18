@@ -21,6 +21,8 @@ public abstract class Effect implements Serializable {
 
     private State holder;
 
+    private boolean toRemove = false;
+
     protected Effect(State holder, EffectCore ec) {
         this.name = ec.getName();
         this.description = ec.getDescription();
@@ -31,8 +33,8 @@ public abstract class Effect implements Serializable {
         this.description = EffectData.modify(this).getRawDescription();
     }
 
-    public boolean remove() {
-        return holder.getEffects().remove(this);
+    public void remove() {
+        setToRemove(true);
     }
 
     public abstract void affectTarget();
@@ -117,5 +119,14 @@ public abstract class Effect implements Serializable {
 
     public void refreshDuration() {
         this.currentDuration = this.duration;
+    }
+
+    public boolean isToRemove() {
+        return toRemove;
+    }
+
+    public Effect setToRemove(boolean toRemove) {
+        this.toRemove = toRemove;
+        return this;
     }
 }

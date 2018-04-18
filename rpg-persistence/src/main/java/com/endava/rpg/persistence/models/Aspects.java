@@ -18,6 +18,12 @@ public class Aspects extends BranchEntity implements TableMapping, Serializable 
     @Column(name = "CURSED_BLADE_LIMIT")
     private Integer cursedBladeLimit = 5;
 
+    @Column(name = "COURAGE")
+    private Integer courage = 0;
+
+    @Column(name = "COURAGE_LIMIT")
+    private Integer courageLimit = 5;
+
     @Column(name = "TOTAL_POINTS")
     private Integer totalPoints = 0;
 
@@ -52,6 +58,11 @@ public class Aspects extends BranchEntity implements TableMapping, Serializable 
         return this;
     }
 
+    public Aspects addCourage(int increase) {
+        this.courage += increase;
+        return this;
+    }
+
     public Character getCharacter() {
         return character;
     }
@@ -76,6 +87,23 @@ public class Aspects extends BranchEntity implements TableMapping, Serializable 
 
     public Aspects setCursedBladeLimit(Integer cursedBladeLimit) {
         this.cursedBladeLimit = cursedBladeLimit;
+        return this;
+    }
+
+    public Integer getCourage() {
+        return courage;
+    }
+
+    public void setCourage(Integer courage) {
+        this.courage = courage;
+    }
+
+    public Integer getCourageLimit() {
+        return courageLimit;
+    }
+
+    public Aspects setCourageLimit(Integer courageLimit) {
+        this.courageLimit = courageLimit;
         return this;
     }
 }

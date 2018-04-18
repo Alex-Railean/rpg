@@ -2,7 +2,6 @@ package com.endava.rpg.gp.responsiveness;
 
 import com.endava.rpg.gp.battle.location.EnemyService;
 import com.endava.rpg.gp.battle.spells.SpellService;
-import com.endava.rpg.gp.battle.spells.constants.SpellType;
 import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CreepState;
@@ -80,13 +79,13 @@ public class ResponseService {
 
     private List<Spell> getEnemyProtectionSpells(CreepState creep) {
         return creep.getSpells().stream()
-                .filter(spell -> spell.getSpellType().equals(SpellType.PROTECTION))
+                .filter(SpellService::isProtectionSpell)
                 .collect(Collectors.toList());
     }
 
     private List<Spell> getEnemyAttackSpells(CreepState creep) {
         return creep.getSpells().stream()
-                .filter(spell -> spell.getSpellType().equals(SpellType.ATTACK))
+                .filter(SpellService::isAttackSpell)
                 .collect(Collectors.toList());
     }
 }

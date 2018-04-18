@@ -1,2 +1,3 @@
-creepName     ; hpFactor; hpRegeneration; mpFactor; mpRegeneration; energy; energyRegeneration; spell_1; spell_2         ; spell_3; creepType ; creepLocation
-Infected Wolf ; 9       ; 2             ; 0       ; 0             ; 250   ; 15                ; Bite   ; Defence Stance  ; null    ; Beast    ; hungry-forest
+creepName            ; hpFactor; hpRegeneration; mpFactor; mpRegeneration; energy; energyRegeneration; spell_1     ; spell_2         ; spell_3; creepType ; creepLocation
+Infected Wolf        ; 9       ; 2             ; 0       ; 0             ; 250   ; 15                ; Bite        ; Defence Stance  ; null    ; Beast    ; hungry-forest
+Infected Wolf (Test) ; 9       ; 2             ; 0       ; 0             ; 250   ; 15                ; Bite (Test) ; Defence Stance  ; null    ; Beast    ; hungry-forest

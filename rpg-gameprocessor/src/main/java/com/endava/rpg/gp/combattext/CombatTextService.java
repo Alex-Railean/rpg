@@ -1,5 +1,6 @@
 package com.endava.rpg.gp.combattext;
 
+import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.combattext.messages.*;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.Spell;
@@ -23,12 +24,20 @@ public final class CombatTextService {
         combatText.add(new ShieldMessage(spell, caster, benefit, cost));
     }
 
+    public static void createShieldEffectRecord(State target, int benefit) {
+        combatText.add(new ShieldEffectMessage(target, benefit));
+    }
+
     public static void createWaitMessage(State caster) {
         combatText.add(new WaitMessage(caster));
     }
 
     public static void createCustomMessage(String costMessage, String mainMessage) {
         combatText.add(new CustomMessage(costMessage, mainMessage));
+    }
+
+    public static void createEffectMessage(State target, Effect effect) {
+        combatText.add(new EffectMessage(target, effect));
     }
 
     public static List<CombatMessage> getCombatText() {

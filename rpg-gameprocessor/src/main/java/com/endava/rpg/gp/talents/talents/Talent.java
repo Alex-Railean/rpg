@@ -1,15 +1,11 @@
 package com.endava.rpg.gp.talents.talents;
 
-import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.persistence.models.Character;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Talent {
-
-    protected CharacterStateService characterState;
 
     private List<Talent> dependency = new ArrayList<>();
 
@@ -83,10 +79,5 @@ public abstract class Talent {
 
     public void setURL(String URL) {
         this.URL = URL;
-    }
-
-    @Autowired
-    public void setCharacterState(CharacterStateService characterState) {
-        this.characterState = characterState;
     }
 }

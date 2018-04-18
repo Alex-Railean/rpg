@@ -48,7 +48,7 @@ public class EnemyService implements Refreshable {
     }
 
     public Model getCurrentEnemyAndGroup(Model m) {
-        currentEnemy = creepGroup.get(ProcessorUtil.getRandomInt(0, creepGroup.size() - 1));
+        currentEnemy = creepGroup.get(ProcessorUtil.getRandomInt(0, creepGroup.size()));
         m.addAttribute("currentEnemy", currentEnemy);
         m.addAttribute("creepsGroup", creepGroup);
 

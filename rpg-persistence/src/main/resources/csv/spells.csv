@@ -4,5 +4,6 @@ Bow Attack       ; 0       ; none              ; 30            ; /resources/img/
 Fire Ball        ; 0       ; none              ; 40            ; /resources/img/fireball.jpg       ; 65    ; magical  ; intellect   ; attack       ; 0        ; none
 No spell         ; 0       ; none              ; 0             ; /resources/img/empty.jpg          ; 0     ; none     ; none        ; none         ; 0        ; none
 Bite             ; 0       ; none              ; 20            ; /resources/img/bite.jpg           ; 30    ; physical ; creep       ; attack       ; 0        ; none
+Bite (Test)      ; 0       ; none              ; 2             ; /resources/img/bite.jpg           ; 30    ; physical ; creep       ; attack       ; 0        ; none
 Defence Stance   ; 0       ; Defence Stance    ; 35            ; /resources/img/defencestance.jpg  ; 100   ; physical ; creep       ; protection   ; 0        ; none
 Unstable shield  ; 5       ; Unstable Shield   ; 25            ; /resources/img/unstableshield.jpg ; 30    ; physical ; strength    ; protection   ; 1        ; technologies

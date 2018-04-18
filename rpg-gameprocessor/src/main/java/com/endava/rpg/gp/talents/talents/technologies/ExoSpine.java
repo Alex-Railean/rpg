@@ -30,7 +30,7 @@ public class ExoSpine extends Talent {
         int hp = character.getHp().getCurrentValue();
 
         character.getHp().setValue(hp + hp / 100 * HP_COEFFICIENT * getPoints());
-        character.getHp().setCurrentValue(hp + hp / 100 * HP_COEFFICIENT * getPoints());
+        character.getHp().setCurrentValue(character.getHp().getValue());
         Double sr = character.getStunResistancePercentage();
 
         character.setStunResistancePercentage(sr + STUN_RESISTANCE * getPoints());

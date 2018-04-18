@@ -6,7 +6,6 @@ import com.endava.rpg.gp.battle.spells.effects.subtypes.InnerEffected;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.CharacterState;
-import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.talents.branches.strength.AspectsBranch;
 import com.endava.rpg.gp.talents.talents.Talent;
 import com.endava.rpg.persistence.models.Character;
@@ -15,20 +14,20 @@ import com.endava.rpg.persistence.services.utils.constants.EffectName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.CURSED_BLADE;
+import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.COURAGE;
 
 @Component
-public class CursedBladeTalent extends Talent {
+public class CourageTalent extends Talent {
 
     private final PersistenceService PS;
 
     @Autowired
-    private CursedBladeTalent(AspectsBranch aspects, PersistenceService ps) {
+    private CourageTalent(AspectsBranch aspects, PersistenceService ps) {
         aspects.addTalent(this);
-        setName(CURSED_BLADE.NAME);
-        setLinkName(CURSED_BLADE.LINK);
-        setURL("/resources/img/cursed-blade.jpg");
-        setDescription("Cursed blade");
+        setName(COURAGE.NAME);
+        setLinkName(COURAGE.LINK);
+        setURL("/resources/img/courage.jpg");
+        setDescription("COURAGE");
         this.PS = ps;
     }
 
@@ -39,12 +38,12 @@ public class CursedBladeTalent extends Talent {
             EffectFactory ef = new EffectFactory();
 
             Effect effect = ef.createEffect(c,
-                    EffectName.CURSED_BLADE,
-                    PS.getEffect(EffectName.CURSED_BLADE));
+                    EffectName.COURAGE,
+                    PS.getEffect(EffectName.COURAGE));
 
-            Effect innerEffect = ef.createEffect(new CreepState(),
-                    EffectName.CURSED,
-                    PS.getEffect(EffectName.CURSED));
+            Effect innerEffect = ef.createEffect(c,
+                    EffectName.SHIELD_OF_COURAGE,
+                    PS.getEffect(EffectName.SHIELD_OF_COURAGE));
 
             ((Leveled) effect).setLevel(getPoints());
             ((InnerEffected) effect).setInnerEffect(innerEffect);
@@ -55,7 +54,7 @@ public class CursedBladeTalent extends Talent {
 
     @Override
     public void define(Character character) {
-        setPoints(character.getAspects().getCursedBlade());
-        setLimit(character.getAspects().getCursedBladeLimit());
+        setPoints(character.getAspects().getCourage());
+        setLimit(character.getAspects().getCourageLimit());
     }
 }

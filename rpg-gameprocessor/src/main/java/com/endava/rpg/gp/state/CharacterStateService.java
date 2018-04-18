@@ -166,9 +166,7 @@ public class CharacterStateService {
         Character character;
 
         if ((character = PS.getCharacterByName(characterName)) != null) {
-            TalentService.defineTalents(character);
-            CharacterState characterState = reloadCharacter(character);
-            TalentService.affect();
+            CharacterState characterState = definitionActions(character);
             LOGGER.info("An existing Character was defined");
             return characterState;
         }
@@ -179,9 +177,7 @@ public class CharacterStateService {
                 new ActionBar()));
         TalentService.createAll(character);
         PS.refreshChar(character);
-        TalentService.defineTalents(character);
-        CharacterState characterState = reloadCharacter(character);
-        TalentService.affect();
+        CharacterState characterState = definitionActions(character);
         LOGGER.info("A New Character was Created");
         return characterState;
     }
@@ -190,6 +186,14 @@ public class CharacterStateService {
         model.addAttribute("characterName", CHAR_STATE.getName())
                 .addAttribute("characterLevel", CHAR_STATE.getLevel());
         return model;
+    }
+
+    private CharacterState definitionActions(Character character) {
+        TalentService.defineTalents(character);
+        CharacterState characterState = reloadCharacter(character);
+        TalentService.affect();
+        characterState.applyEffects();
+        return characterState;
     }
 
     private CharacterState reloadCharacter(Character character) {

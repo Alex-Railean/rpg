@@ -85,6 +85,10 @@ public class TalentService {
             if (branchEntity.getCursedBlade() + points <= branchEntity.getCursedBladeLimit()) {
                 PS.updateBranch(branchEntity.addCursedBlade(points));
             }
+        } else if (COURAGE.LINK.equals(talent)) {
+            if (branchEntity.getCourage() + points <= branchEntity.getCourageLimit()) {
+                PS.updateBranch(branchEntity.addCourage(points));
+            }
         } else {
 
             throw new IllegalArgumentException("There is no such talent");

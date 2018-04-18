@@ -1,12 +1,15 @@
 package com.endava.rpg.gp.battle.spells.effects;
 
-import com.endava.rpg.gp.battle.spells.effects.passive.Cursed;
+import com.endava.rpg.gp.battle.spells.effects.passive.Courage;
 import com.endava.rpg.gp.battle.spells.effects.passive.CursedBlade;
 import com.endava.rpg.gp.battle.spells.effects.shields.DefenceStance;
+import com.endava.rpg.gp.battle.spells.effects.shields.GraceOfCourage;
 import com.endava.rpg.gp.battle.spells.effects.shields.UnstableShield;
+import com.endava.rpg.gp.battle.spells.effects.targeted.Cursed;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
 import com.endava.rpg.persistence.models.Spell;
+import com.endava.rpg.persistence.services.utils.constants.EffectName;
 
 public class EffectFactory {
     public Effect createEffect(State target, Spell s) {
@@ -26,6 +29,10 @@ public class EffectFactory {
                 return new CursedBlade(target, ec);
             case EffectName.CURSED:
                 return new Cursed(target, ec);
+            case EffectName.COURAGE:
+                return new Courage(target, ec);
+            case EffectName.SHIELD_OF_COURAGE:
+                return new GraceOfCourage(target, ec);
             default:
                 throw new IllegalArgumentException("This effect isn't added to the factory");
         }

@@ -3,7 +3,7 @@ package com.endava.rpg.gp.battle.spells;
 import com.endava.rpg.gp.battle.ExpService;
 import com.endava.rpg.gp.battle.spells.constants.School;
 import com.endava.rpg.gp.battle.spells.constants.SpellType;
-import com.endava.rpg.gp.battle.spells.effects.shields.Shield;
+import com.endava.rpg.gp.battle.spells.effects.subtypes.Shield;
 import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.game.FormulaService;
 import com.endava.rpg.gp.state.ActionBarService;
@@ -22,19 +22,22 @@ import java.util.Random;
 public class SpellService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpellService.class);
 
+    private static Spell lastSpell;
+
     public static void useSpellTo(Integer actionBarNumber, State target) {
         Spell usedSpell = getSpellFromActionBar(actionBarNumber);
+        lastSpell = usedSpell;
         useSpellTo(CharacterStateService.getCharacter(), target, usedSpell);
     }
 
     public static void useSpellTo(State caster, State target, Spell usedSpell) {
-        if (usedSpell.getSpellType().equals(SpellType.ATTACK)) {
+        if (isAttackSpell(usedSpell)) {
             int dmg = makeDamage(caster, target, usedSpell.getCoefficient());
             int cost = takeCost(usedSpell, caster);
             usedSpell.onCooldown();
             ExpService.addAttributeExp(usedSpell.getAttribute());
             CombatTextService.createAttackRecord(usedSpell, caster, target, dmg, cost);
-        } else if (usedSpell.getSpellType().equals(SpellType.PROTECTION)) {
+        } else if (isProtectionSpell(usedSpell)) {
             int protection = protection(caster, usedSpell);
             int cost = takeCost(usedSpell, caster);
             usedSpell.onCooldown();
@@ -80,6 +83,18 @@ public class SpellService {
         return ActionBarService.getActionBarMap().get(actionBarNumber).getSpell();
     }
 
+    public static Spell getLastSpell() {
+        return lastSpell;
+    }
+
+    public static boolean isAttackSpell(Spell s) {
+        return s.getSpellType().equals(SpellType.ATTACK);
+    }
+
+    public static boolean isProtectionSpell(Spell s) {
+        return s.getSpellType().equals(SpellType.PROTECTION);
+    }
+
     private static int protection(State target, Spell shieldSpell) {
         Shield shield = (Shield) target.addEffect(target, shieldSpell);
         int shieldPoints = shield.getPoints();
@@ -92,10 +107,10 @@ public class SpellService {
     }
 
     private static int takeCost(Spell spell, State caster) {
-        String spellType = spell.getSchool();
+        String spellSchool = spell.getSchool();
         int manaCost = FormulaService.getManaCost(spell);
 
-        if (spellType.equals(School.PHYSICAL)) {
+        if (spellSchool.equals(School.PHYSICAL)) {
             caster.getEnergy().setCurrentValue(caster.getEnergy().getCurrentValue() - spell.getCost());
             return spell.getCost();
         } else {

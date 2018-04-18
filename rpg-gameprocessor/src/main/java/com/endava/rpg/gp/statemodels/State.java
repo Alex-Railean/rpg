@@ -2,7 +2,7 @@ package com.endava.rpg.gp.statemodels;
 
 import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.battle.spells.effects.EffectFactory;
-import com.endava.rpg.gp.battle.spells.effects.shields.Shield;
+import com.endava.rpg.gp.battle.spells.effects.subtypes.Shield;
 import com.endava.rpg.gp.statemodels.points.Point;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.persistence.models.Spell;
@@ -20,6 +20,8 @@ public abstract class State {
     private final List<Spell> SPELLS = new ArrayList<>();
 
     private Set<Effect> effects = new HashSet<>();
+
+    private Set<Effect> effectsToAdd = new HashSet<>();
 
     private String name;
 
@@ -48,7 +50,7 @@ public abstract class State {
 
         if (sameEffect != null) e.remove();
 
-        effects.add(e);
+        effectsToAdd.add(e);
         return e;
     }
 
@@ -60,16 +62,22 @@ public abstract class State {
 
         if (sameEffect != null) e.remove();
 
-        effects.add(e);
+        effectsToAdd.add(e);
         return e;
     }
 
+    public void applyEffects() {
+        effects.addAll(effectsToAdd);
+        effectsToAdd.clear();
+    }
+
     private void removeEffects() {
-        effects.forEach(e -> {
-            if (e.getCurrentDuration() != -1 && e.getCurrentDuration() <= 0) {
-                e.remove();
-            }
-        });
+        List<Effect> toRemove = this.effects.stream()
+                .filter(e -> e.getCurrentDuration() != -1 && e.getCurrentDuration() <= 0 || e.isToRemove())
+                .map(e -> e.setToRemove(false))
+                .collect(Collectors.toList());
+
+        effects.removeAll(toRemove);
     }
 
     public List<Spell> getSpells() {
@@ -148,15 +156,13 @@ public abstract class State {
     }
 
     public Shield getRandomShield() {
-        Set<Shield> shields = effects.stream()
+        List<Shield> shields = this.effects.stream()
                 .filter(e -> e instanceof Shield)
                 .map(e -> (Shield) e)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
-        return shields.size() != 0 ? shields.stream()
-                .skip(ProcessorUtil.getRandomInt(0, shields.size() - 1))
-                .findFirst()
-                .orElse(null) : null;
+        return shields.size() != 0 ?
+                shields.get(ProcessorUtil.getRandomInt(0, shields.size())) : null;
     }
 
     public Double getCriticalDmgCoefficient() {

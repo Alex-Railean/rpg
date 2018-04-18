@@ -1,15 +1,14 @@
-package com.endava.rpg.gp.battle.spells.effects.passive;
+package com.endava.rpg.gp.battle.spells.effects.targeted;
 
-import com.endava.rpg.gp.battle.spells.constants.SpellType;
+import com.endava.rpg.gp.battle.spells.SpellService;
 import com.endava.rpg.gp.battle.spells.effects.Effect;
+import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
 
-public class Cursed extends Effect implements Passive {
+public class Cursed extends Effect implements Leveled {
 
     private int level;
-
-    private Effect effect;
 
     private boolean affected = false;
 
@@ -22,27 +21,28 @@ public class Cursed extends Effect implements Passive {
         if (!affected) {
             getHolder().getSpells()
                     .forEach(s -> {
-                        if (s.getSpellType().equals(SpellType.ATTACK)) {
-                            s.subtractCoefficient(this.level);
+                        if (SpellService.isAttackSpell(s)) {
+                            s.subtractCoefficient(level);
                         }
                     });
         }
+
         affected = true;
     }
 
     @Override
-    public boolean remove() {
+    public void remove() {
         if (affected) {
             getHolder().getSpells()
                     .forEach(s -> {
-                        if (s.getSpellType().equals(SpellType.ATTACK)) {
-                            s.addCoefficient(this.level);
+                        if (SpellService.isAttackSpell(s)) {
+                            s.addCoefficient(level);
                         }
                     });
         }
 
         affected = false;
-        return super.remove();
+        super.remove();
     }
 
     @Override
@@ -51,17 +51,8 @@ public class Cursed extends Effect implements Passive {
     }
 
     @Override
-    public void setLevel(int level) {
+    public Cursed setLevel(int level) {
         this.level = level;
-    }
-
-    @Override
-    public Effect getEffect() {
-        return effect;
-    }
-
-    @Override
-    public void setEffect(Effect effect) {
-        this.effect = effect;
+        return this;
     }
 }

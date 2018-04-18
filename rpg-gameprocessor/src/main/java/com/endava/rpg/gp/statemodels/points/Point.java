@@ -16,7 +16,7 @@ public class Point implements Serializable {
         cs.addPoint(this);
     }
 
-    public void useRegeneration() {
+    public void applyRegeneration() {
         if (currentValue < value) {
             currentValue = currentValue + regeneration >= value ?
                     value :

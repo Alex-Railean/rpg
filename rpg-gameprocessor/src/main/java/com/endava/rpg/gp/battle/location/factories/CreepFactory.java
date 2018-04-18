@@ -25,10 +25,10 @@ public abstract class CreepFactory {
         List<Creep> creeps = PS.getCreepsFromLocation(location.NAME);
         creeps = filterCreep(creeps);
         List<CreepState> creepGroup = new ArrayList<>();
-        int groupSize = ProcessorUtil.getRandomInt(1, lvl / 2 + 1);
+        int groupSize = ProcessorUtil.getRandomInt(1, lvl / 2 + 2);
 
         for (int i = 0; i < groupSize; i++) {
-            int randomCreepIndex = ProcessorUtil.getRandomInt(0, creeps.size() - 1);
+            int randomCreepIndex = ProcessorUtil.getRandomInt(0, creeps.size());
             creepGroup.add(i, CREEP_ADAPTOR.toCreepState(creeps.get(randomCreepIndex)));
         }
 

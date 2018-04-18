@@ -39,41 +39,15 @@ public class BattleService implements Refreshable {
     public void makeATurn(Integer actionBarNumber, CreepState currentEnemy) {
         activeTurn = true;
         SpellService.useSpellTo(actionBarNumber, currentEnemy);
-        RESPONSE.creepResponse();
-        useEffects();
-        seekDeath();
-        useRegeneration();
+        turnActions();
         ActionBarService.tickCooldowns();
         activeTurn = false;
     }
 
     public void waitATurn() {
         CombatTextService.createWaitMessage(CharacterStateService.getCharacter());
-        useEffects();
-        RESPONSE.creepResponse();
-        seekDeath();
-        useRegeneration();
+        turnActions();
         ActionBarService.tickCooldowns();
-    }
-
-    private void useEffects() {
-        EnemyService.getCreepGroup()
-                .forEach(CreepState::useEffects);
-
-        CharacterStateService.getCharacter().useEffects();
-    }
-
-    private void useRegeneration() {
-        EnemyService.getCreepGroup()
-                .forEach(creep -> creep.getPoints().forEach(Point::useRegeneration));
-
-        CharacterStateService.getCharacter().getPoints().forEach(Point::useRegeneration);
-    }
-
-    private void seekDeath() {
-        if (EnemyService.isCurrentEnemyDead()) {
-            EnemyService.getCreepGroup().remove(EnemyService.getCurrentEnemy());
-        }
     }
 
     public Long getBattleId() {
@@ -87,5 +61,37 @@ public class BattleService implements Refreshable {
     @Override
     public void refresh() {
         battleId = 0L;
+    }
+
+    private void turnActions() {
+        applyEffects();
+        RESPONSE.creepResponse();
+        seekDeath();
+        applyRegeneration();
+    }
+
+    private void applyEffects() {
+        EnemyService.getCreepGroup()
+                .forEach(CreepState::useEffects);
+
+        CharacterStateService.getCharacter().useEffects();
+
+        EnemyService.getCreepGroup()
+                .forEach(CreepState::applyEffects);
+
+        CharacterStateService.getCharacter().applyEffects();
+    }
+
+    private void applyRegeneration() {
+        EnemyService.getCreepGroup()
+                .forEach(creep -> creep.getPoints().forEach(Point::applyRegeneration));
+
+        CharacterStateService.getCharacter().getPoints().forEach(Point::applyRegeneration);
+    }
+
+    private void seekDeath() {
+        if (EnemyService.isCurrentEnemyDead()) {
+            EnemyService.getCreepGroup().remove(EnemyService.getCurrentEnemy());
+        }
     }
 }

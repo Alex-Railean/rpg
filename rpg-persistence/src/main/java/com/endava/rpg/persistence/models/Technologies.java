@@ -59,7 +59,7 @@ public class Technologies extends BranchEntity implements TableMapping, Serializ
     }
 
     public Technologies addMuscleStimulants(int increase) {
-        this.exoSpine += increase;
+        this.muscleStimulants += increase;
         return this;
     }
 

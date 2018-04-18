@@ -1,34 +1,23 @@
 package com.endava.rpg.gp.battle.spells.effects.passive;
 
 import com.endava.rpg.gp.battle.BattleService;
-import com.endava.rpg.gp.battle.location.EnemyService;
+import com.endava.rpg.gp.battle.spells.SpellService;
 import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.InnerEffected;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
 import com.endava.rpg.gp.combattext.CombatTextService;
+import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
 
-public class CursedBlade extends Effect implements InnerEffected {
+public class Courage extends Effect implements InnerEffected {
 
     private int level;
 
     private Effect effect;
 
-    public CursedBlade(State holder, EffectCore ec) {
+    public Courage(State holder, EffectCore ec) {
         super(holder, ec);
-    }
-
-    @Override
-    public void affectTarget() {
-        if (BattleService.isActiveTurn()) {
-            State creep = EnemyService.getCurrentEnemy();
-            ((Leveled) effect).setLevel(level);
-            effect.setHolder(creep);
-            effect.refreshDuration();
-            creep.addEffect(effect);
-            CombatTextService.createEffectMessage(creep, effect);
-        }
     }
 
     @Override
@@ -37,9 +26,20 @@ public class CursedBlade extends Effect implements InnerEffected {
     }
 
     @Override
-    public CursedBlade setLevel(int level) {
+    public Courage setLevel(int level) {
         this.level = level;
         return this;
+    }
+
+    @Override
+    public void affectTarget() {
+        if (BattleService.isActiveTurn() && SpellService.isAttackSpell(SpellService.getLastSpell())) {
+            ((Leveled) effect).setLevel(level);
+            effect.setHolder(CharacterStateService.getCharacter());
+            effect.refreshDuration();
+            super.getHolder().addEffect(effect);
+            CombatTextService.createEffectMessage(super.getHolder(), effect);
+        }
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CursedBlade extends Effect implements InnerEffected {
     }
 
     @Override
-    public CursedBlade setInnerEffect(Effect effect) {
+    public Courage setInnerEffect(Effect effect) {
         this.effect = effect;
         return this;
     }
