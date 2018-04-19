@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.battle.location;
 
-import com.endava.rpg.gp.battle.location.enums.Location;
+import com.endava.rpg.gp.battle.location.constatnts.Location;
 import com.endava.rpg.gp.battle.location.factories.CreepFactory;
 import com.endava.rpg.gp.game.Refresher;
 import com.endava.rpg.gp.statemodels.CreepState;
@@ -38,8 +38,8 @@ public class EnemyService implements Refreshable {
         return currentEnemy;
     }
 
-    public Model getRandomCreepGroup(Model model, Location location, int lvl, CreepFactory creepFactory) {
-        creepGroup = creepFactory.createCreepGroup(location, lvl);
+    public Model getRandomCreepGroup(Model model, Location location, int lvl, CreepFactory cf) {
+        creepGroup = cf.createCreepGroup(location, lvl);
 
         model.addAttribute("creepsGroup", creepGroup);
         LOGGER.info("Creep Group was Generated for location -> " + location);

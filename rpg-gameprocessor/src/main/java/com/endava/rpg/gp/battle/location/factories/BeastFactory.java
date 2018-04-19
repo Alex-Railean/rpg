@@ -1,7 +1,7 @@
 package com.endava.rpg.gp.battle.location.factories;
 
 import com.endava.rpg.gp.adapters.CreepAdaptor;
-import com.endava.rpg.gp.battle.location.enums.CreepType;
+import com.endava.rpg.gp.battle.location.constatnts.CreepType;
 import com.endava.rpg.persistence.models.Creep;
 import com.endava.rpg.persistence.services.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.endava.rpg.gp.battle.location.factories;
 
 import com.endava.rpg.gp.adapters.CreepAdaptor;
-import com.endava.rpg.gp.battle.location.enums.Location;
+import com.endava.rpg.gp.battle.location.constatnts.Location;
 import com.endava.rpg.gp.statemodels.CreepState;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.persistence.models.Creep;
@@ -29,7 +29,7 @@ public abstract class CreepFactory {
 
         for (int i = 0; i < groupSize; i++) {
             int randomCreepIndex = ProcessorUtil.getRandomInt(0, creeps.size());
-            creepGroup.add(i, CREEP_ADAPTOR.toCreepState(creeps.get(randomCreepIndex)));
+            creepGroup.add(i, CREEP_ADAPTOR.toCreepState(creeps.get(randomCreepIndex), lvl));
         }
 
         return creepGroup;

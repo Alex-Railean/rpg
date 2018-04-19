@@ -17,27 +17,29 @@ import java.util.stream.Collectors;
 public class ResponseService {
 
     public void creepResponse() {
-        for (CreepState c : EnemyService.getCreepGroup()) {
-            if (isAlmostDead(c)) {
-                List<Spell> spells = getEnemyProtectionSpells(c);
-                Spell toCast;
-                if (SpellService.isEnoughMana(toCast = chooseAppropriate(spells), c)) {
-                    SpellService.useSpellTo(c, CharacterStateService.getCharacter(), toCast);
-                } else if (chooseAnotherOption(c.getSpells()) != null) {
-                    SpellService.useSpellTo(c, CharacterStateService.getCharacter(), chooseAnotherOption(c.getSpells()));
-                } else {
-                    CombatTextService.createWaitMessage(c);
-                }
+        EnemyService.getCreepGroup().forEach(c -> {
+            if (!c.isStunned()) {
+                if (isAlmostDead(c)) {
+                    List<Spell> spells = getEnemyProtectionSpells(c);
+                    Spell toCast;
+                    if (SpellService.isEnoughMana(toCast = chooseAppropriate(spells), c)) {
+                        SpellService.useSpellTo(c, CharacterStateService.getCharacter(), toCast);
+                    } else if (chooseAnotherOption(c.getSpells()) != null) {
+                        SpellService.useSpellTo(c, CharacterStateService.getCharacter(), chooseAnotherOption(c.getSpells()));
+                    } else {
+                        CombatTextService.createWaitMessage(c);
+                    }
 
-            } else {
-                Spell strongest = chooseStrongestSpell(getEnemyAttackSpells(c));
-                if (SpellService.isEnoughMana(strongest, c)) {
-                    SpellService.useSpellTo(c, CharacterStateService.getCharacter(), strongest);
                 } else {
-                    CombatTextService.createWaitMessage(c);
+                    Spell strongest = chooseStrongestSpell(getEnemyAttackSpells(c));
+                    if (SpellService.isEnoughMana(strongest, c)) {
+                        SpellService.useSpellTo(c, CharacterStateService.getCharacter(), strongest);
+                    } else {
+                        CombatTextService.createWaitMessage(c);
+                    }
                 }
             }
-        }
+        });
     }
 
     private Spell chooseStrongestSpell(List<Spell> spells) {
@@ -73,7 +75,7 @@ public class ResponseService {
     private boolean isAlmostDead(CreepState creep) {
         return !creep.getHp().getValue().equals(creep.getHp().getCurrentValue()) &&
                 creep.getHp().getCurrentValue() +
-                        EnemyService.getCurrentEnemy().getShieldPoints() <
+                        creep.getShieldPoints() <
                         CharacterStateService.getCharacter().getBiggestDmg() * 1.8;
     }
 

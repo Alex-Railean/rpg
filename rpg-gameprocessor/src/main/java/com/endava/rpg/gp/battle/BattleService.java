@@ -23,9 +23,9 @@ public class BattleService implements Refreshable {
     private Long battleId;
 
     @Autowired
-    private BattleService(ResponseService spellChoice) {
+    private BattleService(ResponseService response) {
         Refresher.addRefreshable(this);
-        this.RESPONSE = spellChoice;
+        this.RESPONSE = response;
     }
 
     public static boolean isActiveTurn() {
@@ -36,18 +36,16 @@ public class BattleService implements Refreshable {
         return CharacterStateService.isCharDead() || EnemyService.getCreepGroup().size() == 0;
     }
 
-    public void makeATurn(Integer actionBarNumber, CreepState currentEnemy) {
+    public void makeTurn(Integer actionBarNumber, CreepState currentEnemy) {
         activeTurn = true;
         SpellService.useSpellTo(actionBarNumber, currentEnemy);
         turnActions();
-        ActionBarService.tickCooldowns();
         activeTurn = false;
     }
 
     public void waitATurn() {
         CombatTextService.createWaitMessage(CharacterStateService.getCharacter());
         turnActions();
-        ActionBarService.tickCooldowns();
     }
 
     public Long getBattleId() {
@@ -68,6 +66,10 @@ public class BattleService implements Refreshable {
         RESPONSE.creepResponse();
         seekDeath();
         applyRegeneration();
+        ActionBarService.tickCooldowns();
+        EnemyService.getCreepGroup()
+                .forEach(CreepState::tickStun);
+        CharacterStateService.getCharacter().tickStun();
     }
 
     private void applyEffects() {
@@ -75,11 +77,6 @@ public class BattleService implements Refreshable {
                 .forEach(CreepState::useEffects);
 
         CharacterStateService.getCharacter().useEffects();
-
-        EnemyService.getCreepGroup()
-                .forEach(CreepState::applyEffects);
-
-        CharacterStateService.getCharacter().applyEffects();
     }
 
     private void applyRegeneration() {

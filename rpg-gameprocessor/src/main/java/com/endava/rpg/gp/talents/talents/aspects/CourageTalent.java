@@ -1,13 +1,7 @@
 package com.endava.rpg.gp.talents.talents.aspects;
 
-import com.endava.rpg.gp.battle.spells.effects.Effect;
-import com.endava.rpg.gp.battle.spells.effects.EffectFactory;
-import com.endava.rpg.gp.battle.spells.effects.subtypes.InnerEffected;
-import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
-import com.endava.rpg.gp.state.CharacterStateService;
-import com.endava.rpg.gp.statemodels.CharacterState;
 import com.endava.rpg.gp.talents.branches.strength.AspectsBranch;
-import com.endava.rpg.gp.talents.talents.Talent;
+import com.endava.rpg.gp.talents.talents.PassiveTalent;
 import com.endava.rpg.persistence.models.Character;
 import com.endava.rpg.persistence.services.PersistenceService;
 import com.endava.rpg.persistence.services.utils.constants.EffectName;
@@ -17,39 +11,29 @@ import org.springframework.stereotype.Component;
 import static com.endava.rpg.persistence.services.utils.constants.TalentAttribute.COURAGE;
 
 @Component
-public class CourageTalent extends Talent {
+public class CourageTalent extends PassiveTalent {
 
-    private final PersistenceService PS;
+    private final int COEFICIENT = 2;
 
     @Autowired
     private CourageTalent(AspectsBranch aspects, PersistenceService ps) {
+        super(ps);
         aspects.addTalent(this);
         setName(COURAGE.NAME);
         setLinkName(COURAGE.LINK);
         setURL("/resources/img/courage.jpg");
-        setDescription("COURAGE");
-        this.PS = ps;
     }
 
     @Override
     public void affect() {
         if (getPoints() > 0) {
-            CharacterState c = CharacterStateService.getCharacter();
-            EffectFactory ef = new EffectFactory();
-
-            Effect effect = ef.createEffect(c,
-                    EffectName.COURAGE,
-                    PS.getEffect(EffectName.COURAGE));
-
-            Effect innerEffect = ef.createEffect(c,
-                    EffectName.SHIELD_OF_COURAGE,
-                    PS.getEffect(EffectName.SHIELD_OF_COURAGE));
-
-            ((Leveled) effect).setLevel(getPoints());
-            ((InnerEffected) effect).setInnerEffect(innerEffect);
-
-            c.addEffect(effect);
+            super.addPassive(EffectName.GRACE_OF_COURAGE);
         }
+
+        super.setDescription(COURAGE.NAME +
+                "\nAfter using the attacking spell you will be under effect " + EffectName.GRACE_OF_COURAGE + "." +
+                "\n" + EffectName.GRACE_OF_COURAGE + " gives shield in amount 2% of your maximum health" +
+                "\nCurrent shield: " + COEFICIENT * super.getPoints() + "%");
     }
 
     @Override

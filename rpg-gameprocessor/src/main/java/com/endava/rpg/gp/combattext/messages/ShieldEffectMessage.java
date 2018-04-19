@@ -10,7 +10,7 @@ public class ShieldEffectMessage implements CombatMessage {
 
     public ShieldEffectMessage(State target, int benefit) {
         this.costMessage = "(Effect)";
-        this.mainMessage = target.getName() + " receives a shield. " +
+        this.mainMessage = target.getName() + " receives a shield effect. " +
                 target.getName() + "(" + target.getHp().getCurrentValue() + "/" + target.getHp().getValue() + ")" + "(" + target.getShieldPoints() + ")"
                 + " +" + benefit + " of shield points";
     }

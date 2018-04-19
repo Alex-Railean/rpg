@@ -36,7 +36,7 @@ public class TalentService {
     }
 
     public static void createAll(Character character) {
-        BRANCHES.forEach(b -> b.create(character));
+        BRANCHES.forEach(b -> b.createFor(character));
     }
 
     public List<Branch> getBranches() {
@@ -48,9 +48,13 @@ public class TalentService {
     }
 
     public Branch getBranch(String branch) {
-        return BRANCHES.stream().filter(b -> b.getName().equalsIgnoreCase(branch)).findFirst().orElse(null);
+        return BRANCHES.stream()
+                .filter(b -> b.getName().equalsIgnoreCase(branch))
+                .findFirst()
+                .orElse(null);
     }
 
+    // TODO: Investigate better approach
     public void updateCharacterTalent(Character character, String branch, String talent, int points) {
         if (branch.equals(TECHNOLOGIES.LINK)) {
             Technologies technologies = character.getTechnologies();
@@ -59,7 +63,6 @@ public class TalentService {
             Aspects aspects = character.getAspects();
             updateBranch(talent, points, aspects);
         } else {
-
             throw new IllegalArgumentException("There is no such talent branch");
         }
     }
@@ -75,7 +78,6 @@ public class TalentService {
             }
 
         } else {
-
             throw new IllegalArgumentException("There is no such talent");
         }
     }

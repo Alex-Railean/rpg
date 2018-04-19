@@ -2,14 +2,17 @@ package com.endava.rpg.gp.battle.spells.effects.shields;
 
 import com.endava.rpg.gp.battle.location.EnemyService;
 import com.endava.rpg.gp.battle.spells.SpellService;
-import com.endava.rpg.gp.battle.spells.effects.Effect;
+import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.subtypes.Displayed;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Shield;
 import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.game.FormulaService;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.Spell;
 
-public class UnstableShield extends Effect implements Shield {
+import java.util.Set;
+
+public class UnstableShield extends Effect implements Shield, Displayed {
 
     private Integer points;
 
@@ -21,17 +24,17 @@ public class UnstableShield extends Effect implements Shield {
     }
 
     @Override
-    public void remove() {
+    public Effect remove() {
         setPoints(0);
         affectTarget();
 
-        super.remove();
+        return super.remove();
     }
 
     @Override
     public void affectTarget() {
         if (points <= 0) {
-            EnemyService.getCreepGroup().forEach(c -> SpellService.damageIt(c, explosionDamage));
+            EnemyService.getCreepGroup().forEach(c -> SpellService.dealDamageTo(c, explosionDamage));
             setToRemove(true);
             CombatTextService.createCustomMessage("(Effect)",
                     getName() + " damaged all enemy group. Damage: -" + explosionDamage);
@@ -48,5 +51,11 @@ public class UnstableShield extends Effect implements Shield {
         explosionDamage = points - p;
         this.points = p;
         return this;
+    }
+
+    @Override
+    public boolean addTo(Set<Effect> effects) {
+        CombatTextService.createShieldEffectRecord(super.getHolder(), points);
+        return super.addTo(effects);
     }
 }

@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.battle.location.enums;
+package com.endava.rpg.gp.battle.location.constatnts;
 
 public final class CreepType {
 

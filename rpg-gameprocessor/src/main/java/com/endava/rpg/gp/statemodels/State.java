@@ -1,7 +1,9 @@
 package com.endava.rpg.gp.statemodels;
 
-import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.battle.spells.effects.EffectFactory;
+import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.roots.Passive;
+import com.endava.rpg.gp.battle.spells.effects.subtypes.Displayed;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Shield;
 import com.endava.rpg.gp.statemodels.points.Point;
 import com.endava.rpg.gp.util.ProcessorUtil;
@@ -21,7 +23,7 @@ public abstract class State {
 
     private Set<Effect> effects = new HashSet<>();
 
-    private Set<Effect> effectsToAdd = new HashSet<>();
+    private Set<Passive> passives = new HashSet<>();
 
     private String name;
 
@@ -35,45 +37,57 @@ public abstract class State {
 
     private Double criticalDmgCoefficient = 1.8;
 
+    private int stun = 0;
+
     public void useEffects() {
+        passives.forEach(Passive::affectTarget);
         effects.forEach(Effect::decreaseDuration);
         effects.forEach(Effect::affectTarget);
         removeEffects();
     }
 
     public Effect addEffect(State target, Spell s) {
-        Effect e = new EffectFactory().createEffect(target, s);
-        Effect sameEffect = this.effects.stream()
+        Effect e = EffectFactory.createEffect(target, s);
+        Effect sameEffect = effects.stream()
                 .filter(se -> se.equals(e))
                 .findFirst()
                 .orElse(null);
 
-        if (sameEffect != null) e.remove();
+        if (sameEffect != null) return e.refreshDuration();
 
-        effectsToAdd.add(e);
+        e.addTo(effects);
         return e;
     }
 
-    public Effect addEffect(Effect e) {
-        Effect sameEffect = this.effects.stream()
+    public void addEffect(Effect e) {
+        Effect sameEffect = effects.stream()
                 .filter(se -> se.equals(e))
                 .findFirst()
                 .orElse(null);
 
-        if (sameEffect != null) e.remove();
-
-        effectsToAdd.add(e);
-        return e;
+        if (sameEffect != null) {
+            e.refreshDuration();
+        } else {
+            e.addTo(effects);
+        }
     }
 
-    public void applyEffects() {
-        effects.addAll(effectsToAdd);
-        effectsToAdd.clear();
+    public void addPassive(Passive p) {
+        Passive samePassive = passives.stream()
+                .filter(se -> se.equals(p))
+                .findFirst()
+                .orElse(null);
+
+        if (samePassive != null) passives.remove(samePassive);
+
+        passives.add(p);
     }
 
     private void removeEffects() {
-        List<Effect> toRemove = this.effects.stream()
-                .filter(e -> e.getCurrentDuration() != -1 && e.getCurrentDuration() <= 0 || e.isToRemove())
+
+        List<Effect> toRemove = effects.stream()
+                .map(e -> e.getRemainingDuration() != -1 && e.getRemainingDuration() <= 0 ? e.remove() : e)
+                .filter(Effect::isToRemove)
                 .map(e -> e.setToRemove(false))
                 .collect(Collectors.toList());
 
@@ -176,5 +190,25 @@ public abstract class State {
 
     public Set<Effect> getEffects() {
         return effects;
+    }
+
+    public Set<Effect> getDisplayEffects() {
+        return effects.stream()
+                .filter(e -> e instanceof Displayed)
+                .collect(Collectors.toSet());
+    }
+
+    public void setStun(int stun) {
+        this.stun = stun;
+    }
+
+    public boolean isStunned() {
+        return stun > 0;
+    }
+
+    public void tickStun() {
+        if (stun > 0) {
+            stun -= 1;
+        }
     }
 }

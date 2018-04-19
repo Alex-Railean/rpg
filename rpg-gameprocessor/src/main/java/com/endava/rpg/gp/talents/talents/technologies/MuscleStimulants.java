@@ -27,7 +27,8 @@ public class MuscleStimulants extends Talent {
         CharacterState character = CharacterStateService.getCharacter();
         character.getEnergy().setValue(character.getDefaultEnergy() + COEFFICIENT * getPoints());
         character.getEnergy().setCurrentValue(character.getDefaultEnergy() + COEFFICIENT * getPoints());
-        setDescription("Muscle Stimulants" +
+
+        super.setDescription(MUSCLE_STIMULANTS.NAME +
                 "\nIncrease the character's energy by " + COEFFICIENT +
                 "\nEnergy bonus: " + COEFFICIENT * getPoints());
     }

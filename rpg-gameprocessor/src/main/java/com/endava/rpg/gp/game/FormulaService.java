@@ -11,30 +11,35 @@ import java.util.Map;
 @Service
 public class FormulaService {
 
-    private static Map<Integer, Map<Integer, Integer>> calculatedDmg = new HashMap<>();
+    private final static Map<Integer, Map<Integer, Integer>> CALCULATED_DMG = new HashMap<>();
 
-    public static int getDamage(int lvl, int damageCoefficient) {
+    private final static Map<Integer, Map<Integer, Integer>> CALCULATED_CREEP_POINTS = new HashMap<>();
 
-        if (calculatedDmg.get(lvl) == null) {
-            calculatedDmg = new HashMap<>();
-            calculatedDmg.put(lvl, new HashMap<>());
-        }
+    private final static Map<Integer, Integer> CALCULATED_HP = new HashMap<>();
 
-        if (calculatedDmg.get(lvl).get(damageCoefficient) == null) {
+    private final static Map<Integer, Integer> CALCULATED_MP = new HashMap<>();
+
+    public static int getDamage(int lvl, int dc) {
+
+        if (dc < 0) return 0;
+
+        CALCULATED_DMG.computeIfAbsent(lvl, k -> new HashMap<>());
+
+        if (CALCULATED_DMG.get(lvl).get(dc) == null) {
             double dmgReducer = 0.1;
-            int dmg = damageCoefficient;
+            int dmg = dc;
 
             for (int i = 1; i <= lvl; i++) {
                 dmg += dmg * dmgReducer;
                 dmgReducer *= 0.993;
             }
 
-            calculatedDmg.get(lvl).put(damageCoefficient, dmg);
+            CALCULATED_DMG.get(lvl).put(dc, dmg);
 
             return dmg;
 
         } else {
-            return calculatedDmg.get(lvl).get(damageCoefficient);
+            return CALCULATED_DMG.get(lvl).get(dc);
         }
     }
 
@@ -64,14 +69,23 @@ public class FormulaService {
         return exp;
     }
 
-    public static Integer getCreepPoints(Integer factor) {
-        Integer points = factor * 5;
+    public static Integer getCreepPoints(Integer factor, int lvl) {
+        CALCULATED_CREEP_POINTS.computeIfAbsent(lvl, k -> new HashMap<>());
 
-        for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
-            points += factor + i * GameService.GROWTH_FACTOR;
+        if (CALCULATED_CREEP_POINTS.get(lvl).get(factor) == null) {
+
+            Integer points = factor * 5;
+
+            for (int i = 1; i <= lvl; i++) {
+                points += factor + i * GameService.GROWTH_FACTOR;
+            }
+
+            CALCULATED_CREEP_POINTS.get(lvl).put(factor, points);
+
+            return points;
+        } else {
+            return CALCULATED_CREEP_POINTS.get(lvl).get(factor);
         }
-
-        return points;
     }
 
     public static Integer getManaCost(Spell spell) {
@@ -81,30 +95,47 @@ public class FormulaService {
     }
 
     public static Integer getCharacterHp() {
-        Integer hp = 50;
+        int lvl = CharacterStateService.getLvl();
 
-        for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
-            hp += 20 + i * GameService.GROWTH_FACTOR;
+        if (CALCULATED_HP.get(lvl) == null) {
+            Integer hp = 50;
+
+            for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
+                hp += 20 + i * GameService.GROWTH_FACTOR;
+            }
+
+            for (int i = 1; i <= CharacterStateService.getCharacter().getStrength().getProgressLevel(); i++) {
+                hp += 35 + i * GameService.GROWTH_FACTOR;
+            }
+
+            CALCULATED_HP.put(lvl, hp);
+
+            return hp;
         }
 
-        for (int i = 1; i <= CharacterStateService.getCharacter().getStrength().getProgressLevel(); i++) {
-            hp += 35 + i * GameService.GROWTH_FACTOR;
-        }
-
-        return hp;
+        return CALCULATED_HP.get(lvl);
     }
 
     public static Integer getCharacterMp() {
-        Integer mp = 50;
+        int lvl = CharacterStateService.getLvl();
 
-        for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
-            mp += 10 + i * GameService.GROWTH_FACTOR;
+        if (CALCULATED_MP.get(lvl) == null) {
+
+            Integer mp = 50;
+
+            for (int i = 1; i <= CharacterStateService.getLvl(); i++) {
+                mp += 10 + i * GameService.GROWTH_FACTOR;
+            }
+
+            for (int i = 1; i <= CharacterStateService.getCharacter().getIntellect().getProgressLevel(); i++) {
+                mp += 45 + i * GameService.GROWTH_FACTOR;
+            }
+
+            CALCULATED_MP.put(lvl, mp);
+
+            return mp;
         }
 
-        for (int i = 1; i <= CharacterStateService.getCharacter().getIntellect().getProgressLevel(); i++) {
-            mp += 45 + i * GameService.GROWTH_FACTOR;
-        }
-
-        return mp;
+        return CALCULATED_MP.get(lvl);
     }
 }

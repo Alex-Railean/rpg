@@ -6,8 +6,8 @@ public enum TalentAttribute {
     MUSCLE_STIMULANTS("Muscle Stimulants", "musclestimulants"),
 
     // Aspects
-    CURSED_BLADE(EffectName.CURSED_BLADE, "cursedblade"),
-    COURAGE(EffectName.COURAGE, "courage");
+    CURSED_BLADE("Cursed Blade", "cursedblade"),
+    COURAGE("Courage", "courage");
 
     public final String NAME;
 

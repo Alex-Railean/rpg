@@ -2,32 +2,28 @@ package com.endava.rpg.gp.battle.spells.effects.passive;
 
 import com.endava.rpg.gp.battle.BattleService;
 import com.endava.rpg.gp.battle.location.EnemyService;
-import com.endava.rpg.gp.battle.spells.effects.Effect;
-import com.endava.rpg.gp.battle.spells.effects.subtypes.InnerEffected;
+import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.roots.Passive;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
-import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.statemodels.State;
-import com.endava.rpg.persistence.models.EffectCore;
 
-public class CursedBlade extends Effect implements InnerEffected {
+public class CursedBlade extends Passive implements Leveled {
 
     private int level;
 
-    private Effect effect;
-
-    public CursedBlade(State holder, EffectCore ec) {
-        super(holder, ec);
+    public CursedBlade(State holder, Effect effect) {
+        super(holder, effect);
     }
 
     @Override
     public void affectTarget() {
         if (BattleService.isActiveTurn()) {
+            Effect innerEffect = super.getInnerEffect();
             State creep = EnemyService.getCurrentEnemy();
-            ((Leveled) effect).setLevel(level);
-            effect.setHolder(creep);
-            effect.refreshDuration();
-            creep.addEffect(effect);
-            CombatTextService.createEffectMessage(creep, effect);
+            ((Leveled) innerEffect).setLevel(level);
+            innerEffect.setHolder(creep);
+            innerEffect.refreshDuration();
+            creep.addEffect(innerEffect);
         }
     }
 
@@ -39,17 +35,6 @@ public class CursedBlade extends Effect implements InnerEffected {
     @Override
     public CursedBlade setLevel(int level) {
         this.level = level;
-        return this;
-    }
-
-    @Override
-    public Effect getEffect() {
-        return effect;
-    }
-
-    @Override
-    public CursedBlade setInnerEffect(Effect effect) {
-        this.effect = effect;
         return this;
     }
 }

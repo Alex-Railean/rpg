@@ -35,10 +35,10 @@ public class CharacterState extends State implements Refreshable, Serializable {
     private Integer biggestDmg = 0;
 
     public CharacterState() {
-        getHp().setRegeneration(3);
-        getMp().setRegeneration(5);
-        getEnergy().setRegeneration(10);
-        getEnergy().setCurrentValue(100);
+        super.getHp().setRegeneration(3);
+        super.getMp().setRegeneration(5);
+        super.getEnergy().setRegeneration(10);
+        super.getEnergy().setCurrentValue(100);
         Refresher.addRefreshable(this);
     }
 

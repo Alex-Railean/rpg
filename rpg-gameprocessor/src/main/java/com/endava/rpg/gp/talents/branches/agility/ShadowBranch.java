@@ -33,7 +33,7 @@ public class ShadowBranch extends Branch {
     }
 
     @Override
-    public void create(Character character) {
+    public void createFor(Character character) {
         PS.saveBranch(new Shadow().setCharacter(character));
     }
 }

@@ -65,7 +65,8 @@ public class ActionBarService {
     public void reloadActionBar() {
         Character character = PS.getCharacterByName(CharacterStateService.getCharacter().getName());
         ActionBar actionBar = character.getActionBar();
-        CharacterStateService.getCharacter().setSpell(0, actionBar.getSpell_1())
+        CharacterStateService.getCharacter()
+                .setSpell(0, actionBar.getSpell_1())
                 .setSpell(1, actionBar.getSpell_2())
                 .setSpell(2, actionBar.getSpell_3())
                 .setSpell(3, actionBar.getSpell_4())

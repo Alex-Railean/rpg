@@ -23,7 +23,7 @@ public class TechnologiesBranch extends Branch {
     }
 
     @Override
-    public void create(Character c) {
+    public void createFor(Character c) {
         PS.saveBranch(new Technologies().setCharacter(c));
     }
 

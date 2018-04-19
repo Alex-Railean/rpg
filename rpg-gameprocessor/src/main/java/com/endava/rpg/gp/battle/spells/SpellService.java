@@ -34,6 +34,7 @@ public class SpellService {
         if (isAttackSpell(usedSpell)) {
             int dmg = makeDamage(caster, target, usedSpell.getCoefficient());
             int cost = takeCost(usedSpell, caster);
+            if (usedSpell.getEffectCore() != null) setEffect(target, usedSpell);
             usedSpell.onCooldown();
             ExpService.addAttributeExp(usedSpell.getAttribute());
             CombatTextService.createAttackRecord(usedSpell, caster, target, dmg, cost);
@@ -56,7 +57,7 @@ public class SpellService {
         }
     }
 
-    public static void damageIt(State target, int dmg) {
+    public static void dealDamageTo(State target, int dmg) {
         Shield shield;
 
         do {
@@ -95,6 +96,10 @@ public class SpellService {
         return s.getSpellType().equals(SpellType.PROTECTION);
     }
 
+    private static void setEffect(State target, Spell usedSpell) {
+        target.addEffect(target, usedSpell);
+    }
+
     private static int protection(State target, Spell shieldSpell) {
         Shield shield = (Shield) target.addEffect(target, shieldSpell);
         int shieldPoints = shield.getPoints();
@@ -108,13 +113,13 @@ public class SpellService {
 
     private static int takeCost(Spell spell, State caster) {
         String spellSchool = spell.getSchool();
-        int manaCost = FormulaService.getManaCost(spell);
 
         if (spellSchool.equals(School.PHYSICAL)) {
-            caster.getEnergy().setCurrentValue(caster.getEnergy().getCurrentValue() - spell.getCost());
+            caster.getEnergy().subtractCurrentValue(spell.getCost());
             return spell.getCost();
         } else {
-            caster.getMp().setCurrentValue(caster.getMp().getCurrentValue() - manaCost);
+            int manaCost = FormulaService.getManaCost(spell);
+            caster.getMp().subtractCurrentValue(manaCost);
             return manaCost;
         }
     }
@@ -135,7 +140,7 @@ public class SpellService {
 
         int dmgForLog = dmg;
 
-        damageIt(target, dmg);
+        dealDamageTo(target, dmg);
 
         if (caster instanceof CharacterState) character.setLastMovePoints(dmgForLog);
 
@@ -153,7 +158,7 @@ public class SpellService {
                 new Random().nextInt(100) <= CharacterStateService.getCharacter().getAgility().getProgressLevel();
     }
 
-    public boolean doesHaveEnoughMana(Integer actionBarNumber) {
+    public boolean isEnoughMana(Integer actionBarNumber) {
         Spell usedSpell = getSpellFromActionBar(actionBarNumber);
         return isEnoughMana(usedSpell, CharacterStateService.getCharacter());
     }

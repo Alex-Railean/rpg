@@ -2,22 +2,18 @@ package com.endava.rpg.gp.battle.spells.effects.passive;
 
 import com.endava.rpg.gp.battle.BattleService;
 import com.endava.rpg.gp.battle.spells.SpellService;
-import com.endava.rpg.gp.battle.spells.effects.Effect;
-import com.endava.rpg.gp.battle.spells.effects.subtypes.InnerEffected;
+import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.roots.Passive;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
-import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.State;
-import com.endava.rpg.persistence.models.EffectCore;
 
-public class Courage extends Effect implements InnerEffected {
+public class Courage extends Passive implements Leveled {
 
     private int level;
 
-    private Effect effect;
-
-    public Courage(State holder, EffectCore ec) {
-        super(holder, ec);
+    public Courage(State holder, Effect effect) {
+        super(holder, effect);
     }
 
     @Override
@@ -34,22 +30,11 @@ public class Courage extends Effect implements InnerEffected {
     @Override
     public void affectTarget() {
         if (BattleService.isActiveTurn() && SpellService.isAttackSpell(SpellService.getLastSpell())) {
-            ((Leveled) effect).setLevel(level);
-            effect.setHolder(CharacterStateService.getCharacter());
-            effect.refreshDuration();
-            super.getHolder().addEffect(effect);
-            CombatTextService.createEffectMessage(super.getHolder(), effect);
+            Effect innerEffect = super.getInnerEffect();
+            ((Leveled) innerEffect).setLevel(level);
+            innerEffect.setHolder(CharacterStateService.getCharacter());
+            innerEffect.refreshDuration();
+            super.getHolder().addEffect(innerEffect);
         }
-    }
-
-    @Override
-    public Effect getEffect() {
-        return effect;
-    }
-
-    @Override
-    public Courage setInnerEffect(Effect effect) {
-        this.effect = effect;
-        return this;
     }
 }

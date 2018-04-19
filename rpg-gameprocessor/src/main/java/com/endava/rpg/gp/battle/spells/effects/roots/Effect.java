@@ -1,13 +1,13 @@
-package com.endava.rpg.gp.battle.spells.effects;
+package com.endava.rpg.gp.battle.spells.effects.roots;
 
 import com.endava.rpg.gp.battle.spells.description.effects.EffectData;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.io.Serializable;
+import java.util.Set;
 
-public abstract class Effect implements Serializable {
+public abstract class Effect extends Affecting implements Serializable {
 
     private String name;
 
@@ -15,33 +15,39 @@ public abstract class Effect implements Serializable {
 
     private Integer duration;
 
-    private Integer currentDuration;
+    private Integer remainingDuration;
 
     private String URL;
-
-    private State holder;
 
     private boolean toRemove = false;
 
     protected Effect(State holder, EffectCore ec) {
+        super(holder);
         this.name = ec.getName();
         this.description = ec.getDescription();
         this.duration = ec.getDuration();
-        this.currentDuration = ec.getDuration();
+        this.remainingDuration = ec.getDuration();
         this.URL = ec.getURL();
-        this.holder = holder;
         this.description = EffectData.modify(this).getRawDescription();
     }
 
-    public void remove() {
-        setToRemove(true);
+    protected void instantEffect() {
+        affectTarget();
+        decreaseDuration();
     }
 
-    public abstract void affectTarget();
+    public Effect remove() {
+        setToRemove(true);
+        return this;
+    }
+
+    public boolean addTo(Set<Effect> effects) {
+        return effects.add(this);
+    }
 
     public void decreaseDuration() {
-        if (currentDuration != -1) {
-            currentDuration -= 1;
+        if (remainingDuration != -1) {
+            remainingDuration -= 1;
         }
     }
 
@@ -87,12 +93,12 @@ public abstract class Effect implements Serializable {
         return this;
     }
 
-    public Integer getCurrentDuration() {
-        return currentDuration;
+    public Integer getRemainingDuration() {
+        return remainingDuration;
     }
 
-    public void setCurrentDuration(Integer currentDuration) {
-        this.currentDuration = currentDuration;
+    public void setRemainingDuration(Integer remainingDuration) {
+        this.remainingDuration = remainingDuration;
     }
 
     public String getURL() {
@@ -104,21 +110,13 @@ public abstract class Effect implements Serializable {
         return this;
     }
 
-    @JsonBackReference
-    public State getHolder() {
-        return holder;
-    }
-
-    public void setHolder(State holder) {
-        this.holder = holder;
-    }
-
     public String getRawDescription() {
         return description;
     }
 
-    public void refreshDuration() {
-        this.currentDuration = this.duration;
+    public Effect refreshDuration() {
+        this.remainingDuration = this.duration;
+        return this;
     }
 
     public boolean isToRemove() {

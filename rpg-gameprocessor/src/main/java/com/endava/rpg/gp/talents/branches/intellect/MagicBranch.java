@@ -31,7 +31,7 @@ public class MagicBranch extends Branch {
     }
 
     @Override
-    public void create(Character character) {
+    public void createFor(Character character) {
         PS.saveBranch(new Magic().setCharacter(character));
     }
 }

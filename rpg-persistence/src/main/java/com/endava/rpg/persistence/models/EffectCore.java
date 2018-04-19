@@ -40,8 +40,8 @@ public class EffectCore implements TableMapping {
     }
 
     public String getDescription() {
-        if (this.duration != -1) {
-            return this.description + " Duration: " + this.duration;
+        if (duration != -1) {
+            return description + "\nDuration: " + duration;
         }
         return description;
     }

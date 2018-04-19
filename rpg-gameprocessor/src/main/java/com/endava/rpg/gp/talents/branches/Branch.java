@@ -53,7 +53,7 @@ public abstract class Branch {
 
     protected abstract List<Spell> getBranchSpells();
 
-    public abstract void create(Character character);
+    public abstract void createFor(Character character);
 
     public void addTalent(Talent t) {
         talentsOfBranch.add(t);

@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.combattext.messages;
 
-import com.endava.rpg.gp.battle.spells.effects.Effect;
+import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
 import com.endava.rpg.gp.statemodels.State;
 
 public class EffectMessage implements CombatMessage {

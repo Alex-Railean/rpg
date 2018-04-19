@@ -88,9 +88,14 @@ public class BattleController {
             return "redirect:" + Paths.BATTLE + "/" + BATTLE.getBattleId();
         }
 
+        if (CharacterStateService.getCharacter().isStunned()) {
+            redirectAttributes.addFlashAttribute("warningMessage", "You are stunned!");
+            return "redirect:" + Paths.BATTLE + "/" + BATTLE.getBattleId();
+        }
+
         if (SpellService.getSpellFromActionBar(actionBarId).getCurrentCooldown() == 0) {
-            if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
-                BATTLE.makeATurn(actionBarId, EnemyService.getCurrentEnemy());
+            if (SPELL_SERVICE.isEnoughMana(actionBarId)) {
+                BATTLE.makeTurn(actionBarId, EnemyService.getCurrentEnemy());
             } else {
                 redirectAttributes.addFlashAttribute("warningMessage", "Not Enough Mana or Energy");
             }
@@ -163,8 +168,8 @@ public class BattleController {
         }
 
         if (SpellService.getSpellFromActionBar(actionBarId).getCurrentCooldown() == 0) {
-            if (SPELL_SERVICE.doesHaveEnoughMana(actionBarId)) {
-                BATTLE.makeATurn(actionBarId, EnemyService.getCurrentEnemy());
+            if (SPELL_SERVICE.isEnoughMana(actionBarId)) {
+                BATTLE.makeTurn(actionBarId, EnemyService.getCurrentEnemy());
             } else {
                 model.addAttribute("warningMessage", "Not Enough Mana or Energy");
             }

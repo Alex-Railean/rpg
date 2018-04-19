@@ -23,7 +23,7 @@ public class AspectsBranch extends Branch {
     }
 
     @Override
-    public void create(Character character) {
+    public void createFor(Character character) {
         PS.saveBranch(new Aspects().setCharacter(character));
     }
 

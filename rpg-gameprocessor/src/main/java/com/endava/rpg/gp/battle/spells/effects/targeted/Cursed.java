@@ -1,12 +1,16 @@
 package com.endava.rpg.gp.battle.spells.effects.targeted;
 
 import com.endava.rpg.gp.battle.spells.SpellService;
-import com.endava.rpg.gp.battle.spells.effects.Effect;
+import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.subtypes.Displayed;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
+import com.endava.rpg.gp.combattext.CombatTextService;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
 
-public class Cursed extends Effect implements Leveled {
+import java.util.Set;
+
+public class Cursed extends Effect implements Leveled, Displayed {
 
     private int level;
 
@@ -31,7 +35,7 @@ public class Cursed extends Effect implements Leveled {
     }
 
     @Override
-    public void remove() {
+    public Effect remove() {
         if (affected) {
             getHolder().getSpells()
                     .forEach(s -> {
@@ -42,7 +46,7 @@ public class Cursed extends Effect implements Leveled {
         }
 
         affected = false;
-        super.remove();
+        return super.remove();
     }
 
     @Override
@@ -54,5 +58,12 @@ public class Cursed extends Effect implements Leveled {
     public Cursed setLevel(int level) {
         this.level = level;
         return this;
+    }
+
+    @Override
+    public boolean addTo(Set<Effect> effects) {
+        instantEffect();
+        CombatTextService.createEffectMessage(super.getHolder(), this);
+        return super.addTo(effects);
     }
 }

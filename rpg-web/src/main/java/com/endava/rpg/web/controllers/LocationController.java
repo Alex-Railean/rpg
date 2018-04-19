@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 
-import static com.endava.rpg.gp.battle.location.enums.Location.HUNGRY_FOREST;
+import static com.endava.rpg.gp.battle.location.constatnts.Location.HUNGRY_FOREST;
 
 @Controller
 public class LocationController {

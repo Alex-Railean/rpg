@@ -99,7 +99,7 @@ public class CharacterStateService {
                 .addAttribute("intellectNextLevel", CHAR_STATE.getIntellect().getToNextLevel())
                 .addAttribute("freePoints", CHAR_STATE.getFreePoints())
                 .addAttribute("shield", CHAR_STATE.getShieldPoints())
-                .addAttribute("effects", CharacterStateService.getCharacter().getEffects());
+                .addAttribute("effects", CharacterStateService.getCharacter().getDisplayEffects());
 
         return model;
     }
@@ -192,7 +192,6 @@ public class CharacterStateService {
         TalentService.defineTalents(character);
         CharacterState characterState = reloadCharacter(character);
         TalentService.affect();
-        characterState.applyEffects();
         return characterState;
     }
 
@@ -236,6 +235,8 @@ public class CharacterStateService {
     }
 
     private Integer calculateCharacterLevel() {
-        return CHAR_STATE.getAttributes().stream().mapToInt(Attribute::getProgressLevel).sum() - 2;
+        return CHAR_STATE.getAttributes().stream()
+                .mapToInt(Attribute::getProgressLevel)
+                .sum() - 2;
     }
 }
