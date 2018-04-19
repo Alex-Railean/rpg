@@ -48,7 +48,7 @@ public class GraceOfCourage extends Effect implements Shield, Leveled, Displayed
 
     @Override
     public GraceOfCourage setLevel(int level) {
-        super.setDescription(super.getDescription().replace("$", String.valueOf(COEFICIENT * level)));
+        super.setDescription(super.getRawDescription().replace("$percentage", String.valueOf(COEFICIENT * level)));
         this.level = level;
         return this;
     }
@@ -61,7 +61,6 @@ public class GraceOfCourage extends Effect implements Shield, Leveled, Displayed
 
     @Override
     public boolean addTo(Set<Effect> effects) {
-        instantEffect();
         CombatTextService.createShieldEffectRecord(super.getHolder(), points);
         return super.addTo(effects);
     }

@@ -2,5 +2,5 @@ name                   ; duration ; URL                                 ; descri
 Defence Stance         ; -1       ; /resources/img/defencestance.jpg    ; Defence Stance
 Unstable Shield        ; 8        ; /resources/img/unstableshield.jpg   ; Absorbs incoming damage in an amount depending on your level. When shield disappears (for any reason) it explodes and deals damage to the all enemies. Damage equals to the last value of shield
 Cursed                 ; 10       ; /resources/img/cursed-blade.jpg     ; Damage of spells is reduced
-Grace of Courage       ; 10       ; /resources/img/courage.jpg          ; Shield in amount $% of maximum health
+Grace of Courage       ; 10       ; /resources/img/courage.jpg          ; Shield in amount $percentage% of maximum health
 Sanctified Wrath       ; 3        ; /resources/img/sanctifiedwrath.jpg  ; Stunned
