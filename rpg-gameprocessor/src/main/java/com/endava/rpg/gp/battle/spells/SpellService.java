@@ -20,6 +20,7 @@ import java.util.Random;
 
 @Service
 public class SpellService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SpellService.class);
 
     private static Spell lastSpell;
@@ -154,8 +155,8 @@ public class SpellService {
 
     private static boolean isCritical(State target) {
         return target instanceof CharacterState ?
-                new Random().nextInt(100) <= 25 :
-                new Random().nextInt(100) <= CharacterStateService.getCharacter().getAgility().getProgressLevel();
+                new Random().nextInt(101) <= 25 :
+                new Random().nextInt(101) <= CharacterStateService.getCharacter().getAgility().getProgressLevel();
     }
 
     public boolean isEnoughMana(Integer actionBarNumber) {

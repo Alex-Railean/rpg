@@ -1,6 +1,7 @@
 package com.endava.rpg.gp.battle.spells.constants;
 
 public final class DefaultSpells {
+
     public static final String
             SWORD_ATTACK = "Sword Attack",
             BOW_ATTACK = "Bow Attack",

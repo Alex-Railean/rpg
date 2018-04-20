@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class PageNavigationController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PageNavigationController.class);
 
     private final CharacterStateService CHAR_STATE;

@@ -2,8 +2,8 @@
     <div class="card-body">
         <p class="card-text">
         <#list combatText as ct>
-            <#if ct.getCostMessage()??>
-            ${ct.getCostMessage()}<br>
+            <#if ct.getHeaderMessage()??>
+            ${ct.getHeaderMessage()}<br>
             </#if>
             <#if ct.getMainMessage()??>
             ${ct.getMainMessage()}<br><br>

@@ -25,6 +25,7 @@ import java.util.Map;
 
 @Controller
 public class SpellBookController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SpellBookController.class);
 
     private final CharacterStateService CHARACTER_STATE;

@@ -26,8 +26,6 @@ public class CharacterState extends State implements Refreshable, Serializable {
 
     private String location;
 
-    private Double stunResistancePercentage = 0D;
-
     private Integer freePoints;
 
     private Integer lastMovePoints = 0;
@@ -104,14 +102,6 @@ public class CharacterState extends State implements Refreshable, Serializable {
 
     public void setDefaultEnergy(Integer defaultEnergy) {
         this.defaultEnergy = defaultEnergy;
-    }
-
-    public Double getStunResistancePercentage() {
-        return stunResistancePercentage;
-    }
-
-    public void setStunResistancePercentage(Double stunResistancePercentage) {
-        this.stunResistancePercentage = stunResistancePercentage;
     }
 
     public Integer getFreePoints() {

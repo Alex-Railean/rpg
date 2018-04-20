@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CSVReader {
+
     private Logger LOGGER = LoggerFactory.getLogger(CSVReader.class);
 
     private String fileName;

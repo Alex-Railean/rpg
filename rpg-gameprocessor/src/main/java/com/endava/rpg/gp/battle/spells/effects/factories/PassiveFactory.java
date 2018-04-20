@@ -1,13 +1,14 @@
-package com.endava.rpg.gp.battle.spells.effects;
+package com.endava.rpg.gp.battle.spells.effects.factories;
 
+import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.battle.spells.effects.passive.Courage;
 import com.endava.rpg.gp.battle.spells.effects.passive.CursedBlade;
-import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
-import com.endava.rpg.gp.battle.spells.effects.roots.Passive;
+import com.endava.rpg.gp.battle.spells.effects.passive.Passive;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.services.utils.constants.EffectName;
 
 public class PassiveFactory {
+
     public static Passive createPassive(State holder, Effect effect) {
         switch (effect.getName()) {
             case EffectName.GRACE_OF_COURAGE:

@@ -17,6 +17,7 @@ import static com.endava.rpg.persistence.services.utils.constants.TalentAttribut
 
 @Service
 public class TalentService {
+
     private static final List<Branch> BRANCHES = new ArrayList<>();
 
     private final PersistenceService PS;
@@ -49,7 +50,7 @@ public class TalentService {
 
     public Branch getBranch(String branch) {
         return BRANCHES.stream()
-                .filter(b -> b.getName().equalsIgnoreCase(branch))
+                .filter(b -> b.getLinkName().equals(branch))
                 .findFirst()
                 .orElse(null);
     }
@@ -67,14 +68,14 @@ public class TalentService {
         }
     }
 
-    private void updateBranch(String talent, int points, Technologies branchEntity) {
+    private void updateBranch(String talent, int points, Technologies branch) {
         if (EXO_SPINE.LINK.equals(talent)) {
-            if (branchEntity.getExoSpine() + points <= branchEntity.getExoSpineLimit()) {
-                PS.updateBranch(branchEntity.addExoSpine(points));
+            if (branch.getExoSpine() + points <= branch.getExoSpineLimit()) {
+                PS.updateBranch(branch.addExoSpine(points));
             }
         } else if (MUSCLE_STIMULANTS.LINK.equals(talent)) {
-            if (branchEntity.getMuscleStimulants() + points <= branchEntity.getMuscleStimulantsLimit()) {
-                PS.updateBranch(branchEntity.addMuscleStimulants(points));
+            if (branch.getMuscleStimulants() + points <= branch.getMuscleStimulantsLimit()) {
+                PS.updateBranch(branch.addMuscleStimulants(points));
             }
 
         } else {

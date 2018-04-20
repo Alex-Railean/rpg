@@ -1,18 +1,19 @@
 package com.endava.rpg.gp.combattext.messages;
 
 public class CustomMessage implements CombatMessage {
-    private String costMessage;
+
+    private String headerMessage;
 
     private String mainMessage;
 
-    public CustomMessage(String costMessage, String mainMessage) {
-        this.costMessage = costMessage;
+    public CustomMessage(String headerMessage, String mainMessage) {
+        this.headerMessage = headerMessage;
         this.mainMessage = mainMessage;
     }
 
     @Override
-    public String getCostMessage() {
-        return costMessage;
+    public String getHeaderMessage() {
+        return headerMessage;
     }
 
     @Override

@@ -1,17 +1,18 @@
-package com.endava.rpg.gp.battle.spells.effects;
+package com.endava.rpg.gp.battle.spells.effects.factories;
 
-import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.battle.spells.effects.shields.DefenceStance;
 import com.endava.rpg.gp.battle.spells.effects.shields.GraceOfCourage;
 import com.endava.rpg.gp.battle.spells.effects.shields.UnstableShield;
+import com.endava.rpg.gp.battle.spells.effects.stuns.SanctifiedWrath;
 import com.endava.rpg.gp.battle.spells.effects.targeted.Cursed;
-import com.endava.rpg.gp.battle.spells.effects.targeted.SanctifiedWrath;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
 import com.endava.rpg.persistence.models.Spell;
 import com.endava.rpg.persistence.services.utils.constants.EffectName;
 
 public class EffectFactory {
+
     public static Effect createEffect(State target, Spell s) {
         switch (s.getEffectCore().getName()) {
             case EffectName.UNSTABLE_SHIELD:

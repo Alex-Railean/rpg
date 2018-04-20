@@ -22,6 +22,7 @@ import java.util.Map;
 //TODO: implement hardDefinition, mediumDefinition and softDefinition
 @Service
 public class CharacterStateService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStateService.class);
 
     private static CharacterState CHAR_STATE;

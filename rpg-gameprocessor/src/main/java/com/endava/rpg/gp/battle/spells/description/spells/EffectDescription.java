@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EffectDescription implements DescribedSpell {
+
     private final DescribedSpell describedSpell;
 
     public EffectDescription(DescribedSpell d) {

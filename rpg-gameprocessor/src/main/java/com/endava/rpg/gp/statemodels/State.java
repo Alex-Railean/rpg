@@ -1,18 +1,15 @@
 package com.endava.rpg.gp.statemodels;
 
-import com.endava.rpg.gp.battle.spells.effects.EffectFactory;
-import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
-import com.endava.rpg.gp.battle.spells.effects.roots.Passive;
+import com.endava.rpg.gp.battle.spells.effects.Effect;
+import com.endava.rpg.gp.battle.spells.effects.factories.EffectFactory;
+import com.endava.rpg.gp.battle.spells.effects.passive.Passive;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Displayed;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Shield;
 import com.endava.rpg.gp.statemodels.points.Point;
 import com.endava.rpg.gp.util.ProcessorUtil;
 import com.endava.rpg.persistence.models.Spell;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class State {
@@ -36,6 +33,8 @@ public abstract class State {
     private Point energy = new Point(this);
 
     private Double criticalDmgCoefficient = 1.8;
+
+    private Double stunResistance = 0D;
 
     private int stun = 0;
 
@@ -198,8 +197,20 @@ public abstract class State {
                 .collect(Collectors.toSet());
     }
 
+    public Double getStunResistance() {
+        return stunResistance;
+    }
+
+    public void setStunResistance(Double stunResistance) {
+        this.stunResistance = stunResistance;
+    }
+
+    public int getStun() {
+        return stun;
+    }
+
     public void setStun(int stun) {
-        this.stun = stun;
+        if (stunResistance < new Random().nextInt(101)) this.stun = stun;
     }
 
     public boolean isStunned() {

@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public class EnemyService implements Refreshable {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EnemyService.class);
 
     private static List<CreepState> creepGroup;

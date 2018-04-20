@@ -20,6 +20,7 @@ import java.util.HashMap;
 
 @Controller
 public class TalentController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TalentController.class);
 
     private final TalentService TALENT;
@@ -59,12 +60,14 @@ public class TalentController {
             return "redirect:" + Paths.BRANCHES_TALENTS;
         }
 
-        Character character = PS.getCharacterByName(CharacterStateService.getCharName());
-        TALENT.updateCharacterTalent(character, branch, talent, points);
-        character.removeFreePoints(points);
-        PS.updateCharacter(character);
-        CHARACTER_STATE.refreshCharacter();
-        LOGGER.info("Talents have been updated");
+        if (TALENT.getBranch(branch).getTalent(talent).isAvailable()) {
+            Character character = PS.getCharacterByName(CharacterStateService.getCharName());
+            TALENT.updateCharacterTalent(character, branch, talent, points);
+            character.removeFreePoints(points);
+            PS.updateCharacter(character);
+            CHARACTER_STATE.refreshCharacter();
+            LOGGER.info("Talents have been updated");
+        }
 
         return "redirect:" + Paths.BRANCHES_TALENTS;
     }

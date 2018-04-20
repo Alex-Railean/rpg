@@ -1,15 +1,16 @@
 package com.endava.rpg.gp.talents.talents;
 
-import com.endava.rpg.gp.battle.spells.effects.EffectFactory;
-import com.endava.rpg.gp.battle.spells.effects.PassiveFactory;
-import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
-import com.endava.rpg.gp.battle.spells.effects.roots.Passive;
+import com.endava.rpg.gp.battle.spells.effects.Effect;
+import com.endava.rpg.gp.battle.spells.effects.factories.EffectFactory;
+import com.endava.rpg.gp.battle.spells.effects.factories.PassiveFactory;
+import com.endava.rpg.gp.battle.spells.effects.passive.Passive;
 import com.endava.rpg.gp.state.CharacterStateService;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.EffectCore;
 import com.endava.rpg.persistence.services.PersistenceService;
 
 public abstract class PassiveTalent extends Talent {
+
     private final PersistenceService PS;
 
     protected PassiveTalent(PersistenceService ps) {

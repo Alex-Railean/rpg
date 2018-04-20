@@ -12,6 +12,7 @@ import static com.endava.rpg.persistence.services.utils.constants.TalentAttribut
 
 @Component
 public class ExoSpine extends Talent {
+
     private final int HP_COEFFICIENT = 1;
 
     private final int STUN_RESISTANCE = 2;
@@ -31,9 +32,9 @@ public class ExoSpine extends Talent {
 
         character.getHp().setValue(hp + hp / 100 * HP_COEFFICIENT * getPoints());
         character.getHp().setCurrentValue(character.getHp().getValue());
-        Double sr = character.getStunResistancePercentage();
+        Double sr = character.getStunResistance();
 
-        character.setStunResistancePercentage(sr + STUN_RESISTANCE * getPoints());
+        character.setStunResistance(sr + STUN_RESISTANCE * getPoints());
 
         super.setDescription(EXO_SPINE.NAME +
                 "\nIncrease the character's health by " + HP_COEFFICIENT + "% and stun resistance by " + STUN_RESISTANCE + "%" +

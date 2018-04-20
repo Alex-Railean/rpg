@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.combattext;
 
-import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.combattext.messages.*;
 import com.endava.rpg.gp.statemodels.State;
 import com.endava.rpg.persistence.models.Spell;
@@ -32,12 +32,16 @@ public final class CombatTextService {
         combatText.add(new WaitMessage(caster));
     }
 
-    public static void createCustomMessage(String costMessage, String mainMessage) {
-        combatText.add(new CustomMessage(costMessage, mainMessage));
+    public static void createCustomMessage(String headerMessage, String mainMessage) {
+        combatText.add(new CustomMessage(headerMessage, mainMessage));
     }
 
     public static void createEffectMessage(State target, Effect effect) {
         combatText.add(new EffectMessage(target, effect));
+    }
+
+    public static void createResistMessage(State resisted, Effect effect) {
+        combatText.add(new ResistMessage(resisted, effect));
     }
 
     public static List<CombatMessage> getCombatText() {
@@ -49,4 +53,5 @@ public final class CombatTextService {
     public static void clearCombatText() {
         combatText = new ArrayList<>();
     }
+
 }

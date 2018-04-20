@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 
 @Service
 public class ExpService implements Refreshable {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpService.class);
 
     private static Integer strengthEpx = 0;

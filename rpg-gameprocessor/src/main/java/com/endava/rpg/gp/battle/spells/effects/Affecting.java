@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.battle.spells.effects.roots;
+package com.endava.rpg.gp.battle.spells.effects;
 
 import com.endava.rpg.gp.statemodels.State;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -7,7 +7,7 @@ public abstract class Affecting {
 
     private State holder;
 
-    Affecting(State holder) {
+    protected Affecting(State holder) {
         this.holder = holder;
     }
 

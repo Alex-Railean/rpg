@@ -1,6 +1,7 @@
 package com.endava.rpg.web.controllers.utils;
 
 public final class Paths {
+
     public static final String
             ROOT = "/",
             API_ROOT = "/api",

@@ -1,4 +1,4 @@
-package com.endava.rpg.gp.battle.spells.effects.roots;
+package com.endava.rpg.gp.battle.spells.effects;
 
 import com.endava.rpg.gp.battle.spells.description.effects.EffectData;
 import com.endava.rpg.gp.statemodels.State;

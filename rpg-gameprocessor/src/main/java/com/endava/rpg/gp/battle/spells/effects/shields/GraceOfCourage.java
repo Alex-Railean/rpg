@@ -1,6 +1,6 @@
 package com.endava.rpg.gp.battle.spells.effects.shields;
 
-import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
+import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Displayed;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Shield;

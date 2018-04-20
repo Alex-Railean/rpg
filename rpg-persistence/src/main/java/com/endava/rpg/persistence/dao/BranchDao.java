@@ -14,6 +14,7 @@ import java.util.List;
 
 @Repository
 public class BranchDao extends Dao<BranchEntity> {
+
     private final SessionFactory SESSION_FACTORY;
 
     private Logger LOGGER = LoggerFactory.getLogger(BranchDao.class);

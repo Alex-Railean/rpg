@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dao<R extends TableMapping> {
+
     private final SessionFactory sessionFactory;
 
     private Logger LOGGER = LoggerFactory.getLogger(Dao.class);

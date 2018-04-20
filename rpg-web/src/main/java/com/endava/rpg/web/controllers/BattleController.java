@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 @Controller
 public class BattleController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BattleController.class);
 
     private final CharacterStateService CHAR_STATE;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CSVAdapter {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVAdapter.class);
 
     private final PersistenceService PS;

@@ -12,6 +12,7 @@ import static com.endava.rpg.persistence.services.utils.constants.TalentAttribut
 
 @Component
 public class MuscleStimulants extends Talent {
+
     private final int COEFFICIENT = 5;
 
     @Autowired

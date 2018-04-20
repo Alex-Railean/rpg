@@ -19,6 +19,7 @@ import static com.endava.rpg.gp.battle.location.constatnts.Location.HUNGRY_FORES
 
 @Controller
 public class LocationController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationController.class);
 
     private final CharacterStateService CHAR_STATE;

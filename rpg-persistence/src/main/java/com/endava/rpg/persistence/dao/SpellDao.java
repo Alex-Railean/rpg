@@ -15,6 +15,7 @@ import java.util.List;
 
 @Repository
 public class SpellDao extends Dao<Spell> {
+
     private final SessionFactory SESSION_FACTORY;
 
     private Logger LOGGER = LoggerFactory.getLogger(SpellDao.class);

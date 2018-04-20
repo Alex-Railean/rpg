@@ -2,8 +2,7 @@ package com.endava.rpg.gp.battle.spells.effects.passive;
 
 import com.endava.rpg.gp.battle.BattleService;
 import com.endava.rpg.gp.battle.location.EnemyService;
-import com.endava.rpg.gp.battle.spells.effects.roots.Effect;
-import com.endava.rpg.gp.battle.spells.effects.roots.Passive;
+import com.endava.rpg.gp.battle.spells.effects.Effect;
 import com.endava.rpg.gp.battle.spells.effects.subtypes.Leveled;
 import com.endava.rpg.gp.statemodels.State;
 

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class Branch {
+
     protected final PersistenceService PS;
 
     private List<Talent> talentsOfBranch = new ArrayList<>();
@@ -89,5 +90,12 @@ public abstract class Branch {
 
     public List<Talent> getTalents() {
         return talentsOfBranch;
+    }
+
+    public Talent getTalent(String name) {
+        return talentsOfBranch.stream()
+                .filter(t -> t.getLinkName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 }
