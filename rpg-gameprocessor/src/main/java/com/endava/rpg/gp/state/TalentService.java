@@ -83,14 +83,18 @@ public class TalentService {
         }
     }
 
-    private void updateBranch(String talent, int points, Aspects branchEntity) {
+    private void updateBranch(String talent, int points, Aspects branch) {
         if (CURSED_BLADE.LINK.equals(talent)) {
-            if (branchEntity.getCursedBlade() + points <= branchEntity.getCursedBladeLimit()) {
-                PS.updateBranch(branchEntity.addCursedBlade(points));
+            if (branch.getCursedBlade() + points <= branch.getCursedBladeLimit()) {
+                PS.updateBranch(branch.addCursedBlade(points));
             }
         } else if (COURAGE.LINK.equals(talent)) {
-            if (branchEntity.getCourage() + points <= branchEntity.getCourageLimit()) {
-                PS.updateBranch(branchEntity.addCourage(points));
+            if (branch.getCourage() + points <= branch.getCourageLimit()) {
+                PS.updateBranch(branch.addCourage(points));
+            }
+        } else if (PLAGUE_AURA.LINK.equals(talent)) {
+            if (branch.getPlagueAura() + points <= branch.getPlagueAuraLimit()) {
+                PS.updateBranch(branch.addPlagueAura(points));
             }
         } else {
 

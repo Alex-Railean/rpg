@@ -15,11 +15,7 @@ public class CursedBladeTalent extends PassiveTalent {
 
     @Autowired
     private CursedBladeTalent(AspectsBranch aspects, PersistenceService ps) {
-        super(ps);
-        aspects.addTalent(this);
-        setName(CURSED_BLADE.NAME);
-        setLinkName(CURSED_BLADE.LINK);
-        setURL("/resources/img/cursed-blade.jpg");
+        super(aspects, CURSED_BLADE.NAME, CURSED_BLADE.LINK, CURSED_BLADE.URL, ps);
     }
 
     @Override
@@ -36,7 +32,7 @@ public class CursedBladeTalent extends PassiveTalent {
 
     @Override
     public void define(Character character) {
-        setPoints(character.getAspects().getCursedBlade());
-        setLimit(character.getAspects().getCursedBladeLimit());
+        super.setPoints(character.getAspects().getCursedBlade());
+        super.setLimit(character.getAspects().getCursedBladeLimit());
     }
 }

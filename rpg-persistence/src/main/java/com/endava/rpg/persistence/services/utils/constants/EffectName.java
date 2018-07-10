@@ -1,6 +1,6 @@
 package com.endava.rpg.persistence.services.utils.constants;
 
-public class EffectName {
+public final class EffectName {
 
     public static final String
             DEFENCE_STANCE = "Defence Stance",

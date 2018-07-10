@@ -10,7 +10,6 @@
     <artifactId>rpg-web</artifactId>
     <packaging>war</packaging>
     <name>rpg-web</name>
-    <url>http://maven.apache.org</url>
 
     <build>
         <finalName>rpg-web</finalName>

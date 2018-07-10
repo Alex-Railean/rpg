@@ -91,13 +91,13 @@ public class CharacterStateService {
                 .addAttribute("actionBar", actionBar)
                 .addAttribute("strengthLevel", CHAR_STATE.getStrength().getProgressLevel())
                 .addAttribute("strength", CHAR_STATE.getStrength().getProgress())
-                .addAttribute("strengthNextLevel", CHAR_STATE.getStrength().getToNextLevel())
+                .addAttribute("strengthNextLevel", CHAR_STATE.getStrength().getNextLevel())
                 .addAttribute("agilityLevel", CHAR_STATE.getAgility().getProgressLevel())
                 .addAttribute("agility", CHAR_STATE.getAgility().getProgress())
-                .addAttribute("agilityNextLevel", CHAR_STATE.getAgility().getToNextLevel())
+                .addAttribute("agilityNextLevel", CHAR_STATE.getAgility().getNextLevel())
                 .addAttribute("intellectLevel", CHAR_STATE.getIntellect().getProgressLevel())
                 .addAttribute("intellect", CHAR_STATE.getIntellect().getProgress())
-                .addAttribute("intellectNextLevel", CHAR_STATE.getIntellect().getToNextLevel())
+                .addAttribute("intellectNextLevel", CHAR_STATE.getIntellect().getNextLevel())
                 .addAttribute("freePoints", CHAR_STATE.getFreePoints())
                 .addAttribute("shield", CHAR_STATE.getShieldPoints())
                 .addAttribute("effects", CharacterStateService.getCharacter().getDisplayEffects());
@@ -105,58 +105,60 @@ public class CharacterStateService {
         return model;
     }
 
-    public boolean updateProgress(Integer additionalExp, Attribute stateAttribute, String type) {
+    // TODO: BUG -> inmemory and DB exp isn't synchronized
+    public void updateProgress(Integer additionalExp, Attribute stateAttribute, String type) {
+
         if (additionalExp == 0) {
-            return true;
+            return;
         }
 
         Character character = PS.getCharacterByName(CHAR_STATE.getName());
         Progress progress = character.getProgress();
 
-        if (stateAttribute.isItNextLevel(additionalExp)) {
+        do {
+            if (stateAttribute.isItNextLevel(additionalExp)) {
+                additionalExp -= stateAttribute.getToNextLevel();
 
-            switch (type) {
-                case AttributeType.STRENGTH:
-                    progress.addStrengthProgressLevel(1)
-                            .addStrengthProgress(additionalExp - stateAttribute.getToNextLevel());
-                    break;
-                case AttributeType.AGILITY:
-                    progress.addAgilityProgressLevel(1)
-                            .addAgilityProgress(additionalExp - stateAttribute.getToNextLevel());
-                    break;
+                switch (type) {
+                    case AttributeType.STRENGTH:
+                        progress.addStrengthProgressLevel(1).setStrengthProgress(0);
+                        break;
+                    case AttributeType.AGILITY:
+                        progress.addAgilityProgressLevel(1).setAgilityProgress(0);
+                        break;
 
-                case AttributeType.INTELLECT:
-                    progress.addIntellectProgressLevel(1)
-                            .addIntellectProgress(additionalExp - stateAttribute.getToNextLevel());
-                    break;
+                    case AttributeType.INTELLECT:
+                        progress.addIntellectProgressLevel(1).setIntellectProgress(0);
+                        break;
+                }
+
+                character.addFreePoints(1);
+                LOGGER.info("Level Up!");
+                refreshCharacter();
+
+            } else {
+                switch (type) {
+                    case AttributeType.STRENGTH:
+                        progress.addStrengthProgress(additionalExp);
+                        break;
+                    case AttributeType.AGILITY:
+                        progress.addAgilityProgress(additionalExp);
+                        break;
+
+                    case AttributeType.INTELLECT:
+                        progress.addIntellectProgress(additionalExp);
+                        break;
+                }
+
+                stateAttribute.addProgress(additionalExp);
+                additionalExp = 0;
             }
-
-            character.addFreePoints(1);
-            LOGGER.info("Level Up!");
-
-        } else {
-            switch (type) {
-                case AttributeType.STRENGTH:
-                    progress.addStrengthProgress(additionalExp);
-                    break;
-                case AttributeType.AGILITY:
-                    progress.addAgilityProgress(additionalExp);
-                    break;
-
-                case AttributeType.INTELLECT:
-                    progress.addIntellectProgress(additionalExp);
-                    break;
-            }
-
-            stateAttribute.addProgress(additionalExp);
-        }
+        } while (additionalExp > 0);
 
         PS.updateCharacter(character);
 
         // TODO: Use this only for Lvl Up
         refreshCharacter();
-
-        return stateAttribute.isLevelStable();
     }
 
     public CharacterState refreshCharacter() {

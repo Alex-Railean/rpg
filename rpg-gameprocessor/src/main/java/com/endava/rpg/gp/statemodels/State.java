@@ -222,4 +222,12 @@ public abstract class State {
             stun -= 1;
         }
     }
+
+    public boolean containsPassive(Passive p){
+        return passives.contains(p);
+    }
+
+    public boolean removePassive(Passive p){
+        return passives.remove(p);
+    }
 }

@@ -11,8 +11,6 @@
 
     <properties>
         <spring.version>5.0.1.RELEASE</spring.version>
-        <servlet-api.version>3.1.0</servlet-api.version>
-        <freemarker.version>2.3.26-incubating</freemarker.version>
         <hibernate.version>5.2.10.Final</hibernate.version>
         <slf4j.verison>1.7.5</slf4j.verison>
         <dbcp2.version>2.1.1</dbcp2.version>

@@ -11,7 +11,6 @@
         <module>rpg-gameprocessor</module>
     </modules>
     <name>rpg</name>
-    <url>http://maven.apache.org</url>
 
     <build>
         <finalName>rpg</finalName>
@@ -20,8 +19,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.9</source>
-                    <target>1.9</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>

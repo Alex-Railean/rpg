@@ -13,15 +13,11 @@ import static com.endava.rpg.persistence.services.utils.constants.TalentAttribut
 @Component
 public class CourageTalent extends PassiveTalent {
 
-    private final int COEFICIENT = 2;
+    private static final int COEFICIENT = 2;
 
     @Autowired
     private CourageTalent(AspectsBranch aspects, PersistenceService ps) {
-        super(ps);
-        aspects.addTalent(this);
-        setName(COURAGE.NAME);
-        setLinkName(COURAGE.LINK);
-        setURL("/resources/img/courage.jpg");
+        super(aspects, COURAGE.NAME, COURAGE.LINK, COURAGE.URL, ps);
     }
 
     @Override
@@ -38,7 +34,7 @@ public class CourageTalent extends PassiveTalent {
 
     @Override
     public void define(Character character) {
-        setPoints(character.getAspects().getCourage());
-        setLimit(character.getAspects().getCourageLimit());
+        super.setPoints(character.getAspects().getCourage());
+        super.setLimit(character.getAspects().getCourageLimit());
     }
 }

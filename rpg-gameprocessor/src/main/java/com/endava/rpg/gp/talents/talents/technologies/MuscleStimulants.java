@@ -17,10 +17,7 @@ public class MuscleStimulants extends Talent {
 
     @Autowired
     private MuscleStimulants(TechnologiesBranch technologies) {
-        technologies.addTalent(this);
-        setName(MUSCLE_STIMULANTS.NAME);
-        setLinkName(MUSCLE_STIMULANTS.LINK);
-        setURL("/resources/img/muscle-stimulants.jpg");
+        super(technologies, MUSCLE_STIMULANTS.NAME, MUSCLE_STIMULANTS.LINK, MUSCLE_STIMULANTS.URL);
     }
 
     @Override
@@ -36,7 +33,7 @@ public class MuscleStimulants extends Talent {
 
     @Override
     public void define(Character character) {
-        setPoints(character.getTechnologies().getMuscleStimulants());
-        setLimit(character.getTechnologies().getMuscleStimulantsLimit());
+        super.setPoints(character.getTechnologies().getMuscleStimulants());
+        super.setLimit(character.getTechnologies().getMuscleStimulantsLimit());
     }
 }

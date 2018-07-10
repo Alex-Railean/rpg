@@ -105,8 +105,6 @@ public class SpellService {
         Shield shield = (Shield) target.addEffect(target, shieldSpell);
         int shieldPoints = shield.getPoints();
 
-        if (target instanceof CharacterState) CharacterStateService.getCharacter().setLastMovePoints(shieldPoints);
-
         LOGGER.info("Calculated Protection -> " + shieldPoints);
 
         return shieldPoints;

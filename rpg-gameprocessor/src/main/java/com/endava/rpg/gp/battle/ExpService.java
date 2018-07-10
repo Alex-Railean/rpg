@@ -30,6 +30,7 @@ public class ExpService implements Refreshable {
         this.CHAR_STATE = characterStateService;
     }
 
+    // TODO: investigate -> if there is a better approach
     public static void addAttributeExp(String attributeName) {
         switch (attributeName) {
             case AttributeType.STRENGTH:
@@ -58,29 +59,51 @@ public class ExpService implements Refreshable {
         }
     }
 
+    public static void addAttributeExp(String attributeName, Integer movePoints) {
+        switch (attributeName) {
+            case AttributeType.STRENGTH:
+                strengthEpx += FormulaService.getDeservedExp(movePoints);
+                LOGGER.info("Strength Epx -> " + strengthEpx);
+                break;
+
+            case AttributeType.AGILITY:
+                agilityExp += FormulaService.getDeservedExp(movePoints);
+                LOGGER.info("Agility Exp -> " + agilityExp);
+                break;
+
+            case AttributeType.INTELLECT:
+                intellectExp += FormulaService.getDeservedExp(movePoints);
+                LOGGER.info("Intellect Exp -> " + intellectExp);
+                break;
+
+            case AttributeType.CREEP:
+                break;
+
+            case AttributeType.NONE:
+                break;
+
+            default:
+                throw new IllegalArgumentException("There is no such Attribute");
+        }
+    }
+
+    // TODO: Bug -> to many levels, doesn't refresh exp value after updating
     public void updateProgresses() {
-        boolean isStrengthStable;
-        boolean isAgilityStable;
-        boolean isIntellectStable;
+        CHAR_STATE.updateProgress(getDeservedExp(strengthEpx),
+                CharacterStateService.getCharacter().getStrength(),
+                AttributeType.STRENGTH);
 
-        do {
-            isStrengthStable = CHAR_STATE.updateProgress(strengthEpx,
-                    CharacterStateService.getCharacter().getStrength(),
-                    AttributeType.STRENGTH);
+        CHAR_STATE.updateProgress(getDeservedExp(agilityExp),
+                CharacterStateService.getCharacter().getAgility(),
+                AttributeType.AGILITY);
 
-            isAgilityStable = CHAR_STATE.updateProgress(agilityExp,
-                    CharacterStateService.getCharacter().getAgility(),
-                    AttributeType.AGILITY);
-
-            isIntellectStable = CHAR_STATE.updateProgress(intellectExp,
-                    CharacterStateService.getCharacter().getIntellect(),
-                    AttributeType.INTELLECT);
-
-        } while (!(isStrengthStable && isAgilityStable && isIntellectStable));
+        CHAR_STATE.updateProgress(getDeservedExp(intellectExp),
+                CharacterStateService.getCharacter().getIntellect(),
+                AttributeType.INTELLECT);
     }
 
     private int getDeservedExp(int exp) {
-        return CharacterStateService.isCharDead() ? exp / 4 : exp;
+        return CharacterStateService.isCharDead() ? exp * 4 : exp;
     }
 
     public Model getExpModel(Model model) {

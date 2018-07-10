@@ -1,5 +1,6 @@
 package com.endava.rpg.gp.talents.talents;
 
+import com.endava.rpg.gp.talents.branches.Branch;
 import com.endava.rpg.persistence.models.Character;
 
 import java.util.ArrayList;
@@ -20,6 +21,13 @@ public abstract class Talent {
     private int limit;
 
     private String URL;
+
+    protected Talent(Branch branch, String name, String link, String URL) {
+        this.name = name;
+        this.linkName = link;
+        this.URL = URL;
+        branch.addTalent(this);
+    }
 
     public abstract void affect();
 

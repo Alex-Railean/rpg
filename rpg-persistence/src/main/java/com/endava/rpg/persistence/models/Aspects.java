@@ -24,12 +24,21 @@ public class Aspects extends BranchEntity implements TableMapping, Serializable 
     @Column(name = "COURAGE_LIMIT")
     private Integer courageLimit = 5;
 
+    @Column(name = "PLAGUE_AURA")
+    private Integer plagueAura = 0;
+
+    @Column(name = "PLAGUE_AURA_LIMIT")
+    private Integer plagueAuraLimit = 5;
+
     @Column(name = "TOTAL_POINTS")
     private Integer totalPoints = 0;
 
     @Override
     public Aspects calculateTotalPoints() {
-        totalPoints = cursedBlade;
+        totalPoints = cursedBlade +
+                courage +
+                plagueAura;
+
         return this;
     }
 
@@ -60,6 +69,11 @@ public class Aspects extends BranchEntity implements TableMapping, Serializable 
 
     public Aspects addCourage(int increase) {
         this.courage += increase;
+        return this;
+    }
+
+    public Aspects addPlagueAura(int increase) {
+        this.plagueAura += increase;
         return this;
     }
 
@@ -104,6 +118,24 @@ public class Aspects extends BranchEntity implements TableMapping, Serializable 
 
     public Aspects setCourageLimit(Integer courageLimit) {
         this.courageLimit = courageLimit;
+        return this;
+    }
+
+    public Integer getPlagueAura() {
+        return plagueAura;
+    }
+
+    public Aspects setPlagueAura(Integer plagueAura) {
+        this.plagueAura = plagueAura;
+        return this;
+    }
+
+    public Integer getPlagueAuraLimit() {
+        return plagueAuraLimit;
+    }
+
+    public Aspects setPlagueAuraLimit(Integer plagueAuraLimit) {
+        this.plagueAuraLimit = plagueAuraLimit;
         return this;
     }
 }

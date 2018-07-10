@@ -9,7 +9,7 @@ public class Attribute implements Serializable {
 
     private Integer progressLevel;
 
-    private Integer toNextLevel;
+    private Integer nextLevel;
 
     private Integer progress;
 
@@ -18,16 +18,16 @@ public class Attribute implements Serializable {
     }
 
     public boolean isItNextLevel(Integer additionalExp) {
-        return progress + additionalExp >= toNextLevel;
+        return progress + additionalExp >= nextLevel;
     }
 
     public boolean isLevelStable() {
-        return progress < toNextLevel;
+        return progress < nextLevel;
     }
 
     public Attribute addProgressLevel(Integer progressLevel) {
         this.progressLevel += progressLevel;
-        this.toNextLevel = FormulaService.getNextLevelExp(progressLevel);
+        this.nextLevel = FormulaService.getNextLevelExp(progressLevel);
         return this;
     }
 
@@ -42,12 +42,12 @@ public class Attribute implements Serializable {
 
     public Attribute setProgressLevel(Integer progressLevel) {
         this.progressLevel = progressLevel;
-        this.toNextLevel = FormulaService.getNextLevelExp(progressLevel);
+        this.nextLevel = FormulaService.getNextLevelExp(progressLevel);
         return this;
     }
 
-    public Integer getToNextLevel() {
-        return toNextLevel;
+    public Integer getNextLevel() {
+        return nextLevel;
     }
 
     public Integer getProgress() {
@@ -57,5 +57,9 @@ public class Attribute implements Serializable {
     public Attribute setProgress(Integer progress) {
         this.progress = progress;
         return this;
+    }
+
+    public Integer getToNextLevel(){
+        return nextLevel - progress;
     }
 }

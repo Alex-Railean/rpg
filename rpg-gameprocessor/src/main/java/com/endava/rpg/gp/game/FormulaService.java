@@ -55,6 +55,10 @@ public class FormulaService {
         return CharacterStateService.getCharacter().getLastMovePoints() / 5 * GameService.GAME_RATE;
     }
 
+    public static Integer getDeservedExp(Integer movePoints) {
+        return movePoints / 5 * GameService.GAME_RATE;
+    }
+
     public static int getShield(State target, int damageCoefficient) {
         return getDamage(target.getLevel(), damageCoefficient);
     }

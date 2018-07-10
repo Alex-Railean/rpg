@@ -19,10 +19,7 @@ public class ExoSpine extends Talent {
 
     @Autowired
     private ExoSpine(TechnologiesBranch technologies) {
-        technologies.addTalent(this);
-        setName(EXO_SPINE.NAME);
-        setLinkName(EXO_SPINE.LINK);
-        setURL("/resources/img/exo-spine.jpg");
+        super(technologies, EXO_SPINE.NAME, EXO_SPINE.LINK, EXO_SPINE.URL);
     }
 
     @Override
@@ -44,7 +41,7 @@ public class ExoSpine extends Talent {
 
     @Override
     public void define(Character character) {
-        setPoints(character.getTechnologies().getExoSpine());
-        setLimit(character.getTechnologies().getExoSpineLimit());
+        super.setPoints(character.getTechnologies().getExoSpine());
+        super.setLimit(character.getTechnologies().getExoSpineLimit());
     }
 }

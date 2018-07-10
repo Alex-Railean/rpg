@@ -7,19 +7,20 @@ import com.endava.rpg.gp.statemodels.State;
 
 public abstract class Passive extends Affecting implements Leveled {
 
-    private Effect effect;
+    private int level;
 
-    Passive(State holder, Effect effect) {
+    Passive(State holder) {
         super(holder);
-        this.effect = effect;
     }
 
-    Effect getInnerEffect() {
-        return effect;
+    @Override
+    public int getLevel() {
+        return level;
     }
 
-    public Passive setInnerEffect(Effect effect) {
-        this.effect = effect;
+    @Override
+    public Passive setLevel(int level) {
+        this.level = level;
         return this;
     }
 }
